@@ -1,0 +1,2 @@
+ocamlbuild -use-menhir -tag thread -use-ocamlfind -pkg core main.byte
+./main.byte test.c
