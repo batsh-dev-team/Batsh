@@ -4,6 +4,7 @@
 %token TRUE
 %token FALSE
 %token IF
+%token ELSE
 %token LEFT_PAREN
 %token RIGHT_PAREN
 %token LEFT_BRACK
@@ -13,7 +14,6 @@
 %token SEMICOLON
 %token COMMA
 %token EOF
-
 
 %start <Statement.statements> prog
 
@@ -29,7 +29,15 @@ statement:
   | SEMICOLON; { `Empty }
   | expr = expression; SEMICOLON { `Expression expr }
   | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE; { `Block stmts }
-  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; stmt = statement { `If (expr, stmt) } ;
+  | stmt = if_statement; { stmt } ;
+
+if_statement:
+  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
+      ELSE; elseStmt = statement;
+      { `IfElse (expr, thenStmt, elseStmt) }
+  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
+      { `If (expr, thenStmt) }
+  ;
 
 expression:
   | s = STRING                                { `String s   }

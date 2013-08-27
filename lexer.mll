@@ -32,6 +32,7 @@ rule read =
   | "true"   { TRUE }
   | "false"  { FALSE }
   | "if"     { IF }
+  | "else"   { ELSE }
   | '"'      { read_string (Buffer.create 17) lexbuf }
   | '('      { LEFT_PAREN }
   | ')'      { RIGHT_PAREN }

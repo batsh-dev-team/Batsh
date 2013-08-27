@@ -10,6 +10,7 @@ type statement = [
   | `Block of (statements)
   | `Expression of (expression)
   | `If of (expression * statement)
+  | `IfElse of (expression * statement * statement)
   | `Empty
 ]
 and statements = statement list
@@ -29,6 +30,7 @@ let rec print_statement out (stmt: statement) =
     print_expression out expr;
     output_string out ";"
   | `If (expr, stmt) -> print_if_statement out expr stmt
+  | `IfElse (expr, thenStmt, elseStmt) -> print_if_else_statement out expr thenStmt elseStmt
   | `Empty -> ()
 
 and print_statements out (stmts: statements) =
@@ -44,6 +46,14 @@ and print_if_statement out (expr: expression) (stmt: statement) =
   print_expression out expr;
   output_string out ") ";
   print_statement out stmt
+
+and print_if_else_statement out (expr: expression) (thenStmt: statement) (elseStmt: statement) =
+  output_string out "if (";
+  print_expression out expr;
+  output_string out ") ";
+  print_statement out thenStmt;
+  output_string out "else";
+  print_statement out elseStmt
 
 let print_ast out (stmts: statements) =
   print_statements out stmts
