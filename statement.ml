@@ -1,10 +1,12 @@
+type identifier = string
+
 type expression = [
   | `Bool of bool
   | `Float of float
   | `Int of int
   | `List of expression list
   | `String of string
-  | `Identifier of string
+  | `Identifier of identifier
   | `Plus of (expression * expression)
   | `Minus of (expression * expression)
   | `Multiply of (expression * expression)
@@ -15,6 +17,7 @@ type expression = [
 type statement = [
   | `Block of (statements)
   | `Expression of (expression)
+  | `Assignment of (identifier * expression)
   | `If of (expression * statement)
   | `IfElse of (expression * statement * statement)
   | `Empty
@@ -63,8 +66,14 @@ let rec print_statement out (stmt: statement) =
   | `Expression expr ->
     print_expression out expr;
     output_string out ";"
+  | `Assignment (ident, expr) ->
+    output_string out ident;
+    output_string out "=";
+    print_expression out expr;
+    output_string out ";"
   | `If (expr, stmt) -> print_if_statement out expr stmt
-  | `IfElse (expr, thenStmt, elseStmt) -> print_if_else_statement out expr thenStmt elseStmt
+  | `IfElse (expr, thenStmt, elseStmt) ->
+    print_if_else_statement out expr thenStmt elseStmt
   | `Empty -> ()
 
 and print_statements out (stmts: statements) =

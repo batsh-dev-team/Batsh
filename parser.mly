@@ -6,6 +6,7 @@
 %token FALSE
 %token IF
 %token ELSE
+%token EQUAL
 %token LEFT_PAREN
 %token RIGHT_PAREN
 %token LEFT_BRACK
@@ -41,7 +42,10 @@ statement:
   | SEMICOLON; { `Empty }
   | expr = expression; SEMICOLON { `Expression expr }
   | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE; { `Block stmts }
-  | stmt = if_statement; { stmt } ;
+  | ident = IDENTIFIER; EQUAL; expr = expression;
+      { `Assignment (ident, expr) }
+  | stmt = if_statement; { stmt }
+  ;
 
 if_statement:
   | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement; %prec IF;
@@ -52,8 +56,8 @@ if_statement:
   ;
 
 expression:
-  | identifier = IDENTIFIER
-    { `Identifier identifier }
+  | ident = IDENTIFIER
+    { `Identifier ident }
   | s = STRING                                { `String s   }
   | i = INT                                   { `Int i      }
   | x = FLOAT                                 { `Float x    }
