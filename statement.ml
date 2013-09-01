@@ -4,6 +4,7 @@ type expression = [
   | `Int of int
   | `List of expression list
   | `String of string
+  | `Identifier of string
   | `Plus of (expression * expression)
   | `Minus of (expression * expression)
   | `Multiply of (expression * expression)
@@ -24,6 +25,7 @@ open Core.Std
 
 let rec print_expression out (expr: expression) =
   match expr with
+  | `Identifier identifier -> output_string out identifier
   | `Int number -> output_string out (string_of_int number)
   | `Bool true  -> output_string out "true"
   | `Bool false -> output_string out "false"

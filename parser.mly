@@ -1,6 +1,7 @@
 %token <int> INT
 %token <float> FLOAT
 %token <string> STRING
+%token <string> IDENTIFIER
 %token TRUE
 %token FALSE
 %token IF
@@ -51,6 +52,8 @@ if_statement:
   ;
 
 expression:
+  | identifier = IDENTIFIER
+    { `Identifier identifier }
   | s = STRING                                { `String s   }
   | i = INT                                   { `Int i      }
   | x = FLOAT                                 { `Float x    }

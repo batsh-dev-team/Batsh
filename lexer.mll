@@ -21,7 +21,7 @@ let float = digit* frac? exp?
 
 let white = [' ' '\t']+
 let newline = '\r' | '\n' | "\r\n"
-let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
+let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 
 rule read =
   parse
@@ -47,6 +47,7 @@ rule read =
   | '*'      { MULTIPLY }
   | '/'      { DIVIDE }
   | '%'      { MODULO }
+  | identifier { IDENTIFIER (Lexing.lexeme lexbuf) }
   | eof      { EOF }
   | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
 
