@@ -49,7 +49,7 @@ statement:
       { Statement.Expression expr }
   | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE;
       { Statement.Block stmts }
-  | ident = IDENTIFIER; EQUAL; expr = expression;
+  | ident = IDENTIFIER; EQUAL; expr = expression; SEMICOLON;
       { Statement.Assignment (ident, expr) }
   | stmt = if_statement; { stmt }
   ;
@@ -80,6 +80,8 @@ expression:
       { Statement.List vl }
   | expr = binary_expression;
       { expr }
+  | LEFT_PAREN; expr = expression; RIGHT_PAREN;
+      { Statement.Parentheses expr }
   ;
 
 binary_expression:

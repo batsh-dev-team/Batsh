@@ -12,6 +12,7 @@ type expression =
   | Multiply of (expression * expression)
   | Divide of (expression * expression)
   | Modulo of (expression * expression)
+  | Parentheses of expression
 
 type statement = 
   | Block of (statements)
@@ -33,6 +34,10 @@ let rec print_expression out (expr: expression) =
   | Bool false -> output_string out "false"
   | Plus _ | Minus _ | Multiply _ | Divide _ ->
     print_binary_expression out expr
+  | Parentheses expr ->
+    output_string out "(";
+    print_expression out expr;
+    output_string out ")"
   | _ -> output_string out "???"
 
 and print_binary_expression out (expr: expression) : unit =
