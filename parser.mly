@@ -15,6 +15,9 @@
 %token COMMA
 %token EOF
 
+%nonassoc IF
+%nonassoc ELSE
+
 %start <Statement.statements> prog
 
 %%
@@ -32,11 +35,11 @@ statement:
   | stmt = if_statement; { stmt } ;
 
 if_statement:
+  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement; %prec IF;
+      { `If (expr, thenStmt) }
   | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
       ELSE; elseStmt = statement;
       { `IfElse (expr, thenStmt, elseStmt) }
-  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
-      { `If (expr, thenStmt) }
   ;
 
 expression:
