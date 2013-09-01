@@ -42,8 +42,13 @@ rule read =
   | ']'      { RIGHT_BRACK }
   | ';'      { SEMICOLON }
   | ','      { COMMA }
-  | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
+  | '+'      { PLUS }
+  | '-'      { MINUS }
+  | '*'      { MULTIPLY }
+  | '/'      { DIVIDE }
+  | '%'      { MODULO }
   | eof      { EOF }
+  | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
 
 and read_string buf =
   parse

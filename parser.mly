@@ -13,7 +13,15 @@
 %token RIGHT_BRACE
 %token SEMICOLON
 %token COMMA
+%token PLUS
+%token MINUS
+%token MULTIPLY
+%token DIVIDE
+%token MODULO
 %token EOF
+
+%left PLUS MINUS
+%left MULTIPLY DIVIDE MODULO
 
 %nonassoc IF
 %nonassoc ELSE
@@ -46,9 +54,24 @@ expression:
   | s = STRING                                { `String s   }
   | i = INT                                   { `Int i      }
   | x = FLOAT                                 { `Float x    }
-  | LEFT_BRACK; vl = list_fields; RIGHT_BRACK { `List vl    }
   | TRUE                                      { `Bool true  }
-  | FALSE                                     { `Bool false } ;
+  | FALSE                                     { `Bool false }
+  | LEFT_BRACK; vl = list_fields; RIGHT_BRACK { `List vl    }
+  | expr = binary_expression;                 { expr }
+  ;
+
+binary_expression:
+  | left = expression; PLUS; right = expression;
+      { `Plus (left, right) }
+  | left = expression; MINUS; right = expression;
+      { `Minus (left, right) }
+  | left = expression; MULTIPLY; right = expression;
+      { `Multiply (left, right) }
+  | left = expression; DIVIDE; right = expression;
+      { `Divide (left, right) }
+  | left = expression; MODULO; right = expression;
+      { `Modulo (left, right) }
+  ;
 
 list_fields:
     vl = separated_list(COMMA, expression)         { vl } ;

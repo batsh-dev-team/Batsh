@@ -4,6 +4,11 @@ type expression = [
   | `Int of int
   | `List of expression list
   | `String of string
+  | `Plus of (expression * expression)
+  | `Minus of (expression * expression)
+  | `Multiply of (expression * expression)
+  | `Divide of (expression * expression)
+  | `Modulo of (expression * expression)
 ]
 
 type statement = [
@@ -17,11 +22,38 @@ and statements = statement list
 
 open Core.Std
 
-let print_expression out (expr: expression) =
+let rec print_expression out (expr: expression) =
   match expr with
+  | `Int number -> output_string out (string_of_int number)
   | `Bool true  -> output_string out "true"
   | `Bool false -> output_string out "false"
+  | `Plus _ | `Minus _ | `Multiply _ | `Divide _ ->
+    print_binary_expression out expr
   | _ -> output_string out "???"
+
+and print_binary_expression out (expr: expression) : unit =
+  match expr with
+  | `Plus (left, right) ->
+    print_expression out left;
+    output_string out "+";
+    print_expression out right
+  | `Minus (left, right) ->
+    print_expression out left;
+    output_string out "-";
+    print_expression out right
+  | `Multiply (left, right) ->
+    print_expression out left;
+    output_string out "*";
+    print_expression out right
+  | `Divide (left, right) ->
+    print_expression out left;
+    output_string out "/";
+    print_expression out right
+  | `Modulo (left, right) ->
+    print_expression out left;
+    output_string out "%";
+    print_expression out right
+  | _ -> assert false
 
 let rec print_statement out (stmt: statement) =
   match stmt with
