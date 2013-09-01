@@ -33,52 +33,69 @@
 %%
 
 prog:
-    stmts = statement_list; EOF; { stmts };
+    stmts = statement_list; EOF;
+      { stmts }
+  ;
 
 statement_list:
-    stmts = list(statement); { stmts } ;
+    stmts = list(statement);
+      { stmts }
+  ;
 
 statement:
-  | SEMICOLON; { `Empty }
-  | expr = expression; SEMICOLON { `Expression expr }
-  | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE; { `Block stmts }
+  | SEMICOLON;
+      { Statement.Empty }
+  | expr = expression; SEMICOLON;
+      { Statement.Expression expr }
+  | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE;
+      { Statement.Block stmts }
   | ident = IDENTIFIER; EQUAL; expr = expression;
-      { `Assignment (ident, expr) }
+      { Statement.Assignment (ident, expr) }
   | stmt = if_statement; { stmt }
   ;
 
 if_statement:
-  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement; %prec IF;
-      { `If (expr, thenStmt) }
+  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
+      %prec IF;
+      { Statement.If (expr, thenStmt) }
   | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
       ELSE; elseStmt = statement;
-      { `IfElse (expr, thenStmt, elseStmt) }
+      { Statement.IfElse (expr, thenStmt, elseStmt) }
   ;
 
 expression:
   | ident = IDENTIFIER
-    { `Identifier ident }
-  | s = STRING                                { `String s   }
-  | i = INT                                   { `Int i      }
-  | x = FLOAT                                 { `Float x    }
-  | TRUE                                      { `Bool true  }
-  | FALSE                                     { `Bool false }
-  | LEFT_BRACK; vl = list_fields; RIGHT_BRACK { `List vl    }
-  | expr = binary_expression;                 { expr }
+      { Statement.Identifier ident }
+  | s = STRING
+      { Statement.String s }
+  | i = INT
+      { Statement.Int i }
+  | x = FLOAT
+      { Statement.Float x }
+  | TRUE
+      { Statement.Bool true }
+  | FALSE
+      { Statement.Bool false }
+  | LEFT_BRACK; vl = list_fields; RIGHT_BRACK
+      { Statement.List vl }
+  | expr = binary_expression;
+      { expr }
   ;
 
 binary_expression:
   | left = expression; PLUS; right = expression;
-      { `Plus (left, right) }
+      { Statement.Plus (left, right) }
   | left = expression; MINUS; right = expression;
-      { `Minus (left, right) }
+      { Statement.Minus (left, right) }
   | left = expression; MULTIPLY; right = expression;
-      { `Multiply (left, right) }
+      { Statement.Multiply (left, right) }
   | left = expression; DIVIDE; right = expression;
-      { `Divide (left, right) }
+      { Statement.Divide (left, right) }
   | left = expression; MODULO; right = expression;
-      { `Modulo (left, right) }
+      { Statement.Modulo (left, right) }
   ;
 
 list_fields:
-    vl = separated_list(COMMA, expression)         { vl } ;
+    vl = separated_list(COMMA, expression)
+      { vl }
+  ;
