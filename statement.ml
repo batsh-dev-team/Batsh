@@ -1,3 +1,7 @@
+open Core.Std
+
+(*********** Definition ***********)
+
 type identifier = string
 
 type expression =
@@ -24,7 +28,7 @@ type statement =
 
 and statements = statement list
 
-open Core.Std
+(*********** Output ***********)
 
 let rec print_expression out (expr: expression) =
   match expr with

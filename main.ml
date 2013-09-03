@@ -22,6 +22,11 @@ let parse_and_prettify (lexbuf: Lexing.lexbuf) =
   let ast = parse_and_print_error lexbuf in
   printf "%a\n" Statement.print_ast ast
 
+let compile_to_bash (lexbuf: Lexing.lexbuf) =
+  let ast = parse_and_print_error lexbuf in
+  let bash_ast = Bash.compile ast in
+  printf "%a\n" Bash.print bash_ast
+
 let main (filename: string) (format: bool) () =
   let inx = In_channel.create filename in
   let lexbuf = Lexing.from_channel inx in
@@ -29,7 +34,7 @@ let main (filename: string) (format: bool) () =
   if format then
     parse_and_prettify lexbuf
   else
-    failwith "Not implemented yet";
+    compile_to_bash lexbuf;
   In_channel.close inx
 
 let () =
