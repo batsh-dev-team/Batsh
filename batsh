@@ -1,2 +1,2 @@
 ocamlbuild -use-menhir -use-ocamlfind main.byte
-./main.byte test.c
+./main.byte $@
