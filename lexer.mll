@@ -4,12 +4,13 @@ open Parser
 
 exception SyntaxError of string
 
-let next_line lexbuf =
+let next_line (lexbuf: Lexing.lexbuf) =
   let pos = lexbuf.lex_curr_p in
   lexbuf.lex_curr_p <-
     { pos with pos_bol = lexbuf.lex_curr_pos;
                pos_lnum = pos.pos_lnum + 1
     }
+
 }
 
 let int = '-'? ['0'-'9'] ['0'-'9']*

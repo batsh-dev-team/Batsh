@@ -2,12 +2,12 @@ open Core.Std
 open Lexer
 open Lexing
 
-let print_position outx lexbuf =
-  let pos = lexbuf.lex_curr_p in
-  fprintf outx "%s:%d:%d" pos.pos_fname
-    pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
-
-let parse_with_error lexbuf =
+let parse_and_print_error (lexbuf: Lexing.lexbuf) =
+  let print_position (outx: out_channel) (lexbuf: Lexing.lexbuf) =
+    let pos = lexbuf.lex_curr_p in
+    fprintf outx "%s:%d:%d" pos.pos_fname
+      pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
+  in
   try
     Parser.prog Lexer.read lexbuf
   with
@@ -18,16 +18,16 @@ let parse_with_error lexbuf =
     fprintf stderr "%a: syntax error\n" print_position lexbuf;
     exit (-1)
 
-let rec parse_and_print lexbuf =
-  let ast = parse_with_error lexbuf in
+let parse_and_prettify (lexbuf: Lexing.lexbuf) =
+  let ast = parse_and_print_error lexbuf in
   printf "%a\n" Statement.print_ast ast
 
-let main (filename: string) (format :bool) () =
+let main (filename: string) (format: bool) () =
   let inx = In_channel.create filename in
   let lexbuf = Lexing.from_channel inx in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
   if format then
-    parse_and_print lexbuf
+    parse_and_prettify lexbuf
   else
     failwith "Not implemented yet";
   In_channel.close inx
