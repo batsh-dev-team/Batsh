@@ -22,15 +22,31 @@ let rec parse_and_print lexbuf =
   let ast = parse_with_error lexbuf in
   printf "%a\n" Statement.print_ast ast
 
-let loop filename () =
+let main (filename: string) (format :bool) () =
   let inx = In_channel.create filename in
   let lexbuf = Lexing.from_channel inx in
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = filename };
-  parse_and_print lexbuf;
+  if format then
+    parse_and_print lexbuf
+  else
+    failwith "Not implemented yet";
   In_channel.close inx
 
 let () =
-  Command.basic ~summary:"Batsh"
-    Command.Spec.(empty +> anon ("filename" %: file))
-    loop 
-  |> Command.run
+  let regular_file = Command.Spec.Arg_type.create (fun filename ->
+    match Sys.is_file filename with
+    | `Yes -> filename
+    | `No | `Unknown ->
+      eprintf "%s is not a regular file.\n%!" filename;
+      exit 1
+  )
+  in
+  Command.basic
+    ~summary:"Batsh"
+    ~readme:(fun () -> "Write once and runs on both UNIX and Windows.")
+    Command.Spec.(
+      empty
+      +> anon ("filename" %: regular_file)
+      +> flag "-format" no_arg ~doc:" print prettified source code"
+    ) main
+  |> Command.run ~version:"0.0" ~build_info:""
