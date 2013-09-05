@@ -20,8 +20,10 @@
 %token MULTIPLY
 %token DIVIDE
 %token MODULO
+%token CONCAT
 %token EOF
 
+%left CONCAT
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MODULO
 
@@ -95,6 +97,8 @@ binary_expression:
       { Statement.Divide (left, right) }
   | left = expression; MODULO; right = expression;
       { Statement.Modulo (left, right) }
+  | left = expression; CONCAT; right = expression;
+      { Statement.Concat (left, right) }
   ;
 
 list_fields:

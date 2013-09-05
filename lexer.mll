@@ -49,6 +49,7 @@ rule read =
   | '*'      { MULTIPLY }
   | '/'      { DIVIDE }
   | '%'      { MODULO }
+  | "++"     { CONCAT }
   | identifier { IDENTIFIER (Lexing.lexeme lexbuf) }
   | eof      { EOF }
   | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }

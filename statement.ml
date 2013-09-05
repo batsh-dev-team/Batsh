@@ -16,6 +16,7 @@ type expression =
   | Multiply of (expression * expression)
   | Divide of (expression * expression)
   | Modulo of (expression * expression)
+  | Concat of (expression * expression)
   | Parentheses of expression
 
 type statement = 
@@ -38,7 +39,7 @@ let rec print_expression out (expr: expression) =
   | String str -> output_string out (sprintf "\"%s\"" str)
   | Bool true  -> output_string out "true"
   | Bool false -> output_string out "false"
-  | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ ->
+  | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ | Concat _ ->
     print_binary_expression out expr
   | Parentheses expr ->
     output_string out "(";
@@ -68,6 +69,10 @@ and print_binary_expression out (expr: expression) =
     print_expression out left;
     output_string out " % ";
     print_expression out right
+  | Concat (left, right) ->
+    print_expression out left;
+    output_string out " ++ ";
+    print_expression out right
   | _ -> assert false
 
 let print_indent out (indent: int) =
@@ -93,7 +98,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
 and print_statements out (stmts: statements) ~(indent: int) =
   List.iter stmts ~f: (fun stmt ->
     print_indent out indent;
-    print_statement out stmt ~indent
+    print_statement out stmt ~indent;
+    output_string out "\n"
   )
 
 and print_block_statement out (inner_stmts: statements) ~(indent: int) =
