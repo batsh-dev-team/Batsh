@@ -84,6 +84,13 @@ expression:
       { expr }
   | LEFT_PAREN; expr = expression; RIGHT_PAREN;
       { Statement.Parentheses expr }
+  | ident = IDENTIFIER; LEFT_PAREN; exprs = expression_list; RIGHT_PAREN;
+      { Statement.Call (ident, exprs) }
+  ;
+
+expression_list:
+    exprs = separated_list(COMMA, expression);
+      { exprs }
   ;
 
 binary_expression:

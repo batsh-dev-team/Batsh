@@ -18,6 +18,7 @@ type expression =
   | Modulo of (expression * expression)
   | Concat of (expression * expression)
   | Parentheses of expression
+  | Call of (identifier * expression list)
 
 type statement = 
   | Block of (statements)
@@ -45,7 +46,20 @@ let rec print_expression out (expr: expression) =
     output_string out "(";
     print_expression out expr;
     output_string out ")"
+  | Call (ident, exprs) ->
+    output_string out ident;
+    output_string out "(";
+    print_expressions out exprs;
+    output_string out ")"
   | _ -> output_string out "???"
+
+and print_expressions out (exprs: expression list) =
+  let num_exprs = List.length exprs in
+  List.iteri exprs ~f: (fun i expr ->
+    print_expression out expr;
+    if i <> num_exprs - 1 then
+      output_string out ", "
+  )
 
 and print_binary_expression out (expr: expression) =
   match expr with

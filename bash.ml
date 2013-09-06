@@ -21,9 +21,12 @@ type concatenation =
   | Result of arithmetic
   | Concat of (concatenation * concatenation)
 
+type command = concatenation list
+
 type statement = 
   | Let of (identifier * arithmetic)
   | Assignment of (identifier * concatenation)
+  | Command of (concatenation * command)
   | Empty
 
 and statements = statement list
@@ -32,7 +35,8 @@ and statements = statement list
 
 let rec is_arith (expr: Statement.expression) :bool =
   match expr with
-  | Statement.String _ | Statement.List _ | Statement.Concat _ ->
+  | Statement.String _ | Statement.List _ | Statement.Concat _ 
+  | Statement.Call _ ->
       false
   | Statement.Plus (left, right) -> is_arith left && is_arith right
   | Statement.Minus (left, right) -> is_arith left && is_arith right
@@ -64,6 +68,7 @@ let rec compile_expr_to_arith (expr: Statement.expression) :arithmetic =
       Parentheses (compile_expr_to_arith expr)
   | Statement.List _ -> assert false
   | Statement.Concat _ -> assert false
+  | Statement.Call _ -> assert false
 
 let rec compile_expr_to_concat (expr: Statement.expression) :concatenation =
   if is_arith expr then
@@ -87,6 +92,9 @@ let compile_statement (stmt: Statement.statement) :statement =
         Let (ident, compile_expr_to_arith expr)
       else
         Assignment (ident, compile_expr_to_concat expr)
+  | Statement.Expression Statement.Call (ident, exprs) ->
+    let params = List.map exprs ~f: compile_expr_to_concat in
+    Command (String ident, params)
   | _ -> Empty
 
 let compile (program: Statement.statements) :statements =
@@ -157,6 +165,12 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
       output_string out ident;
       output_string out "=";
       print_concat out concat
+  | Command (ident, params) ->
+      print_concat out ident;
+      List.iter params ~f: (fun param ->
+        output_string out " ";
+        print_concat out param
+      )
   | Empty -> ()
 
 and print_statements out (stmts: statements) ~(indent: int) =
