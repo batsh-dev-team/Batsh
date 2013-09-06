@@ -41,17 +41,12 @@ let rec print_expression out (expr: expression) =
   | Bool true  -> output_string out "true"
   | Bool false -> output_string out "false"
   | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ | Concat _ ->
-    print_binary_expression out expr
+      print_binary_expression out expr
   | Parentheses expr ->
-    output_string out "(";
-    print_expression out expr;
-    output_string out ")"
+      fprintf out "(%a)" print_expression expr
   | Call (ident, exprs) ->
-    output_string out ident;
-    output_string out "(";
-    print_expressions out exprs;
-    output_string out ")"
-  | _ -> output_string out "???"
+      fprintf out "%s(%a)" ident print_expressions exprs
+  | List _ -> ()
 
 and print_expressions out (exprs: expression list) =
   let num_exprs = List.length exprs in
@@ -62,31 +57,23 @@ and print_expressions out (exprs: expression list) =
   )
 
 and print_binary_expression out (expr: expression) =
+  let print_binary operator left right =
+    fprintf out "%a %s %a"
+      print_expression left operator print_expression right
+  in
   match expr with
   | Plus (left, right) ->
-    print_expression out left;
-    output_string out " + ";
-    print_expression out right
+      print_binary "+" left right
   | Minus (left, right) ->
-    print_expression out left;
-    output_string out " - ";
-    print_expression out right
+      print_binary "-" left right
   | Multiply (left, right) ->
-    print_expression out left;
-    output_string out " * ";
-    print_expression out right
+      print_binary "*" left right
   | Divide (left, right) ->
-    print_expression out left;
-    output_string out " / ";
-    print_expression out right
+      print_binary "/" left right
   | Modulo (left, right) ->
-    print_expression out left;
-    output_string out " % ";
-    print_expression out right
+      print_binary "%" left right
   | Concat (left, right) ->
-    print_expression out left;
-    output_string out " ++ ";
-    print_expression out right
+      print_binary "++" left right
   | _ -> assert false
 
 let print_indent out (indent: int) =
@@ -99,10 +86,7 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
       print_expression out expr;
       output_string out ";"
   | Assignment (ident, expr) ->
-      output_string out ident;
-      output_string out " = ";
-      print_expression out expr;
-      output_string out ";"
+      fprintf out "%s = %a;" ident print_expression expr
   | If (expr, stmt) ->
       print_if_statement out expr stmt ~indent
   | IfElse (expr, thenStmt, elseStmt) ->
@@ -125,9 +109,7 @@ and print_block_statement out (inner_stmts: statements) ~(indent: int) =
 
 and print_if_statement
     out (expr: expression) (stmt: statement) ~(indent: int) =
-  output_string out "if (";
-  print_expression out expr;
-  output_string out ") ";
+  fprintf out "if (%a) " print_expression expr;
   print_statement out stmt ~indent
 
 and print_if_else_statement
@@ -136,10 +118,7 @@ and print_if_else_statement
     (thenStmt: statement)
     (elseStmt: statement)
     ~(indent: int) =
-  output_string out "if (";
-  print_expression out expr;
-  output_string out ") ";
-  print_statement out thenStmt ~indent;
+  print_if_statement out expr thenStmt ~indent;
   output_string out " else ";
   print_statement out elseStmt ~indent
 

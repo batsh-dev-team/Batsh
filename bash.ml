@@ -108,47 +108,35 @@ let rec print_arith out (expr: arithmetic) =
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
   | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ ->
-    print_binary_arith out expr
+      print_binary_arith out expr
   | Parentheses expr ->
-    output_string out "(";
-    print_arith out expr;
-    output_string out ")"
+      fprintf out "(%a)" print_arith expr
 
 and print_binary_arith out (expr: arithmetic) =
+  let print_binary operator left right =
+    fprintf out "%a %s %a" print_arith left operator print_arith right
+  in
   match expr with
   | Plus (left, right) ->
-    print_arith out left;
-    output_string out " + ";
-    print_arith out right
+      print_binary "+" left right
   | Minus (left, right) ->
-    print_arith out left;
-    output_string out " - ";
-    print_arith out right
+      print_binary "-" left right
   | Multiply (left, right) ->
-    print_arith out left;
-    output_string out " * ";
-    print_arith out right
+      print_binary "*" left right
   | Divide (left, right) ->
-    print_arith out left;
-    output_string out " / ";
-    print_arith out right
+      print_binary "/" left right
   | Modulo (left, right) ->
-    print_arith out left;
-    output_string out " % ";
-    print_arith out right
+      print_binary "%" left right
   | _ -> assert false
 
 let rec print_concat out (concat: concatenation) =
   match concat with
-  | Variable var -> fprintf out "$%s" var
+  | Variable var | Result Identifier var -> fprintf out "$%s" var
   | String str -> fprintf out "\"%s\"" str
   | Result arith ->
-      output_string out "$((";
-      print_arith out arith;
-      output_string out "))"
+      fprintf out "$((%a))" print_arith arith
   | Concat (left, right) ->
-      print_concat out left;
-      print_concat out right
+      fprintf out "%a%a" print_concat left print_concat right
 
 let print_indent out (indent: int) =
   output_string out (String.make indent ' ')
@@ -156,15 +144,9 @@ let print_indent out (indent: int) =
 let rec print_statement out (stmt: statement) ~(indent: int) =
   match stmt with
   | Let (ident, arith) ->
-      output_string out "let \"";
-      output_string out ident;
-      output_string out " = ";
-      print_arith out arith;
-      output_string out "\""
+      fprintf out "let \"%s = %a\"" ident print_arith arith
   | Assignment (ident, concat) ->
-      output_string out ident;
-      output_string out "=";
-      print_concat out concat
+      fprintf out "%s = %a" ident print_concat concat
   | Command (ident, params) ->
       print_concat out ident;
       List.iter params ~f: (fun param ->
