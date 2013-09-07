@@ -15,18 +15,18 @@ type arithmetic =
   | Modulo of (arithmetic * arithmetic)
   | Parentheses of arithmetic
 
-type concatenation =
+type expression =
   | Variable of identifier
   | String of string
   | Result of arithmetic
-  | Concat of (concatenation * concatenation)
+  | Concat of (expression * expression)
 
-type command = concatenation list
+type expressions = expression list
 
 type statement = 
   | Let of (identifier * arithmetic)
-  | Assignment of (identifier * concatenation)
-  | Command of (concatenation * command)
+  | Assignment of (identifier * expression)
+  | Command of (expression * expressions)
   | Empty
 
 and statements = statement list
@@ -70,7 +70,7 @@ let rec compile_expr_to_arith (expr: Statement.expression) :arithmetic =
   | Statement.Concat _ -> assert false
   | Statement.Call _ -> assert false
 
-let rec compile_expr_to_concat (expr: Statement.expression) :concatenation =
+let rec compile_expr (expr: Statement.expression) :expression =
   if is_arith expr then
     Result (compile_expr_to_arith expr)
   else
@@ -82,7 +82,7 @@ let rec compile_expr_to_concat (expr: Statement.expression) :concatenation =
     | Statement.String str -> String str
     | Statement.Identifier ident -> Variable ident
     | Statement.Concat (left, right) ->
-        Concat (compile_expr_to_concat left, compile_expr_to_concat right)
+        Concat (compile_expr left, compile_expr right)
     | _ -> assert false
 
 let compile_statement (stmt: Statement.statement) :statement =
@@ -91,9 +91,9 @@ let compile_statement (stmt: Statement.statement) :statement =
       if is_arith expr then
         Let (ident, compile_expr_to_arith expr)
       else
-        Assignment (ident, compile_expr_to_concat expr)
+        Assignment (ident, compile_expr expr)
   | Statement.Expression Statement.Call (ident, exprs) ->
-    let params = List.map exprs ~f: compile_expr_to_concat in
+    let params = List.map exprs ~f: compile_expr in
     Command (String ident, params)
   | _ -> Empty
 
@@ -129,14 +129,14 @@ and print_binary_arith out (expr: arithmetic) =
       print_binary "%" left right
   | _ -> assert false
 
-let rec print_concat out (concat: concatenation) =
-  match concat with
+let rec print_expression out (expr: expression) =
+  match expr with
   | Variable var | Result Identifier var -> fprintf out "$%s" var
   | String str -> fprintf out "\"%s\"" str
   | Result arith ->
       fprintf out "$((%a))" print_arith arith
   | Concat (left, right) ->
-      fprintf out "%a%a" print_concat left print_concat right
+      fprintf out "%a%a" print_expression left print_expression right
 
 let print_indent out (indent: int) =
   output_string out (String.make indent ' ')
@@ -145,13 +145,13 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
   match stmt with
   | Let (ident, arith) ->
       fprintf out "let \"%s = %a\"" ident print_arith arith
-  | Assignment (ident, concat) ->
-      fprintf out "%s = %a" ident print_concat concat
+  | Assignment (ident, expr) ->
+      fprintf out "%s=%a" ident print_expression expr
   | Command (ident, params) ->
-      print_concat out ident;
+      print_expression out ident;
       List.iter params ~f: (fun param ->
         output_string out " ";
-        print_concat out param
+        print_expression out param
       )
   | Empty -> ()
 
