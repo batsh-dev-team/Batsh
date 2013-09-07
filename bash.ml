@@ -20,13 +20,14 @@ type expression =
   | String of string
   | Result of arithmetic
   | Concat of (expression * expression)
+  | Command of (expression * expressions)
 
-type expressions = expression list
+and expressions = expression list
 
 type statement = 
   | Let of (identifier * arithmetic)
   | Assignment of (identifier * expression)
-  | Command of (expression * expressions)
+  | Expression of expression
   | Empty
 
 and statements = statement list
@@ -83,6 +84,9 @@ let rec compile_expr (expr: Statement.expression) :expression =
     | Statement.Identifier ident -> Variable ident
     | Statement.Concat (left, right) ->
         Concat (compile_expr left, compile_expr right)
+    | Statement.Call (ident, exprs) ->
+        let params = List.map exprs ~f: compile_expr in
+        Command (String ident, params)
     | _ -> assert false
 
 let compile_statement (stmt: Statement.statement) :statement =
@@ -92,9 +96,8 @@ let compile_statement (stmt: Statement.statement) :statement =
         Let (ident, compile_expr_to_arith expr)
       else
         Assignment (ident, compile_expr expr)
-  | Statement.Expression Statement.Call (ident, exprs) ->
-    let params = List.map exprs ~f: compile_expr in
-    Command (String ident, params)
+  | Statement.Expression expr ->
+      Expression (compile_expr expr)
   | _ -> Empty
 
 let compile (program: Statement.statements) :statements =
@@ -137,6 +140,18 @@ let rec print_expression out (expr: expression) =
       fprintf out "$((%a))" print_arith arith
   | Concat (left, right) ->
       fprintf out "%a%a" print_expression left print_expression right
+  | Command _ ->
+      fprintf out "$(%a)" print_command expr
+
+and print_command out (expr: expression) =
+  match expr with
+  | Command (ident, params) ->
+    print_expression out ident;
+    List.iter params ~f: (fun param ->
+      output_string out " ";
+      print_expression out param
+    )
+  | _ -> assert false
 
 let print_indent out (indent: int) =
   output_string out (String.make indent ' ')
@@ -147,12 +162,10 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
       fprintf out "let \"%s = %a\"" ident print_arith arith
   | Assignment (ident, expr) ->
       fprintf out "%s=%a" ident print_expression expr
-  | Command (ident, params) ->
-      print_expression out ident;
-      List.iter params ~f: (fun param ->
-        output_string out " ";
-        print_expression out param
-      )
+  | Expression (Command _ as expr) ->
+      print_command out expr
+  | Expression expr ->
+      print_expression out expr
   | Empty -> ()
 
 and print_statements out (stmts: statements) ~(indent: int) =
