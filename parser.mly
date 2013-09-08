@@ -21,8 +21,15 @@
 %token DIVIDE
 %token MODULO
 %token CONCAT
+%token EQ
+%token NE
+%token GT
+%token LT
+%token GE
+%token LE
 %token EOF
 
+%nonassoc EQ NE GT LT GE LE
 %left CONCAT
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MODULO
@@ -106,6 +113,18 @@ binary_expression:
       { Statement.Modulo (left, right) }
   | left = expression; CONCAT; right = expression;
       { Statement.Concat (left, right) }
+  | left = expression; EQ; right = expression;
+      { Statement.Equal (left, right) }
+  | left = expression; NE; right = expression;
+      { Statement.NotEqual (left, right) }
+  | left = expression; GT; right = expression;
+      { Statement.Greater (left, right) }
+  | left = expression; LT; right = expression;
+      { Statement.Less (left, right) }
+  | left = expression; GE; right = expression;
+      { Statement.GreaterEqual (left, right) }
+  | left = expression; LE; right = expression;
+      { Statement.LessEqual (left, right) }
   ;
 
 list_fields:

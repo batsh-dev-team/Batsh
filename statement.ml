@@ -17,6 +17,12 @@ type expression =
   | Divide of (expression * expression)
   | Modulo of (expression * expression)
   | Concat of (expression * expression)
+  | Equal of (expression * expression)
+  | NotEqual of (expression * expression)
+  | Greater of (expression * expression)
+  | Less of (expression * expression)
+  | GreaterEqual of (expression * expression)
+  | LessEqual of (expression * expression)
   | Parentheses of expression
   | Call of (identifier * expression list)
 
@@ -40,7 +46,8 @@ let rec print_expression out (expr: expression) =
   | String str -> output_string out (sprintf "\"%s\"" str)
   | Bool true  -> output_string out "true"
   | Bool false -> output_string out "false"
-  | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ | Concat _ ->
+  | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ | Concat _
+  | Equal _ | NotEqual _ | Greater _ | Less _ | GreaterEqual _ | LessEqual _ ->
       print_binary_expression out expr
   | Parentheses expr ->
       fprintf out "(%a)" print_expression expr
@@ -74,6 +81,18 @@ and print_binary_expression out (expr: expression) =
       print_binary "%" left right
   | Concat (left, right) ->
       print_binary "++" left right
+  | Equal (left, right) ->
+      print_binary "==" left right
+  | NotEqual (left, right) ->
+      print_binary "!=" left right
+  | Greater (left, right) ->
+      print_binary ">" left right
+  | Less (left, right) ->
+      print_binary "<" left right
+  | GreaterEqual (left, right) ->
+      print_binary ">=" left right
+  | LessEqual (left, right) ->
+      print_binary "<=" left right
   | _ -> assert false
 
 let print_indent out (indent: int) =

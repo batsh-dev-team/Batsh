@@ -13,6 +13,12 @@ type arithmetic =
   | Multiply of (arithmetic * arithmetic)
   | Divide of (arithmetic * arithmetic)
   | Modulo of (arithmetic * arithmetic)
+  | Equal of (arithmetic * arithmetic)
+  | NotEqual of (arithmetic * arithmetic)
+  | Greater of (arithmetic * arithmetic)
+  | Less of (arithmetic * arithmetic)
+  | GreaterEqual of (arithmetic * arithmetic)
+  | LessEqual of (arithmetic * arithmetic)
   | Parentheses of arithmetic
 
 type expression =
@@ -65,6 +71,18 @@ let rec compile_expr_to_arith (expr: Statement.expression) :arithmetic =
       Divide (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.Modulo (left, right) ->
       Modulo (compile_expr_to_arith left, compile_expr_to_arith right)
+  | Statement.Equal (left, right) ->
+      Equal (compile_expr_to_arith left, compile_expr_to_arith right)
+  | Statement.NotEqual (left, right) ->
+      NotEqual (compile_expr_to_arith left, compile_expr_to_arith right)
+  | Statement.Greater (left, right) ->
+      Greater (compile_expr_to_arith left, compile_expr_to_arith right)
+  | Statement.Less (left, right) ->
+      Less (compile_expr_to_arith left, compile_expr_to_arith right)
+  | Statement.GreaterEqual (left, right) ->
+      GreaterEqual (compile_expr_to_arith left, compile_expr_to_arith right)
+  | Statement.LessEqual (left, right) ->
+      LessEqual (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.Parentheses expr ->
       Parentheses (compile_expr_to_arith expr)
   | Statement.List _ -> assert false
@@ -110,7 +128,8 @@ let rec print_arith out (expr: arithmetic) =
   | Identifier identifier -> output_string out identifier
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
-  | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ ->
+  | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _
+  | Equal _ | NotEqual _ | Greater _ | Less _ | GreaterEqual _ | LessEqual _ ->
       print_binary_arith out expr
   | Parentheses expr ->
       fprintf out "(%a)" print_arith expr
@@ -130,6 +149,18 @@ and print_binary_arith out (expr: arithmetic) =
       print_binary "/" left right
   | Modulo (left, right) ->
       print_binary "%" left right
+  | Equal (left, right) ->
+      print_binary "==" left right
+  | NotEqual (left, right) ->
+      print_binary "!=" left right
+  | Greater (left, right) ->
+      print_binary ">" left right
+  | Less (left, right) ->
+      print_binary "<" left right
+  | GreaterEqual (left, right) ->
+      print_binary ">=" left right
+  | LessEqual (left, right) ->
+      print_binary "<=" left right
   | _ -> assert false
 
 let rec print_expression out (expr: expression) =

@@ -50,6 +50,12 @@ rule read =
   | '/'      { DIVIDE }
   | '%'      { MODULO }
   | "++"     { CONCAT }
+  | "=="     { EQ }
+  | "!="     { NE }
+  | '>'      { GT }
+  | '<'      { LT }
+  | ">="     { GE }
+  | "<="     { LE }
   | identifier { IDENTIFIER (Lexing.lexeme lexbuf) }
   | eof      { EOF }
   | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
