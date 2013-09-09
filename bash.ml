@@ -35,6 +35,7 @@ type statement =
   | Assignment of (identifier * expression)
   | Expression of expression
   | If of (expression * statements)
+  | IfElse of (expression * statements * statements)
   | Empty
 
 and statements = statement list
@@ -119,16 +120,28 @@ let rec compile_statement (stmt: Statement.statement) :statement =
       Expression (compile_expr expr)
   | Statement.If (expr, stmt) ->
       compile_if_statement expr stmt
+  | Statement.IfElse (expr, thenStmt, elseStmt) ->
+      compile_if_else_statement expr thenStmt elseStmt
   | _ -> Empty (* TODO should be removed *)
 
-and compile_if_statement (expr: Statement.expression) stmt :statement =
-  let thenStmts = match stmt with
+and compile_block (stmt: Statement.statement) =
+  match stmt with
+  | Statement.Block [] ->
+      [Empty]
   | Statement.Block stmts ->
       List.map stmts ~f: compile_statement
   | _ ->
       [compile_statement stmt]
-  in
-  If (compile_expr expr, thenStmts)
+
+and compile_if_statement (expr: Statement.expression) stmt :statement =
+  If (compile_expr expr, compile_block stmt)
+
+and compile_if_else_statement
+    (expr: Statement.expression)
+    (thenStmt: Statement.statement)
+    (elseStmt: Statement.statement)
+    :statement =
+  IfElse (compile_expr expr, compile_block thenStmt, compile_block elseStmt)
 
 let compile (program: Statement.statements) :statements =
   List.map program ~f: compile_statement
@@ -211,12 +224,29 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
       print_expression out expr
   | If (expr, stmts) ->
       print_if out expr stmts ~indent
-  | Empty -> ()
+  | IfElse (expr, then_stmts, else_stmts) ->
+      print_if_else out expr then_stmts else_stmts ~indent
+  | Empty ->
+      output_string out "true"
 
 and print_if out (expr: expression) (stmts: statements) ~(indent: int) =
   let print_statements_indented = print_statements ~indent: (indent + 2) in
-  fprintf out "if [ %a ]; then\n%afi"
-      print_expression expr print_statements_indented stmts
+  fprintf out "if [ %a ]; then\n%a%afi"
+      print_expression expr print_statements_indented stmts print_indent indent
+
+and print_if_else
+  (out: out_channel)
+  (expr: expression)
+  (then_stmts: statements)
+  (else_stmts: statements)
+  ~(indent: int) =
+  let print_statements_indented = print_statements ~indent: (indent + 2) in
+  fprintf out "if [ %a ]; then\n%a%aelse\n%a%afi"
+      print_expression expr
+      print_statements_indented then_stmts
+      print_indent indent
+      print_statements_indented else_stmts
+      print_indent indent
 
 and print_statements out (stmts: statements) ~(indent: int) =
   List.iter stmts ~f: (fun stmt ->
