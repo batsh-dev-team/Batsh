@@ -34,6 +34,7 @@ type statement =
   | Let of (identifier * arithmetic)
   | Assignment of (identifier * expression)
   | Expression of expression
+  | If of (expression * statements)
   | Empty
 
 and statements = statement list
@@ -107,7 +108,7 @@ let rec compile_expr (expr: Statement.expression) :expression =
         Command (String ident, params)
     | _ -> assert false
 
-let compile_statement (stmt: Statement.statement) :statement =
+let rec compile_statement (stmt: Statement.statement) :statement =
   match stmt with
   | Statement.Assignment (ident, expr) ->
       if is_arith expr then
@@ -116,7 +117,18 @@ let compile_statement (stmt: Statement.statement) :statement =
         Assignment (ident, compile_expr expr)
   | Statement.Expression expr ->
       Expression (compile_expr expr)
-  | _ -> Empty
+  | Statement.If (expr, stmt) ->
+      compile_if_statement expr stmt
+  | _ -> Empty (* TODO should be removed *)
+
+and compile_if_statement (expr: Statement.expression) stmt :statement =
+  let thenStmts = match stmt with
+  | Statement.Block stmts ->
+      List.map stmts ~f: compile_statement
+  | _ ->
+      [compile_statement stmt]
+  in
+  If (compile_expr expr, thenStmts)
 
 let compile (program: Statement.statements) :statements =
   List.map program ~f: compile_statement
@@ -197,7 +209,14 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
       print_command out expr
   | Expression expr ->
       print_expression out expr
+  | If (expr, stmts) ->
+      print_if out expr stmts ~indent
   | Empty -> ()
+
+and print_if out (expr: expression) (stmts: statements) ~(indent: int) =
+  let print_statements_indented = print_statements ~indent: (indent + 2) in
+  fprintf out "if [ %a ]; then\n%afi"
+      print_expression expr print_statements_indented stmts
 
 and print_statements out (stmts: statements) ~(indent: int) =
   List.iter stmts ~f: (fun stmt ->
