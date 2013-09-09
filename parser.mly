@@ -29,7 +29,8 @@
 %token LE
 %token EOF
 
-%nonassoc EQ NE GT LT GE LE
+%nonassoc EQ NE
+%nonassoc GT LT GE LE
 %left CONCAT
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MODULO
