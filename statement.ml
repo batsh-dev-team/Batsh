@@ -113,18 +113,15 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
   | Empty -> ()
 
 and print_statements out (stmts: statements) ~(indent: int) =
+  let print_statement_indented = print_statement ~indent in
   List.iter stmts ~f: (fun stmt ->
-    print_indent out indent;
-    print_statement out stmt ~indent;
-    output_string out "\n"
+    fprintf out "%a%a\n" print_indent indent print_statement_indented stmt
   )
 
 and print_block_statement out (inner_stmts: statements) ~(indent: int) =
-  output_string out "{\n";
-  print_statements out inner_stmts ~indent:(indent + 2);
-  output_string out "\n";
-  print_indent out indent;
-  output_string out "}"
+  let print_statements_indented = print_statements ~indent:(indent + 2) in
+  fprintf out "{\n%a%a}"
+      print_statements_indented inner_stmts print_indent indent
 
 and print_if_statement
     out (expr: expression) (stmt: statement) ~(indent: int) =
@@ -132,7 +129,7 @@ and print_if_statement
   print_statement out stmt ~indent
 
 and print_if_else_statement
-    out
+    (out: out_channel)
     (expr: expression)
     (thenStmt: statement)
     (elseStmt: statement)
