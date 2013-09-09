@@ -231,7 +231,7 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
 
 and print_if out (expr: expression) (stmts: statements) ~(indent: int) =
   let print_statements_indented = print_statements ~indent: (indent + 2) in
-  fprintf out "if [ %a ]; then\n%a%afi"
+  fprintf out "if [ %a = 1 ]; then\n%a%afi"
       print_expression expr print_statements_indented stmts print_indent indent
 
 and print_if_else
@@ -241,7 +241,7 @@ and print_if_else
   (else_stmts: statements)
   ~(indent: int) =
   let print_statements_indented = print_statements ~indent: (indent + 2) in
-  fprintf out "if [ %a ]; then\n%a%aelse\n%a%afi"
+  fprintf out "if [ %a = 1 ]; then\n%a%aelse\n%a%afi"
       print_expression expr
       print_statements_indented then_stmts
       print_indent indent
