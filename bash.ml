@@ -13,12 +13,12 @@ type arithmetic =
   | Multiply of (arithmetic * arithmetic)
   | Divide of (arithmetic * arithmetic)
   | Modulo of (arithmetic * arithmetic)
-  | Equal of (arithmetic * arithmetic)
-  | NotEqual of (arithmetic * arithmetic)
-  | Greater of (arithmetic * arithmetic)
-  | Less of (arithmetic * arithmetic)
-  | GreaterEqual of (arithmetic * arithmetic)
-  | LessEqual of (arithmetic * arithmetic)
+  | AEQ of (arithmetic * arithmetic)
+  | ANE of (arithmetic * arithmetic)
+  | AGT of (arithmetic * arithmetic)
+  | ALT of (arithmetic * arithmetic)
+  | AGE of (arithmetic * arithmetic)
+  | ALE of (arithmetic * arithmetic)
   | Parentheses of arithmetic
 
 type expression =
@@ -26,6 +26,10 @@ type expression =
   | String of string
   | Result of arithmetic
   | Concat of (expression * expression)
+  | SEQ of (expression * expression)
+  | SNE of (expression * expression)
+  | SGT of (expression * expression)
+  | SLT of (expression * expression)
   | Command of (expression * expressions)
 
 and expressions = expression list
@@ -44,16 +48,26 @@ and statements = statement list
 
 let rec is_arith (expr: Statement.expression) :bool =
   match expr with
+  | Statement.Bool _ | Statement.Int _ | Statement.Float _
+  | Statement.Identifier _ ->
+      true
   | Statement.String _ | Statement.List _ | Statement.Concat _ 
   | Statement.Call _ ->
       false
-  | Statement.Plus (left, right) -> is_arith left && is_arith right
-  | Statement.Minus (left, right) -> is_arith left && is_arith right
-  | Statement.Multiply (left, right) -> is_arith left && is_arith right
-  | Statement.Divide (left, right) -> is_arith left && is_arith right
-  | Statement.Modulo (left, right) -> is_arith left && is_arith right
-  | Statement.Parentheses expr -> is_arith expr
-  | _ -> true
+  | Statement.Parentheses expr ->
+      is_arith expr
+  | Statement.Plus (left, right)
+  | Statement.Minus (left, right)
+  | Statement.Multiply (left, right)
+  | Statement.Divide (left, right)
+  | Statement.Modulo (left, right)
+  | Statement.Equal (left, right)
+  | Statement.NotEqual (left, right)
+  | Statement.Greater (left, right)
+  | Statement.Less (left, right)
+  | Statement.GreaterEqual (left, right)
+  | Statement.LessEqual (left, right) ->
+      is_arith left && is_arith right
 
 let rec compile_expr_to_arith (expr: Statement.expression) :arithmetic =
   match expr with
@@ -74,17 +88,17 @@ let rec compile_expr_to_arith (expr: Statement.expression) :arithmetic =
   | Statement.Modulo (left, right) ->
       Modulo (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.Equal (left, right) ->
-      Equal (compile_expr_to_arith left, compile_expr_to_arith right)
+      AEQ (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.NotEqual (left, right) ->
-      NotEqual (compile_expr_to_arith left, compile_expr_to_arith right)
+      ANE (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.Greater (left, right) ->
-      Greater (compile_expr_to_arith left, compile_expr_to_arith right)
+      AGT (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.Less (left, right) ->
-      Less (compile_expr_to_arith left, compile_expr_to_arith right)
+      ALT (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.GreaterEqual (left, right) ->
-      GreaterEqual (compile_expr_to_arith left, compile_expr_to_arith right)
+      AGE (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.LessEqual (left, right) ->
-      LessEqual (compile_expr_to_arith left, compile_expr_to_arith right)
+      ALE (compile_expr_to_arith left, compile_expr_to_arith right)
   | Statement.Parentheses expr ->
       Parentheses (compile_expr_to_arith expr)
   | Statement.List _ -> assert false
@@ -107,7 +121,20 @@ let rec compile_expr (expr: Statement.expression) :expression =
     | Statement.Call (ident, exprs) ->
         let params = List.map exprs ~f: compile_expr in
         Command (String ident, params)
-    | _ -> assert false
+    | Statement.Equal (left, right) ->
+        SEQ (compile_expr left, compile_expr right)
+    | Statement.NotEqual (left, right) ->
+        SNE (compile_expr left, compile_expr right)
+    | Statement.Greater (left, right) ->
+        SGT (compile_expr left, compile_expr right)
+    | Statement.Less (left, right) ->
+        SLT (compile_expr left, compile_expr right)
+    | Statement.Parentheses expr ->
+        compile_expr expr
+    | Statement.List _ | Statement.Plus _ | Statement.Minus _
+    | Statement.Multiply _ | Statement.Divide _ | Statement.Modulo _
+    | Statement.GreaterEqual _ | Statement.LessEqual _ ->
+        assert false
 
 let rec compile_statement (stmt: Statement.statement) :statement =
   match stmt with
@@ -154,7 +181,7 @@ let rec print_arith out (expr: arithmetic) =
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
   | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _
-  | Equal _ | NotEqual _ | Greater _ | Less _ | GreaterEqual _ | LessEqual _ ->
+  | AEQ _ | ANE _ | AGT _ | ALT _ | AGE _ | ALE _ ->
       print_binary_arith out expr
   | Parentheses expr ->
       fprintf out "(%a)" print_arith expr
@@ -174,17 +201,17 @@ and print_binary_arith out (expr: arithmetic) =
       print_binary "/" left right
   | Modulo (left, right) ->
       print_binary "%" left right
-  | Equal (left, right) ->
+  | AEQ (left, right) ->
       print_binary "==" left right
-  | NotEqual (left, right) ->
+  | ANE (left, right) ->
       print_binary "!=" left right
-  | Greater (left, right) ->
+  | AGT (left, right) ->
       print_binary ">" left right
-  | Less (left, right) ->
+  | ALT (left, right) ->
       print_binary "<" left right
-  | GreaterEqual (left, right) ->
+  | AGE (left, right) ->
       print_binary ">=" left right
-  | LessEqual (left, right) ->
+  | ALE (left, right) ->
       print_binary "<=" left right
   | _ -> assert false
 
@@ -198,6 +225,14 @@ let rec print_expression out (expr: expression) =
       fprintf out "%a%a" print_expression left print_expression right
   | Command _ ->
       fprintf out "$(%a)" print_command expr
+  | SEQ (left, right) ->
+      fprintf out "[ %a == %a ]" print_expression left print_expression right
+  | SNE (left, right) ->
+      fprintf out "[ %a != %a ]" print_expression left print_expression right
+  | SGT (left, right) ->
+      fprintf out "[ %a > %a ]" print_expression left print_expression right
+  | SLT (left, right) ->
+      fprintf out "[ %a < %a ]" print_expression left print_expression right
 
 and print_command out (expr: expression) =
   match expr with
@@ -229,10 +264,17 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
   | Empty ->
       output_string out "true"
 
+and print_condition (out: out_channel) (expr: expression) =
+  match expr with
+  | SEQ _ | SNE _ | SGT _ | SLT _ ->
+      print_expression out expr
+  | _ ->
+      fprintf out "[ %a == 1 ]" print_expression expr
+
 and print_if out (expr: expression) (stmts: statements) ~(indent: int) =
   let print_statements_indented = print_statements ~indent: (indent + 2) in
-  fprintf out "if [ %a = 1 ]; then\n%a%afi"
-      print_expression expr print_statements_indented stmts print_indent indent
+  fprintf out "if %a; then\n%a%afi"
+      print_condition expr print_statements_indented stmts print_indent indent
 
 and print_if_else
   (out: out_channel)
@@ -241,8 +283,8 @@ and print_if_else
   (else_stmts: statements)
   ~(indent: int) =
   let print_statements_indented = print_statements ~indent: (indent + 2) in
-  fprintf out "if [ %a = 1 ]; then\n%a%aelse\n%a%afi"
-      print_expression expr
+  fprintf out "if %a; then\n%a%aelse\n%a%afi"
+      print_condition expr
       print_statements_indented then_stmts
       print_indent indent
       print_statements_indented else_stmts
