@@ -6,6 +6,7 @@
 %token FALSE
 %token IF
 %token ELSE
+%token WHILE
 %token EQUAL
 %token LEFT_PAREN
 %token RIGHT_PAREN
@@ -61,7 +62,10 @@ statement:
       { Statement.Block stmts }
   | ident = IDENTIFIER; EQUAL; expr = expression; SEMICOLON;
       { Statement.Assignment (ident, expr) }
-  | stmt = if_statement; { stmt }
+  | stmt = if_statement;
+      { stmt }
+  | stmt = loop_statement;
+      { stmt }
   ;
 
 if_statement:
@@ -71,6 +75,11 @@ if_statement:
   | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
       ELSE; elseStmt = statement;
       { Statement.IfElse (expr, thenStmt, elseStmt) }
+  ;
+
+loop_statement:
+  | WHILE; LEFT_PAREN; expr = expression; RIGHT_PAREN; stmt = statement;
+      { Statement.While (expr, stmt) }
   ;
 
 expression:

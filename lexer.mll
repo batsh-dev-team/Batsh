@@ -34,6 +34,7 @@ rule read =
   | "false"  { FALSE }
   | "if"     { IF }
   | "else"   { ELSE }
+  | "while"  { WHILE }
   | '='      { EQUAL }
   | '"'      { read_string (Buffer.create 17) lexbuf }
   | '('      { LEFT_PAREN }

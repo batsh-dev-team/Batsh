@@ -32,6 +32,7 @@ type statement =
   | Assignment of (identifier * expression)
   | If of (expression * statement)
   | IfElse of (expression * statement * statement)
+  | While of (expression * statement)
   | Empty
 
 and statements = statement list
@@ -110,6 +111,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
       print_if_statement out expr stmt ~indent
   | IfElse (expr, thenStmt, elseStmt) ->
       print_if_else_statement out expr thenStmt elseStmt ~indent
+  | While (expr, stmt) ->
+      print_while_statement out expr stmt ~indent
   | Empty -> ()
 
 and print_statements out (stmts: statements) ~(indent: int) =
@@ -123,10 +126,14 @@ and print_block_statement out (inner_stmts: statements) ~(indent: int) =
   fprintf out "{\n%a%a}"
       print_statements_indented inner_stmts print_indent indent
 
+and print_if_while_statement
+    out (name: string) (expr: expression) (stmt: statement) ~(indent: int) =
+  fprintf out "%s (%a) " name print_expression expr;
+  print_statement out stmt ~indent
+
 and print_if_statement
     out (expr: expression) (stmt: statement) ~(indent: int) =
-  fprintf out "if (%a) " print_expression expr;
-  print_statement out stmt ~indent
+  print_if_while_statement out "if" expr stmt ~indent
 
 and print_if_else_statement
     (out: out_channel)
@@ -137,6 +144,10 @@ and print_if_else_statement
   print_if_statement out expr thenStmt ~indent;
   output_string out " else ";
   print_statement out elseStmt ~indent
+
+and print_while_statement
+    out (expr: expression) (stmt: statement) ~(indent: int) =
+  print_if_while_statement out "while" expr stmt ~indent
 
 let print_ast out (stmts: statements) =
   print_statements out stmts ~indent: 0

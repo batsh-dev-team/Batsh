@@ -40,6 +40,7 @@ type statement =
   | Expression of expression
   | If of (expression * statements)
   | IfElse of (expression * statements * statements)
+  | While of (expression * statements)
   | Empty
 
 and statements = statement list
@@ -149,7 +150,11 @@ let rec compile_statement (stmt: Statement.statement) :statement =
       compile_if_statement expr stmt
   | Statement.IfElse (expr, thenStmt, elseStmt) ->
       compile_if_else_statement expr thenStmt elseStmt
-  | _ -> Empty (* TODO should be removed *)
+  | Statement.While (expr, stmt) ->
+      compile_while_statement expr stmt
+  | Statement.Block stmts -> assert false (* TODO *)
+  | Statement.Empty ->
+      Empty
 
 and compile_block (stmt: Statement.statement) =
   match stmt with
@@ -169,6 +174,9 @@ and compile_if_else_statement
     (elseStmt: Statement.statement)
     :statement =
   IfElse (compile_expr expr, compile_block thenStmt, compile_block elseStmt)
+
+and compile_while_statement (expr: Statement.expression) stmt :statement =
+  While (compile_expr expr, compile_block stmt)
 
 let compile (program: Statement.statements) :statements =
   List.map program ~f: compile_statement
@@ -261,6 +269,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
       print_if out expr stmts ~indent
   | IfElse (expr, then_stmts, else_stmts) ->
       print_if_else out expr then_stmts else_stmts ~indent
+  | While (expr, stmts) ->
+      print_while out expr stmts ~indent
   | Empty ->
       output_string out "true"
 
@@ -271,10 +281,25 @@ and print_condition (out: out_channel) (expr: expression) =
   | _ ->
       fprintf out "[ %a == 1 ]" print_expression expr
 
-and print_if out (expr: expression) (stmts: statements) ~(indent: int) =
+and print_if_while
+    (out: out_channel)
+    (expr: expression)
+    (stmts: statements)
+    (first: string)
+    (second: string)
+    (third: string)
+    ~(indent: int) =
   let print_statements_indented = print_statements ~indent: (indent + 2) in
-  fprintf out "if %a; then\n%a%afi"
-      print_condition expr print_statements_indented stmts print_indent indent
+  fprintf out "%s %a; %s\n%a%a%s"
+      first (* if/while *)
+      print_condition expr
+      second (* then/do *)
+      print_statements_indented stmts
+      print_indent indent
+      third (* fi/done *)
+
+and print_if out (expr: expression) (stmts: statements) ~(indent: int) =
+  print_if_while out expr stmts "if" "then" "fi" ~indent
 
 and print_if_else
   (out: out_channel)
@@ -289,6 +314,9 @@ and print_if_else
       print_indent indent
       print_statements_indented else_stmts
       print_indent indent
+
+and print_while out (expr: expression) (stmts: statements) ~(indent: int) =
+  print_if_while out expr stmts "while" "do" "done" ~indent
 
 and print_statements out (stmts: statements) ~(indent: int) =
   List.iter stmts ~f: (fun stmt ->
