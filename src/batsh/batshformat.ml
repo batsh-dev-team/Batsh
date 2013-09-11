@@ -1,43 +1,5 @@
 open Core.Std
-
-(*********** Definition ***********)
-
-type identifier = string
-
-type expression =
-  | Bool of bool
-  | Float of float
-  | Int of int
-  | List of expression list
-  | String of string
-  | Identifier of identifier
-  | Plus of (expression * expression)
-  | Minus of (expression * expression)
-  | Multiply of (expression * expression)
-  | Divide of (expression * expression)
-  | Modulo of (expression * expression)
-  | Concat of (expression * expression)
-  | Equal of (expression * expression)
-  | NotEqual of (expression * expression)
-  | Greater of (expression * expression)
-  | Less of (expression * expression)
-  | GreaterEqual of (expression * expression)
-  | LessEqual of (expression * expression)
-  | Parentheses of expression
-  | Call of (identifier * expression list)
-
-type statement = 
-  | Block of (statements)
-  | Expression of (expression)
-  | Assignment of (identifier * expression)
-  | If of (expression * statement)
-  | IfElse of (expression * statement * statement)
-  | While of (expression * statement)
-  | Empty
-
-and statements = statement list
-
-(*********** Output ***********)
+open Batshast
 
 let rec print_expression out (expr: expression) =
   match expr with
@@ -149,5 +111,5 @@ and print_while_statement
     out (expr: expression) (stmt: statement) ~(indent: int) =
   print_if_while_statement out "while" expr stmt ~indent
 
-let print_ast out (stmts: statements) =
-  print_statements out stmts ~indent: 0
+let print_ast out (ast: asttype) =
+  print_statements out ast ~indent: 0

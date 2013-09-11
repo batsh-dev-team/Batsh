@@ -39,7 +39,7 @@
 %nonassoc IF
 %nonassoc ELSE
 
-%start <Statement.statements> prog
+%start <Batshast.statements> prog
 
 %%
 
@@ -55,13 +55,13 @@ statement_list:
 
 statement:
   | SEMICOLON;
-      { Statement.Empty }
+      { Batshast.Empty }
   | expr = expression; SEMICOLON;
-      { Statement.Expression expr }
+      { Batshast.Expression expr }
   | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE;
-      { Statement.Block stmts }
+      { Batshast.Block stmts }
   | ident = IDENTIFIER; EQUAL; expr = expression; SEMICOLON;
-      { Statement.Assignment (ident, expr) }
+      { Batshast.Assignment (ident, expr) }
   | stmt = if_statement;
       { stmt }
   | stmt = loop_statement;
@@ -71,38 +71,38 @@ statement:
 if_statement:
   | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
       %prec IF;
-      { Statement.If (expr, thenStmt) }
+      { Batshast.If (expr, thenStmt) }
   | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
       ELSE; elseStmt = statement;
-      { Statement.IfElse (expr, thenStmt, elseStmt) }
+      { Batshast.IfElse (expr, thenStmt, elseStmt) }
   ;
 
 loop_statement:
   | WHILE; LEFT_PAREN; expr = expression; RIGHT_PAREN; stmt = statement;
-      { Statement.While (expr, stmt) }
+      { Batshast.While (expr, stmt) }
   ;
 
 expression:
   | ident = IDENTIFIER
-      { Statement.Identifier ident }
+      { Batshast.Identifier ident }
   | s = STRING
-      { Statement.String s }
+      { Batshast.String s }
   | i = INT
-      { Statement.Int i }
+      { Batshast.Int i }
   | x = FLOAT
-      { Statement.Float x }
+      { Batshast.Float x }
   | TRUE
-      { Statement.Bool true }
+      { Batshast.Bool true }
   | FALSE
-      { Statement.Bool false }
+      { Batshast.Bool false }
   | LEFT_BRACK; vl = list_fields; RIGHT_BRACK
-      { Statement.List vl }
+      { Batshast.List vl }
   | expr = binary_expression;
       { expr }
   | LEFT_PAREN; expr = expression; RIGHT_PAREN;
-      { Statement.Parentheses expr }
+      { Batshast.Parentheses expr }
   | ident = IDENTIFIER; LEFT_PAREN; exprs = expression_list; RIGHT_PAREN;
-      { Statement.Call (ident, exprs) }
+      { Batshast.Call (ident, exprs) }
   ;
 
 expression_list:
@@ -112,29 +112,29 @@ expression_list:
 
 binary_expression:
   | left = expression; PLUS; right = expression;
-      { Statement.Plus (left, right) }
+      { Batshast.Plus (left, right) }
   | left = expression; MINUS; right = expression;
-      { Statement.Minus (left, right) }
+      { Batshast.Minus (left, right) }
   | left = expression; MULTIPLY; right = expression;
-      { Statement.Multiply (left, right) }
+      { Batshast.Multiply (left, right) }
   | left = expression; DIVIDE; right = expression;
-      { Statement.Divide (left, right) }
+      { Batshast.Divide (left, right) }
   | left = expression; MODULO; right = expression;
-      { Statement.Modulo (left, right) }
+      { Batshast.Modulo (left, right) }
   | left = expression; CONCAT; right = expression;
-      { Statement.Concat (left, right) }
+      { Batshast.Concat (left, right) }
   | left = expression; EQ; right = expression;
-      { Statement.Equal (left, right) }
+      { Batshast.Equal (left, right) }
   | left = expression; NE; right = expression;
-      { Statement.NotEqual (left, right) }
+      { Batshast.NotEqual (left, right) }
   | left = expression; GT; right = expression;
-      { Statement.Greater (left, right) }
+      { Batshast.Greater (left, right) }
   | left = expression; LT; right = expression;
-      { Statement.Less (left, right) }
+      { Batshast.Less (left, right) }
   | left = expression; GE; right = expression;
-      { Statement.GreaterEqual (left, right) }
+      { Batshast.GreaterEqual (left, right) }
   | left = expression; LE; right = expression;
-      { Statement.LessEqual (left, right) }
+      { Batshast.LessEqual (left, right) }
   ;
 
 list_fields:

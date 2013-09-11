@@ -3,7 +3,7 @@ open Bashast
 type asttype
 
 module Compile : sig
-  val compile : Statement.statements -> asttype
+  val compile : Batshast.asttype -> asttype
 end
 
 module Format : sig
