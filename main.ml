@@ -24,8 +24,8 @@ let parse_and_prettify (lexbuf: Lexing.lexbuf) =
 
 let compile_to_bash (lexbuf: Lexing.lexbuf) =
   let ast = parse_and_print_error lexbuf in
-  let bash_ast = Bash.compile ast in
-  printf "%a\n" Bash.print bash_ast
+  let bash_ast : Bash.asttype = Bash.Compile.compile ast in
+  printf "%a\n" Bash.Format.print bash_ast
 
 let main (filename: string) (format: bool) () =
   let inx = In_channel.create filename in

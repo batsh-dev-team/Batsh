@@ -1,1 +1,2 @@
 true:package(core),thread,true:bin_annot
+"bash": include
