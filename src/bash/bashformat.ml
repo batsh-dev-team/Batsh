@@ -70,9 +70,6 @@ and print_command out (expr: expression) =
     )
   | _ -> assert false
 
-let print_indent out (indent: int) =
-  output_string out (String.make indent ' ')
-
 let rec print_statement out (stmt: statement) ~(indent: int) =
   match stmt with
   | Let (ident, arith) ->
@@ -113,7 +110,7 @@ and print_if_while
       print_condition expr
       second (* then/do *)
       print_statements_indented stmts
-      print_indent indent
+      Formatutil.print_indent indent
       third (* fi/done *)
 
 and print_if out (expr: expression) (stmts: statements) ~(indent: int) =
@@ -129,19 +126,15 @@ and print_if_else
   fprintf out "if %a; then\n%a%aelse\n%a%afi"
       print_condition expr
       print_statements_indented then_stmts
-      print_indent indent
+      Formatutil.print_indent indent
       print_statements_indented else_stmts
-      print_indent indent
+      Formatutil.print_indent indent
 
 and print_while out (expr: expression) (stmts: statements) ~(indent: int) =
   print_if_while out expr stmts "while" "do" "done" ~indent
 
-and print_statements out (stmts: statements) ~(indent: int) =
-  List.iter stmts ~f: (fun stmt ->
-    print_indent out indent;
-    print_statement out stmt ~indent;
-    output_string out "\n"
-  )
+and print_statements: out_channel -> statements -> indent:int -> unit =
+  Formatutil.print_statements ~f: print_statement
 
 let print (outx: out_channel) (program: statements) :unit =
   print_statements outx program ~indent: 0

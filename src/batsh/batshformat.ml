@@ -58,9 +58,6 @@ and print_binary_expression out (expr: expression) =
       print_binary "<=" left right
   | _ -> assert false
 
-let print_indent out (indent: int) =
-  output_string out (String.make indent ' ')
-
 let rec print_statement out (stmt: statement) ~(indent: int) =
   match stmt with
   | Block inner_stmts -> print_block_statement ~indent out inner_stmts
@@ -77,16 +74,12 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
       print_while_statement out expr stmt ~indent
   | Empty -> ()
 
-and print_statements out (stmts: statements) ~(indent: int) =
-  let print_statement_indented = print_statement ~indent in
-  List.iter stmts ~f: (fun stmt ->
-    fprintf out "%a%a\n" print_indent indent print_statement_indented stmt
-  )
+and print_statements = Formatutil.print_statements ~f: print_statement
 
 and print_block_statement out (inner_stmts: statements) ~(indent: int) =
   let print_statements_indented = print_statements ~indent:(indent + 2) in
   fprintf out "{\n%a%a}"
-      print_statements_indented inner_stmts print_indent indent
+      print_statements_indented inner_stmts Formatutil.print_indent indent
 
 and print_if_while_statement
     out (name: string) (expr: expression) (stmt: statement) ~(indent: int) =
