@@ -22,7 +22,7 @@ let float = digit* frac? exp?
 
 let white = [' ' '\t']+
 let newline = '\r' | '\n' | "\r\n"
-let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
+let ident = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 
 rule read =
   parse
@@ -57,9 +57,11 @@ rule read =
   | '<'      { LT }
   | ">="     { GE }
   | "<="     { LE }
-  | identifier { IDENTIFIER (Lexing.lexeme lexbuf) }
+  | "//"     { read_line_comment (Buffer.create 17) lexbuf }
+  | ident    { IDENTIFIER (Lexing.lexeme lexbuf) }
   | eof      { EOF }
-  | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
+  | _        { raise (SyntaxError (
+                 "Unexpected char: " ^ Lexing.lexeme lexbuf)) }
 
 and read_string buf =
   parse
@@ -77,3 +79,13 @@ and read_string buf =
     }
   | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
   | eof { raise (SyntaxError ("String is not terminated")) }
+
+and read_line_comment buf =
+  parse
+  | newline
+  | eof
+      { COMMENT (Buffer.contents buf) }
+  | _
+      { Buffer.add_string buf (Lexing.lexeme lexbuf);
+        read_line_comment buf lexbuf
+      }

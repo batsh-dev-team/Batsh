@@ -72,6 +72,8 @@ and print_command out (expr: expression) =
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
   match stmt with
+  | Comment comment ->
+      fprintf out "#%s" comment
   | Let (ident, arith) ->
       fprintf out "let \"%s = %a\"" ident print_arith arith
   | Assignment (ident, expr) ->

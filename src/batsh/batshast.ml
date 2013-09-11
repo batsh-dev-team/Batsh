@@ -22,9 +22,10 @@ type expression =
   | Parentheses of expression
   | Call of (identifier * expression list)
 
-type statement = 
-  | Block of (statements)
-  | Expression of (expression)
+type statement =
+  | Comment of string
+  | Block of statements
+  | Expression of expression
   | Assignment of (identifier * expression)
   | If of (expression * statement)
   | IfElse of (expression * statement * statement)

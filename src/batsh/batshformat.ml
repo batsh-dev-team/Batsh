@@ -60,6 +60,8 @@ and print_binary_expression out (expr: expression) =
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
   match stmt with
+  | Comment comment ->
+      fprintf out "//%s" comment
   | Block inner_stmts -> print_block_statement ~indent out inner_stmts
   | Expression expr ->
       print_expression out expr;

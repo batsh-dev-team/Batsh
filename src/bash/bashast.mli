@@ -30,7 +30,8 @@ type expression =
 
 and expressions = expression list
 
-type statement = 
+type statement =
+  | Comment of string
   | Let of (identifier * arithmetic)
   | Assignment of (identifier * expression)
   | Expression of expression

@@ -2,6 +2,7 @@
 %token <float> FLOAT
 %token <string> STRING
 %token <string> IDENTIFIER
+%token <string> COMMENT
 %token TRUE
 %token FALSE
 %token IF
@@ -56,6 +57,8 @@ statement_list:
 statement:
   | SEMICOLON;
       { Batshast.Empty }
+  | comment = COMMENT;
+      { Batshast.Comment comment }
   | expr = expression; SEMICOLON;
       { Batshast.Expression expr }
   | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE;

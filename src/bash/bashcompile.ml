@@ -93,6 +93,8 @@ let rec compile_expr (expr: Batshast.expression) :expression =
 
 let rec compile_statement (stmt: Batshast.statement) :statement =
   match stmt with
+  | Batshast.Comment comment ->
+      Comment comment
   | Batshast.Assignment (ident, expr) ->
       if is_arith expr then
         Let (ident, compile_expr_to_arith expr)
