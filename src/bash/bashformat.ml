@@ -1,9 +1,16 @@
 open Core.Std
 open Bashast
 
-let rec print_arith out (expr: arithmetic) =
+let rec print_lvalue out (lvalue: leftvalue) ~(bare: bool) =
+  match lvalue with
+  | Identifier ident ->
+    if not bare then
+      output_string out "$";
+    output_string out ident
+
+and print_arith out (expr: arithmetic) =
   match expr with
-  | Identifier identifier -> output_string out identifier
+  | Leftvalue lvalue -> print_lvalue out lvalue ~bare: true
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
   | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _
@@ -43,7 +50,8 @@ and print_binary_arith out (expr: arithmetic) =
 
 let rec print_expression out (expr: expression) =
   match expr with
-  | Variable var | Result Identifier var -> fprintf out "$%s" var
+  | Variable lvalue | Result Leftvalue lvalue ->
+      print_lvalue out lvalue ~bare: false
   | String str -> fprintf out "\"%s\"" str
   | Result arith ->
       fprintf out "$((%a))" print_arith arith
@@ -71,13 +79,18 @@ and print_command out (expr: expression) =
   | _ -> assert false
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
+  let print_lvalue = print_lvalue ~bare: true in
   match stmt with
   | Comment comment ->
       fprintf out "#%s" comment
-  | Let (ident, arith) ->
-      fprintf out "let \"%s = %a\"" ident print_arith arith
-  | Assignment (ident, expr) ->
-      fprintf out "%s=%a" ident print_expression expr
+  | Let (lvalue, arith) ->
+      fprintf out "let \"%a = %a\""
+        print_lvalue lvalue
+        print_arith arith
+  | Assignment (lvalue, expr) ->
+      fprintf out "%a=%a"
+        print_lvalue lvalue
+        print_expression expr
   | Expression (Command _ as expr) ->
       print_command out expr
   | Expression expr ->

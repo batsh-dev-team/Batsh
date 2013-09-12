@@ -63,8 +63,8 @@ statement:
       { Batshast.Expression expr }
   | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE;
       { Batshast.Block stmts }
-  | ident = IDENTIFIER; EQUAL; expr = expression; SEMICOLON;
-      { Batshast.Assignment (ident, expr) }
+  | lvalue = leftvalue; EQUAL; expr = expression; SEMICOLON;
+      { Batshast.Assignment (lvalue, expr) }
   | stmt = if_statement;
       { stmt }
   | stmt = loop_statement;
@@ -86,8 +86,8 @@ loop_statement:
   ;
 
 expression:
-  | ident = IDENTIFIER
-      { Batshast.Identifier ident }
+  | lvalue = leftvalue
+      { Batshast.Leftvalue lvalue }
   | s = STRING
       { Batshast.String s }
   | i = INT
@@ -111,6 +111,13 @@ expression:
 expression_list:
     exprs = separated_list(COMMA, expression);
       { exprs }
+  ;
+
+leftvalue:
+  | ident = IDENTIFIER;
+      { Batshast.Identifier ident }
+  | lvalue = leftvalue; LEFT_BRACK; index = expression; RIGHT_BRACK;
+      { Batshast.ListAccess (lvalue, index) }
   ;
 
 binary_expression:

@@ -4,7 +4,7 @@ open Bashast
 let rec is_arith (expr: Batshast.expression) :bool =
   match expr with
   | Batshast.Bool _ | Batshast.Int _ | Batshast.Float _
-  | Batshast.Identifier _ ->
+  | Batshast.Leftvalue _ ->
       true
   | Batshast.String _ | Batshast.List _ | Batshast.Concat _ 
   | Batshast.Call _ ->
@@ -30,7 +30,7 @@ let rec compile_expr_to_arith (expr: Batshast.expression) :arithmetic =
   | Batshast.Bool true -> Int 1
   | Batshast.Int number -> Int number
   | Batshast.Float number -> Float number
-  | Batshast.Identifier ident -> Identifier ident
+  | Batshast.Leftvalue lvalue -> Leftvalue (compile_leftvalue lvalue)
   | Batshast.String str -> assert false
   | Batshast.Plus (left, right) ->
       Plus (compile_expr_to_arith left, compile_expr_to_arith right)
@@ -60,7 +60,7 @@ let rec compile_expr_to_arith (expr: Batshast.expression) :arithmetic =
   | Batshast.Concat _ -> assert false
   | Batshast.Call _ -> assert false
 
-let rec compile_expr (expr: Batshast.expression) :expression =
+and compile_expr (expr: Batshast.expression) :expression =
   if is_arith expr then
     Result (compile_expr_to_arith expr)
   else
@@ -70,7 +70,6 @@ let rec compile_expr (expr: Batshast.expression) :expression =
     | Batshast.Int number -> String (string_of_int number)
     | Batshast.Float number -> String (Float.to_string number)
     | Batshast.String str -> String str
-    | Batshast.Identifier ident -> Variable ident
     | Batshast.Concat (left, right) ->
         Concat (compile_expr left, compile_expr right)
     | Batshast.Call (ident, exprs) ->
@@ -88,18 +87,22 @@ let rec compile_expr (expr: Batshast.expression) :expression =
         compile_expr expr
     | Batshast.List _ | Batshast.Plus _ | Batshast.Minus _
     | Batshast.Multiply _ | Batshast.Divide _ | Batshast.Modulo _
-    | Batshast.GreaterEqual _ | Batshast.LessEqual _ ->
+    | Batshast.GreaterEqual _ | Batshast.LessEqual _ | Batshast.Leftvalue _ ->
         assert false
+
+and compile_leftvalue (lvalue: Batshast.leftvalue) :leftvalue =
+  match lvalue with
+  | Batshast.Identifier ident -> Identifier ident
 
 let rec compile_statement (stmt: Batshast.statement) :statement =
   match stmt with
   | Batshast.Comment comment ->
       Comment comment
-  | Batshast.Assignment (ident, expr) ->
+  | Batshast.Assignment (lvalue, expr) ->
       if is_arith expr then
-        Let (ident, compile_expr_to_arith expr)
+        Let (compile_leftvalue lvalue, compile_expr_to_arith expr)
       else
-        Assignment (ident, compile_expr expr)
+        Assignment (compile_leftvalue lvalue, compile_expr expr)
   | Batshast.Expression expr ->
       Expression (compile_expr expr)
   | Batshast.If (expr, stmt) ->

@@ -1,9 +1,16 @@
 open Core.Std
 open Batshast
 
-let rec print_expression out (expr: expression) =
+let rec print_lvalue out (lvalue: leftvalue) =
+  match lvalue with
+  | Identifier ident ->
+      output_string out ident
+  | ListAccess (lvalue, expr) ->
+      fprintf out "%a[%a]" print_lvalue lvalue print_expression expr
+
+and print_expression out (expr: expression) =
   match expr with
-  | Identifier identifier -> output_string out identifier
+  | Leftvalue lvalue -> print_lvalue out lvalue
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
   | String str -> output_string out (sprintf "\"%s\"" str)
@@ -16,7 +23,8 @@ let rec print_expression out (expr: expression) =
       fprintf out "(%a)" print_expression expr
   | Call (ident, exprs) ->
       fprintf out "%s(%a)" ident print_expressions exprs
-  | List _ -> ()
+  | List exprs ->
+      fprintf out "[%a]" print_expressions exprs
 
 and print_expressions out (exprs: expression list) =
   let num_exprs = List.length exprs in
@@ -66,8 +74,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
   | Expression expr ->
       print_expression out expr;
       output_string out ";"
-  | Assignment (ident, expr) ->
-      fprintf out "%s = %a;" ident print_expression expr
+  | Assignment (lvalue, expr) ->
+      fprintf out "%a = %a;" print_lvalue lvalue print_expression expr
   | If (expr, stmt) ->
       print_if_statement out expr stmt ~indent
   | IfElse (expr, thenStmt, elseStmt) ->

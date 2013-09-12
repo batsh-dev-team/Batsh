@@ -1,7 +1,10 @@
 type identifier = string
 
-type arithmetic =
+type leftvalue =
   | Identifier of identifier
+
+type arithmetic =
+  | Leftvalue of leftvalue
   | Int of int
   | Float of float
   | Plus of (arithmetic * arithmetic)
@@ -18,7 +21,7 @@ type arithmetic =
   | Parentheses of arithmetic
 
 type expression =
-  | Variable of identifier
+  | Variable of leftvalue
   | String of string
   | Result of arithmetic
   | Concat of (expression * expression)
@@ -32,8 +35,8 @@ and expressions = expression list
 
 type statement =
   | Comment of string
-  | Let of (identifier * arithmetic)
-  | Assignment of (identifier * expression)
+  | Let of (leftvalue * arithmetic)
+  | Assignment of (leftvalue * expression)
   | Expression of expression
   | If of (expression * statements)
   | IfElse of (expression * statements * statements)

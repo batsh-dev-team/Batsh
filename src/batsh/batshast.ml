@@ -1,12 +1,16 @@
 type identifier = string
 
-type expression =
+type leftvalue =
+  | Identifier of identifier
+  | ListAccess of (leftvalue * expression)
+
+and expression =
   | Bool of bool
   | Float of float
   | Int of int
   | List of expression list
   | String of string
-  | Identifier of identifier
+  | Leftvalue of leftvalue
   | Plus of (expression * expression)
   | Minus of (expression * expression)
   | Multiply of (expression * expression)
@@ -26,7 +30,7 @@ type statement =
   | Comment of string
   | Block of statements
   | Expression of expression
-  | Assignment of (identifier * expression)
+  | Assignment of (leftvalue * expression)
   | If of (expression * statement)
   | IfElse of (expression * statement * statement)
   | While of (expression * statement)
