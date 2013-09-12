@@ -7,6 +7,12 @@ let rec print_lvalue out (lvalue: leftvalue) ~(bare: bool) =
     if not bare then
       output_string out "$";
     output_string out ident
+  | ListAccess (lvalue, arith) ->
+    let print_lvalue_bare = print_lvalue ~bare: true in
+    if bare then
+      fprintf out "%a[%a]" print_lvalue_bare lvalue print_arith arith
+    else
+      fprintf out "${%a[%a]}" print_lvalue_bare lvalue print_arith arith
 
 and print_arith out (expr: arithmetic) =
   match expr with

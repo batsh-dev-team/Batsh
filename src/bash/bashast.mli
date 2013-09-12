@@ -2,8 +2,9 @@ type identifier = string
 
 type leftvalue =
   | Identifier of identifier
+  | ListAccess of (leftvalue * arithmetic)
 
-type arithmetic =
+and arithmetic =
   | Leftvalue of leftvalue
   | Int of int
   | Float of float

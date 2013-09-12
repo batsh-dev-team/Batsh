@@ -94,7 +94,10 @@ and compile_expr (expr: Batshast.expression) :expression =
 
 and compile_leftvalue (lvalue: Batshast.leftvalue) :leftvalue =
   match lvalue with
-  | Batshast.Identifier ident -> Identifier ident
+  | Batshast.Identifier ident ->
+      Identifier ident
+  | Batshast.ListAccess (lvalue, expr) ->
+      ListAccess (compile_leftvalue lvalue, compile_expr_to_arith expr)
 
 let rec compile_statement (stmt: Batshast.statement) :statement =
   match stmt with
