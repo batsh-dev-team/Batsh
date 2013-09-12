@@ -85,7 +85,9 @@ and compile_expr (expr: Batshast.expression) :expression =
         SLT (compile_expr left, compile_expr right)
     | Batshast.Parentheses expr ->
         compile_expr expr
-    | Batshast.List _ | Batshast.Plus _ | Batshast.Minus _
+    | Batshast.List exprs ->
+        List (List.map exprs ~f: compile_expr)
+    | Batshast.Plus _ | Batshast.Minus _
     | Batshast.Multiply _ | Batshast.Divide _ | Batshast.Modulo _
     | Batshast.GreaterEqual _ | Batshast.LessEqual _ | Batshast.Leftvalue _ ->
         assert false

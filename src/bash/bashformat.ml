@@ -67,6 +67,15 @@ let rec print_expression out (expr: expression) =
       fprintf out "[ %a > %a ]" print_expression left print_expression right
   | SLT (left, right) ->
       fprintf out "[ %a < %a ]" print_expression left print_expression right
+  | List exprs ->
+      output_string out "(";
+      let num_exprs = List.length exprs in
+      List.iteri exprs ~f: (fun i expr ->
+        print_expression out expr;
+        if i <> num_exprs - 1 then
+          output_string out " "
+      );
+      output_string out ")"
 
 and print_command out (expr: expression) =
   match expr with

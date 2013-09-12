@@ -30,6 +30,7 @@ type expression =
   | SGT of (expression * expression)
   | SLT of (expression * expression)
   | Command of (expression * expressions)
+  | List of expressions
 
 and expressions = expression list
 
