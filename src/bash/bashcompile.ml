@@ -116,11 +116,12 @@ let rec compile_statement (stmt: Batshast.statement) :statement =
       compile_if_else_statement expr thenStmt elseStmt
   | Batshast.While (expr, stmt) ->
       compile_while_statement expr stmt
-  | Batshast.Block stmts -> assert false (* TODO *)
+  | Batshast.Block stmts ->
+      Block (List.map stmts ~f: compile_statement)
   | Batshast.Empty ->
       Empty
 
-and compile_block (stmt: Batshast.statement) =
+and open_block (stmt: Batshast.statement) =
   match stmt with
   | Batshast.Block [] ->
       [Empty]
@@ -130,17 +131,30 @@ and compile_block (stmt: Batshast.statement) =
       [compile_statement stmt]
 
 and compile_if_statement (expr: Batshast.expression) stmt :statement =
-  If (compile_expr expr, compile_block stmt)
+  If (compile_expr expr, open_block stmt)
 
 and compile_if_else_statement
     (expr: Batshast.expression)
     (thenStmt: Batshast.statement)
     (elseStmt: Batshast.statement)
     :statement =
-  IfElse (compile_expr expr, compile_block thenStmt, compile_block elseStmt)
+  IfElse (compile_expr expr, open_block thenStmt, open_block elseStmt)
 
 and compile_while_statement (expr: Batshast.expression) stmt :statement =
-  While (compile_expr expr, compile_block stmt)
+  While (compile_expr expr, open_block stmt)
+
+let rec flatten_blocks (stmts: statements) :statements =
+  List.fold_right stmts ~init: [] ~f: (fun stmt accum ->
+    match stmt with
+    | Block stmts ->
+        (flatten_blocks stmts) @ accum
+    | _ ->
+        stmt :: accum
+  )
+
+let compile_statements (stmts: Batshast.statements) :statements =
+  List.map stmts ~f: compile_statement
+  |> flatten_blocks
 
 let compile (program: Batshast.statements) :statements =
-  List.map program ~f: compile_statement
+  compile_statements program

@@ -43,6 +43,7 @@ type statement =
   | If of (expression * statements)
   | IfElse of (expression * statements * statements)
   | While of (expression * statements)
+  | Block of statements
   | Empty
 
 and statements = statement list
