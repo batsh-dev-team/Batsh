@@ -1,0 +1,13 @@
+echo(false);
+echo(true);
+echo(42);
+echo(1 + (4 + 6) * 3);
+echo(8 - 3 % 2);
+echo(-9 - 9);
+echo((2 + 8) / 3);
+echo(2 == 2);
+echo(6 != 8);
+echo(3 > 2);
+echo(4 < 5);
+echo(6 >= 2);
+echo(19 <= 30);

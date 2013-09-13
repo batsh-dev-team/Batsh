@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+ocamlbuild -quiet -use-ocamlfind src/test.ml ./test.d.byte &&\
+./test.d.byte $@

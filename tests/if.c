@@ -1,10 +1,10 @@
 if (2 < 10) {
-	echo("He");
+	echo("Yes");
 }
 
 if (true) {
-	if(false){
-		v=(4 + 1 );
+	if (false){
+		v=(4 + 1);
 	} else {
 		v = 2;
 	}

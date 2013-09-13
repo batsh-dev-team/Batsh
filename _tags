@@ -1,5 +1,6 @@
-true:package(core),thread
-true:bin_annot
+true: package(core),thread
+true: bin_annot
+true: use_menhir
 "src": include
 "src/bash": include
 "src/batsh": include
