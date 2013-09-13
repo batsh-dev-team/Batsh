@@ -94,6 +94,10 @@ and print_command out (expr: expression) =
   | _ -> assert false
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
+  let () = match stmt with
+    | Block _ -> ()
+    | _ ->
+      Formatutil.print_indent out indent in
   let print_lvalue = print_lvalue ~bare: true in
   match stmt with
   | Comment comment ->
@@ -117,7 +121,9 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
   | While (expr, stmts) ->
     print_while out expr stmts ~indent
   | Empty ->
-    output_string out "true"
+    output_string out "-"
+  | Block [] ->
+    print_statements out [Empty] ~indent
   | Block stmts ->
     print_statements out stmts ~indent
 
@@ -131,39 +137,39 @@ and print_condition (out: out_channel) (expr: expression) =
 and print_if_while
     (out: out_channel)
     (expr: expression)
-    (stmts: statements)
+    (stmt: statement)
     (first: string)
     (second: string)
     (third: string)
     ~(indent: int) =
-  let print_statements_indented = print_statements ~indent: (indent + 2) in
+  let print_statement_indented = print_statement ~indent: (indent + 2) in
   fprintf out "%s %a; %s\n%a%a\n%s"
     first (* if/while *)
     print_condition expr
     second (* then/do *)
-    print_statements_indented stmts
+    print_statement_indented stmt
     Formatutil.print_indent indent
     third (* fi/done *)
 
-and print_if out (expr: expression) (stmts: statements) ~(indent: int) =
-  print_if_while out expr stmts "if" "then" "fi" ~indent
+and print_if out (expr: expression) (stmt: statement) ~(indent: int) =
+  print_if_while out expr stmt "if" "then" "fi" ~indent
 
 and print_if_else
     (out: out_channel)
     (expr: expression)
-    (then_stmts: statements)
-    (else_stmts: statements)
+    (then_stmt: statement)
+    (else_stmt: statement)
     ~(indent: int) =
-  let print_statements_indented = print_statements ~indent: (indent + 2) in
+  let print_statement_indented = print_statement ~indent: (indent + 2) in
   fprintf out "if %a; then\n%a\n%aelse\n%a\n%afi"
     print_condition expr
-    print_statements_indented then_stmts
+    print_statement_indented then_stmt
     Formatutil.print_indent indent
-    print_statements_indented else_stmts
+    print_statement_indented else_stmt
     Formatutil.print_indent indent
 
-and print_while out (expr: expression) (stmts: statements) ~(indent: int) =
-  print_if_while out expr stmts "while" "do" "done" ~indent
+and print_while out (expr: expression) (stmt: statement) ~(indent: int) =
+  print_if_while out expr stmt "while" "do" "done" ~indent
 
 and print_statements: out_channel -> statements -> indent:int -> unit =
   Formatutil.print_statements ~f: print_statement

@@ -40,9 +40,9 @@ type statement =
   | Let of (leftvalue * arithmetic)
   | Assignment of (leftvalue * expression)
   | Expression of expression
-  | If of (expression * statements)
-  | IfElse of (expression * statements * statements)
-  | While of (expression * statements)
+  | If of (expression * statement)
+  | IfElse of (expression * statement * statement)
+  | While of (expression * statement)
   | Block of statements
   | Empty
 

@@ -13,6 +13,9 @@ if (true) {
 }
 echo(v);
 
+if (2 > 1)
+	echo("True");
+
 if (1 == 12) {
-	echo("yes");
+	echo("No");
 }

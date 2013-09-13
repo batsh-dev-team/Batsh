@@ -131,17 +131,19 @@ and open_block (stmt: Batshast.statement) =
     [compile_statement stmt]
 
 and compile_if_statement (expr: Batshast.expression) stmt :statement =
-  If (compile_expr expr, open_block stmt)
+  If (compile_expr expr, compile_statement stmt)
 
 and compile_if_else_statement
     (expr: Batshast.expression)
     (thenStmt: Batshast.statement)
     (elseStmt: Batshast.statement)
   :statement =
-  IfElse (compile_expr expr, open_block thenStmt, open_block elseStmt)
+  IfElse (compile_expr expr,
+          compile_statement thenStmt,
+          compile_statement elseStmt)
 
 and compile_while_statement (expr: Batshast.expression) stmt :statement =
-  While (compile_expr expr, open_block stmt)
+  While (compile_expr expr, compile_statement stmt)
 
 let compile_statements (stmts: Batshast.statements) :statements =
   List.map stmts ~f: compile_statement

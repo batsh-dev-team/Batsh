@@ -67,6 +67,10 @@ and print_binary_expression out (expr: expression) =
   | _ -> assert false
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
+  let () = match stmt with
+    | Block _ -> ()
+    | _ ->
+      Formatutil.print_indent out indent in
   match stmt with
   | Comment comment ->
     fprintf out "//%s" comment

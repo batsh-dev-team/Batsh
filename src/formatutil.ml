@@ -11,9 +11,7 @@ let print_statements
   let print_statement_indented out stmt = f out stmt ~indent in
   let num_stmts = List.length stmts in
   List.iteri stmts ~f: (fun i stmt ->
-      fprintf out "%a%a"
-        print_indent indent
-        print_statement_indented stmt;
+      print_statement_indented out stmt;
       if i < num_stmts - 1 then
         output_string out "\n"
     )
