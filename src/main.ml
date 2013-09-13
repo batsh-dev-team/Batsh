@@ -16,12 +16,12 @@ let main (filename: string) (format: bool) () =
 
 let () =
   let regular_file = Command.Spec.Arg_type.create (fun filename ->
-    match Sys.is_file filename with
-    | `Yes -> filename
-    | `No | `Unknown ->
-      eprintf "%s is not a regular file.\n%!" filename;
-      exit 1
-  )
+      match Sys.is_file filename with
+      | `Yes -> filename
+      | `No | `Unknown ->
+        eprintf "%s is not a regular file.\n%!" filename;
+        exit 1
+    )
   in
   Command.basic
     ~summary:"Batsh"
