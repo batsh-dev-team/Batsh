@@ -121,15 +121,6 @@ let rec compile_statement (stmt: Batshast.statement) :statement =
   | Batshast.Empty ->
     Empty
 
-and open_block (stmt: Batshast.statement) =
-  match stmt with
-  | Batshast.Block [] ->
-    [Empty]
-  | Batshast.Block stmts ->
-    List.map stmts ~f: compile_statement
-  | _ ->
-    [compile_statement stmt]
-
 and compile_if_statement (expr: Batshast.expression) stmt :statement =
   If (compile_expr expr, compile_statement stmt)
 
