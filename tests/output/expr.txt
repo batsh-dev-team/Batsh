@@ -3,3 +3,4 @@ BYVoid
 http://www.byvoid.com
 42
 1 2 3
+Help\nNewLine!Backslash\ Quote" Slash/ Tab	
