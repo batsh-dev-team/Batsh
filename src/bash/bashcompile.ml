@@ -143,18 +143,8 @@ and compile_if_else_statement
 and compile_while_statement (expr: Batshast.expression) stmt :statement =
   While (compile_expr expr, open_block stmt)
 
-let rec flatten_blocks (stmts: statements) :statements =
-  List.fold_right stmts ~init: [] ~f: (fun stmt accum ->
-      match stmt with
-      | Block stmts ->
-        (flatten_blocks stmts) @ accum
-      | _ ->
-        stmt :: accum
-    )
-
 let compile_statements (stmts: Batshast.statements) :statements =
   List.map stmts ~f: compile_statement
-  |> flatten_blocks
 
 let compile (program: Batshast.statements) :statements =
   compile_statements program

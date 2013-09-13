@@ -118,6 +118,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
     print_while out expr stmts ~indent
   | Empty ->
     output_string out "true"
+  | Block stmts ->
+    print_statements out stmts ~indent
 
 and print_condition (out: out_channel) (expr: expression) =
   match expr with
@@ -135,7 +137,7 @@ and print_if_while
     (third: string)
     ~(indent: int) =
   let print_statements_indented = print_statements ~indent: (indent + 2) in
-  fprintf out "%s %a; %s\n%a%a%s"
+  fprintf out "%s %a; %s\n%a%a\n%s"
     first (* if/while *)
     print_condition expr
     second (* then/do *)
@@ -153,7 +155,7 @@ and print_if_else
     (else_stmts: statements)
     ~(indent: int) =
   let print_statements_indented = print_statements ~indent: (indent + 2) in
-  fprintf out "if %a; then\n%a%aelse\n%a%afi"
+  fprintf out "if %a; then\n%a\n%aelse\n%a\n%afi"
     print_condition expr
     print_statements_indented then_stmts
     Formatutil.print_indent indent

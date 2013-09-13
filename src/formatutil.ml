@@ -9,8 +9,11 @@ let print_statements
     ~(f: out_channel -> 'a -> indent:int -> unit)
     ~(indent: int) =
   let print_statement_indented out stmt = f out stmt ~indent in
-  List.iter stmts ~f: (fun stmt ->
-      fprintf out "%a%a\n"
+  let num_stmts = List.length stmts in
+  List.iteri stmts ~f: (fun i stmt ->
+      fprintf out "%a%a"
         print_indent indent
-        print_statement_indented stmt
+        print_statement_indented stmt;
+      if i < num_stmts - 1 then
+        output_string out "\n"
     )

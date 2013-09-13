@@ -88,8 +88,9 @@ and print_statements = Formatutil.print_statements ~f: print_statement
 
 and print_block_statement out (inner_stmts: statements) ~(indent: int) =
   let print_statements_indented = print_statements ~indent:(indent + 2) in
-  fprintf out "{\n%a%a}"
-    print_statements_indented inner_stmts Formatutil.print_indent indent
+  fprintf out "{\n%a\n%a}"
+    print_statements_indented inner_stmts
+    Formatutil.print_indent indent
 
 and print_if_while_statement
     out (name: string) (expr: expression) (stmt: statement) ~(indent: int) =
