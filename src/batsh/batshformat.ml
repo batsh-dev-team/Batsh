@@ -13,7 +13,7 @@ and print_expression out (expr: expression) =
   | Leftvalue lvalue -> print_lvalue out lvalue
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
-  | String str -> output_string out (sprintf "\"%s\"" str)
+  | String str -> fprintf out "\"%s\"" (Formatutil.escape str)
   | Bool true  -> output_string out "true"
   | Bool false -> output_string out "false"
   | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ | Concat _

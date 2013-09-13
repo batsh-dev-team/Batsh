@@ -58,7 +58,8 @@ let rec print_expression out (expr: expression) =
   match expr with
   | Variable lvalue | Result Leftvalue lvalue ->
     print_lvalue out lvalue ~bare: false
-  | String str -> fprintf out "\"%s\"" str
+  | String str ->
+    fprintf out "\"%s\"" (Formatutil.escape str)
   | Result arith ->
     fprintf out "$((%a))" print_arith arith
   | Concat (left, right) ->

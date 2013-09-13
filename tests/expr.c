@@ -4,5 +4,6 @@ echo("http://" ++ "www." ++ ("byvoid" ++ ".com"));
 echo(expr(36, "+", 6));
 a = [1, 2, 3];
 echo(a[0], a[1], a[2]);
+echo("Help\nNewLine!Backslash\\ Quote\" Slash/ Tab\t");
 //echo("BYVoid" == "BYVoid");
 //echo([1, 2, 3]);

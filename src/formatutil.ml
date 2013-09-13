@@ -15,3 +15,14 @@ let print_statements
       if i < num_stmts - 1 then
         output_string out "\n"
     )
+
+let escaper = Staged.unstage (String.Escaping.escape_gen_exn
+                                ~escapeworthy_map: [
+                                  ('\n', 'n');
+                                  ('\r', 'r');
+                                  ('\"', '"')]
+                                ~escape_char: '\\'
+                             )
+
+let escape (str: string) :string =
+  escaper str
