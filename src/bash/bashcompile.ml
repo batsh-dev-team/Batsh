@@ -104,7 +104,11 @@ let rec compile_statement (stmt: Batshast.statement) :statement =
   | Batshast.Comment comment ->
     Comment comment
   | Batshast.Assignment (lvalue, expr) ->
-    if is_arith expr then
+    let print_let = is_arith expr && match expr with
+      (* if right value is only a left value, do not use let*)
+      | Batshast.Leftvalue _ -> false
+      | _ -> true in
+    if print_let then
       Let (compile_leftvalue lvalue, compile_expr_to_arith expr)
     else
       Assignment (compile_leftvalue lvalue, compile_expr expr)
