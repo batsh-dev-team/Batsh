@@ -8,6 +8,7 @@
 %token IF
 %token ELSE
 %token WHILE
+%token FUNCTION
 %token EQUAL
 %token LEFT_PAREN
 %token RIGHT_PAREN
@@ -40,18 +41,26 @@
 %nonassoc IF
 %nonassoc ELSE
 
-%start <Batshast.statements> prog
+%start <Batshast.asttype> program
 
 %%
 
-prog:
-    stmts = statement_list; EOF;
-      { stmts }
+program:
+    toplevels = toplevel_list; EOF;
+      { toplevels }
   ;
 
-statement_list:
-    stmts = list(statement);
-      { stmts }
+toplevel:
+  | stmt = statement;
+      { Batshast.Statement stmt }
+  | FUNCTION; name = IDENTIFIER; LEFT_PAREN;
+      params = identifier_list; RIGHT_PAREN;
+      LEFT_BRACE; stmts = statement_list; RIGHT_BRACE;
+      { Batshast.Function (name, params, stmts) }
+
+toplevel_list:
+    toplevels = list(toplevel);
+      { toplevels }
   ;
 
 statement:
@@ -69,6 +78,11 @@ statement:
       { stmt }
   | stmt = loop_statement;
       { stmt }
+  ;
+
+statement_list:
+    stmts = list(statement);
+      { stmts }
   ;
 
 if_statement:
@@ -111,6 +125,11 @@ expression:
 expression_list:
     exprs = separated_list(COMMA, expression);
       { exprs }
+  ;
+
+identifier_list:
+    idents = separated_list(COMMA, IDENTIFIER);
+      { idents }
   ;
 
 leftvalue:

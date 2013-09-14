@@ -119,5 +119,26 @@ and print_while_statement
     out (expr: expression) (stmt: statement) ~(indent: int) =
   print_if_while_statement out "while" expr stmt ~indent
 
-let print_ast out (ast: asttype) =
-  print_statements out ast ~indent: 0
+let print_params (outx: out_channel) (params: identifiers) =
+  let num_params = List.length params in
+  List.iteri params ~f: (fun i param ->
+    output_string outx param;
+    if i < num_params - 1 then
+      output_string outx ", "
+  )
+
+let print_function (outx: out_channel) (name, params, stmts) =
+  fprintf outx "function %s (%a) {\n%a\n}"
+      name
+      print_params params
+      (print_statements ~indent: 2) stmts
+
+let print_toplevel (outx: out_channel) (topl: toplevel) =
+  match topl with
+  | Statement stmt ->
+    print_statement outx stmt ~indent: 0
+  | Function func ->
+    print_function outx func
+
+let print_ast (outx: out_channel) (ast: asttype) =
+  List.iter ast ~f: (print_toplevel outx)

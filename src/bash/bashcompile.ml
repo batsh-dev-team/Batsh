@@ -140,8 +140,10 @@ and compile_if_else_statement
 and compile_while_statement (expr: Batshast.expression) stmt :statement =
   While (compile_expr expr, compile_statement stmt)
 
-let compile_statements (stmts: Batshast.statements) :statements =
-  List.map stmts ~f: compile_statement
+let compile_toplevel (topl: Batshast.toplevel) :statement =
+  match topl with
+  | Batshast.Statement stmt -> compile_statement stmt
+  | Batshast.Function _ -> Empty
 
-let compile (program: Batshast.statements) :statements =
-  compile_statements program
+let compile (program: Batshast.asttype) :statements =
+  List.map program ~f: compile_toplevel

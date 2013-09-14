@@ -12,7 +12,7 @@ module Parser = struct
         pos.Lexing.pos_lnum (pos.Lexing.pos_cnum - pos.Lexing.pos_bol + 1)
     in
     try
-      Parser.prog Lexer.read lexbuf
+      Parser.program Lexer.read lexbuf
     with
     | Lexer.SyntaxError msg ->
       fprintf stderr "%a: %s\n" print_position lexbuf msg;
