@@ -26,13 +26,9 @@ and print_expression out (expr: expression) =
   | List exprs ->
     fprintf out "[%a]" print_expressions exprs
 
-and print_expressions out (exprs: expression list) =
-  let num_exprs = List.length exprs in
-  List.iteri exprs ~f: (fun i expr ->
-      print_expression out expr;
-      if i <> num_exprs - 1 then
-        output_string out ", "
-    )
+and print_expressions (outx: out_channel) (exprs: expression list) =
+  Formatutil.print_separate_list outx exprs
+    ~f: print_expression ~separator: ", "
 
 and print_binary_expression out (expr: expression) =
   let print_binary operator left right =
@@ -120,12 +116,7 @@ and print_while_statement
   print_if_while_statement out "while" expr stmt ~indent
 
 let print_params (outx: out_channel) (params: identifiers) =
-  let num_params = List.length params in
-  List.iteri params ~f: (fun i param ->
-    output_string outx param;
-    if i < num_params - 1 then
-      output_string outx ", "
-  )
+  Formatutil.print_separate_list outx params ~f: output_string ~separator: ", "
 
 let print_function (outx: out_channel) (name, params, stmts) =
   fprintf outx "function %s (%a) {\n%a\n}"

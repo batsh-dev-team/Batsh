@@ -16,6 +16,18 @@ let print_statements
         output_string out "\n"
     )
 
+let print_separate_list
+    (outx: out_channel)
+    (elements: 'a list)
+    ~(f: out_channel -> 'a -> unit)
+    ~(separator: string) =
+  let num_elements = List.length elements in
+  List.iteri elements ~f: (fun i element ->
+      f outx element;
+      if i < num_elements - 1 then
+        output_string outx separator
+    )
+
 let escaper = Staged.unstage (String.Escaping.escape_gen_exn
                                 ~escapeworthy_map: [
                                   ('\n', 'n');
