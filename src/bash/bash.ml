@@ -1,4 +1,4 @@
-type asttype = Bashast.statements
+type asttype = Bashast.asttype
 
 module Compile = struct
   include Bashcompile

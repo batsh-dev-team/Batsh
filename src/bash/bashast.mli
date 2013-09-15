@@ -1,5 +1,7 @@
 type identifier = string
 
+type identifiers = identifier list
+
 type leftvalue =
   | Identifier of identifier
   | ListAccess of (leftvalue * arithmetic)
@@ -47,3 +49,9 @@ type statement =
   | Empty
 
 and statements = statement list
+
+type toplevel =
+  | Statement of statement
+  | Function of (identifier * statements)
+
+type asttype = toplevel list

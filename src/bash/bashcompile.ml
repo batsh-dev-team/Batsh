@@ -140,10 +140,23 @@ and compile_if_else_statement
 and compile_while_statement (expr: Batshast.expression) stmt :statement =
   While (compile_expr expr, compile_statement stmt)
 
-let compile_toplevel (topl: Batshast.toplevel) :statement =
-  match topl with
-  | Batshast.Statement stmt -> compile_statement stmt
-  | Batshast.Function _ -> Empty
+let compile_statements (stmts: Batshast.statements) :statements =
+  List.map stmts ~f: compile_statement
 
-let compile (program: Batshast.asttype) :statements =
+let compile_function (name, params, stmts) :toplevel =
+  let locals = List.mapi params ~f: (fun i param ->
+      Assignment (Identifier param,
+                  Variable (Identifier (string_of_int (i + 1))))
+    ) in
+  let body = compile_statements stmts in
+  Function (name, locals @ body)
+
+let compile_toplevel (topl: Batshast.toplevel) :toplevel =
+  match topl with
+  | Batshast.Statement stmt ->
+    Statement (compile_statement stmt)
+  | Batshast.Function func ->
+    compile_function func
+
+let compile (program: Batshast.asttype) :asttype =
   List.map program ~f: compile_toplevel
