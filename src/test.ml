@@ -34,7 +34,8 @@ let test_cases = "Batsh Unit Tests" >:::
                     "Array" >:: test_bash "array";
                     "Expressions" >:: test_bash "expr";
                     "If" >:: test_bash "if";
-                    "While" >:: test_bash "while"]
+                    "While" >:: test_bash "while";
+                    "Function" >:: test_bash "function"]
 
 let _ =
   run_test_tt_main test_cases
