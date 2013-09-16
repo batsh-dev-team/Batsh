@@ -177,8 +177,8 @@ and print_statements: out_channel -> statements -> indent:int -> unit =
 
 let print_function (outx: out_channel) (name, stmts) =
   fprintf outx "function %s {\n%a\n}"
-      name
-      (print_statements ~indent: 2) stmts
+    name
+    (print_statements ~indent: 2) stmts
 
 let print_toplevel (outx: out_channel) (topl: toplevel) ~indent =
   match topl with

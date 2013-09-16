@@ -120,9 +120,9 @@ let print_params (outx: out_channel) (params: identifiers) =
 
 let print_function (outx: out_channel) (name, params, stmts) =
   fprintf outx "function %s (%a) {\n%a\n}"
-      name
-      print_params params
-      (print_statements ~indent: 2) stmts
+    name
+    print_params params
+    (print_statements ~indent: 2) stmts
 
 let print_toplevel (outx: out_channel) (topl: toplevel) ~indent =
   match topl with
