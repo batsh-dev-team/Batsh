@@ -60,10 +60,14 @@ let rec compile_expr_to_arith (expr: Batshast.expression) :arithmetic =
   | Batshast.Concat _ -> assert false
   | Batshast.Call _ -> assert false
 
-and compile_expr (expr: Batshast.expression) :expression =
+and compile_expr
+    (expr: Batshast.expression)
+    ~(symtable: Symbol_table.t)
+  :expression =
   if is_arith expr then
     Result (compile_expr_to_arith expr)
   else
+    let compile_expr = compile_expr ~symtable in
     match expr with
     | Batshast.Bool false -> String "false"
     | Batshast.Bool true -> String "true"
@@ -99,7 +103,10 @@ and compile_leftvalue (lvalue: Batshast.leftvalue) :leftvalue =
   | Batshast.ListAccess (lvalue, expr) ->
     ListAccess (compile_leftvalue lvalue, compile_expr_to_arith expr)
 
-let rec compile_statement (stmt: Batshast.statement) :statement =
+let rec compile_statement
+    (stmt: Batshast.statement)
+    ~(symtable: Symbol_table.t)
+  :statement =
   match stmt with
   | Batshast.Comment comment ->
     Comment comment
@@ -111,52 +118,71 @@ let rec compile_statement (stmt: Batshast.statement) :statement =
     if print_let then
       Let (compile_leftvalue lvalue, compile_expr_to_arith expr)
     else
-      Assignment (compile_leftvalue lvalue, compile_expr expr)
+      Assignment (compile_leftvalue lvalue, compile_expr expr ~symtable)
   | Batshast.Expression expr ->
-    Expression (compile_expr expr)
+    Expression (compile_expr expr ~symtable)
   | Batshast.If (expr, stmt) ->
-    compile_if_statement expr stmt
+    compile_if_statement expr stmt ~symtable
   | Batshast.IfElse (expr, thenStmt, elseStmt) ->
-    compile_if_else_statement expr thenStmt elseStmt
+    compile_if_else_statement expr thenStmt elseStmt ~symtable
   | Batshast.While (expr, stmt) ->
-    compile_while_statement expr stmt
+    compile_while_statement expr stmt ~symtable
   | Batshast.Block stmts ->
-    Block (List.map stmts ~f: compile_statement)
+    Block (List.map stmts ~f: (compile_statement ~symtable))
   | Batshast.Empty ->
     Empty
 
-and compile_if_statement (expr: Batshast.expression) stmt :statement =
-  If (compile_expr expr, compile_statement stmt)
+and compile_if_statement
+    (expr: Batshast.expression)
+    stmt
+    ~(symtable: Symbol_table.t)
+  :statement =
+  If (compile_expr expr ~symtable, compile_statement stmt ~symtable)
 
 and compile_if_else_statement
     (expr: Batshast.expression)
     (thenStmt: Batshast.statement)
     (elseStmt: Batshast.statement)
+    ~(symtable: Symbol_table.t)
   :statement =
-  IfElse (compile_expr expr,
-          compile_statement thenStmt,
-          compile_statement elseStmt)
+  IfElse (compile_expr expr ~symtable,
+          compile_statement thenStmt ~symtable,
+          compile_statement elseStmt ~symtable)
 
-and compile_while_statement (expr: Batshast.expression) stmt :statement =
-  While (compile_expr expr, compile_statement stmt)
+and compile_while_statement
+    (expr: Batshast.expression)
+    stmt
+    ~(symtable: Symbol_table.t)
+  :statement =
+  While (compile_expr expr ~symtable, compile_statement stmt ~symtable)
 
-let compile_statements (stmts: Batshast.statements) :statements =
-  List.map stmts ~f: compile_statement
+let compile_statements
+    (stmts: Batshast.statements)
+    ~(symtable: Symbol_table.t)
+  :statements =
+  List.map stmts ~f: (compile_statement ~symtable)
 
-let compile_function (name, params, stmts) :toplevel =
+let compile_function
+    (name, params, stmts)
+    ~(symtable: Symbol_table.t)
+  :toplevel =
   let locals = List.mapi params ~f: (fun i param ->
       Assignment (Identifier param,
                   Variable (Identifier (string_of_int (i + 1))))
     ) in
-  let body = compile_statements stmts in
+  let body = compile_statements stmts ~symtable in
   Function (name, locals @ body)
 
-let compile_toplevel (topl: Batshast.toplevel) :toplevel =
+let compile_toplevel
+    ~(symtable: Symbol_table.t)
+    (topl: Batshast.toplevel)
+  :toplevel =
   match topl with
   | Batshast.Statement stmt ->
-    Statement (compile_statement stmt)
+    Statement (compile_statement stmt ~symtable)
   | Batshast.Function func ->
-    compile_function func
+    compile_function func ~symtable
 
 let compile (program: Batshast.asttype) :asttype =
-  List.map program ~f: compile_toplevel
+  let symtable = Symbol_table.create program in
+  List.map program ~f: (compile_toplevel ~symtable)

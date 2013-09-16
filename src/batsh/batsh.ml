@@ -3,6 +3,7 @@ open Batshast
 
 type t = Lexing.lexbuf
 type asttype = Batshast.asttype
+type symtable = Symbol_table.t
 
 module Parser = struct
   let parse_and_print_error (lexbuf: t) : asttype =
@@ -27,6 +28,10 @@ module Format = struct
   let prettify (batsh: t) =
     let ast = Parser.parse_and_print_error batsh in
     printf "%a\n" print_ast ast
+end
+
+module Symbol_table = struct
+  include Symbol_table
 end
 
 let create_from_channel (inx: in_channel) (filename: string) : t =
