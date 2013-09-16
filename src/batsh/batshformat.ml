@@ -124,12 +124,12 @@ let print_function (outx: out_channel) (name, params, stmts) =
       print_params params
       (print_statements ~indent: 2) stmts
 
-let print_toplevel (outx: out_channel) (topl: toplevel) =
+let print_toplevel (outx: out_channel) (topl: toplevel) ~indent =
   match topl with
   | Statement stmt ->
-    print_statement outx stmt ~indent: 0
+    print_statement outx stmt ~indent
   | Function func ->
     print_function outx func
 
 let print_ast (outx: out_channel) (ast: asttype) =
-  List.iter ast ~f: (print_toplevel outx)
+  Formatutil.print_statements outx ast ~f: print_toplevel ~indent: 0
