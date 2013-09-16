@@ -64,8 +64,8 @@ let rec print_expression out (expr: expression) =
     fprintf out "$((%a))" print_arith arith
   | Concat (left, right) ->
     fprintf out "%a%a" print_expression left print_expression right
-  | Command _ ->
-    fprintf out "$(%a)" print_command expr
+  | Command cmd ->
+    fprintf out "$(%a)" print_command cmd
   | SEQ (left, right) ->
     fprintf out "[ %a == %a ]" print_expression left print_expression right
   | SNE (left, right) ->
@@ -84,15 +84,10 @@ let rec print_expression out (expr: expression) =
       );
     output_string out ")"
 
-and print_command out (expr: expression) =
-  match expr with
-  | Command (ident, params) ->
-    print_expression out ident;
-    List.iter params ~f: (fun param ->
-        output_string out " ";
-        print_expression out param
-      )
-  | _ -> assert false
+and print_command (outx: out_channel) (ident, params) =
+  fprintf outx "%a %a"
+    print_expression ident
+    (Formatutil.print_separate_list ~f: print_expression ~separator: " ") params
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
   let () = match stmt with
@@ -111,8 +106,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
     fprintf out "%a=%a"
       print_lvalue lvalue
       print_expression expr
-  | Expression (Command _ as expr) ->
-    print_command out expr
+  | Expression (Command cmd) ->
+    print_command out cmd
   | Expression expr ->
     print_expression out expr
   | If (expr, stmts) ->
