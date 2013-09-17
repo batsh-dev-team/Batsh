@@ -39,6 +39,7 @@ and expressions = expression list
 
 type statement =
   | Comment of string
+  | Local of identifier
   | Let of (leftvalue * arithmetic)
   | Assignment of (leftvalue * expression)
   | Expression of expression

@@ -166,12 +166,18 @@ let compile_function
     (name, params, stmts)
     ~(symtable: Symbol_table.t)
   :toplevel =
-  let locals = List.mapi params ~f: (fun i param ->
+  let ident_local ident = Local ident in
+  let locals = Symbol_table.map_variables symtable ~scope: (Some name)
+      ~f: ident_local
+  in
+  let param_locals = List.map params ~f: ident_local in
+  let param_defines = List.mapi params ~f: (fun i param ->
       Assignment (Identifier param,
                   Variable (Identifier (string_of_int (i + 1))))
-    ) in
+    )
+  in
   let body = compile_statements stmts ~symtable in
-  Function (name, locals @ body)
+  Function (name, List.concat [locals; param_locals; param_defines; body])
 
 let compile_toplevel
     ~(symtable: Symbol_table.t)

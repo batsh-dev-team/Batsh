@@ -98,6 +98,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
   match stmt with
   | Comment comment ->
     fprintf out "#%s" comment
+  | Local ident ->
+    fprintf out "local %s" ident
   | Let (lvalue, arith) ->
     fprintf out "let \"%a = %a\""
       print_lvalue lvalue

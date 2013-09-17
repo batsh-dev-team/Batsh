@@ -56,3 +56,14 @@ let find_function (symtable: t) (name: string) :bool =
   match Hashtbl.find symtable.functions name with
   | Some _ -> true
   | None -> false
+
+let map_variables (symtable: t) ~(scope: string option) ~(f: string -> 'a) =
+  let variables : variable_table = match scope with
+    | Some scope -> (
+        match Hashtbl.find_exn symtable.functions scope with
+        | Declare -> failwith "No such function"
+        | Define variables -> variables
+      )
+    | None -> symtable.globals
+  in
+  Hashtbl.fold variables ~init: [] ~f: (fun ~key ~data acc -> (f data) :: acc)
