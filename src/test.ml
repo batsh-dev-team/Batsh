@@ -35,7 +35,8 @@ let test_cases = "Batsh Unit Tests" >:::
                     "Expressions" >:: test_bash "expr";
                     "If" >:: test_bash "if";
                     "While" >:: test_bash "while";
-                    "Function" >:: test_bash "function"]
+                    "Function" >:: test_bash "function";
+                    "Recursion" >:: test_bash "recursion"]
 
 let _ =
   run_test_tt_main test_cases
