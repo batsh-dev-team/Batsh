@@ -9,6 +9,7 @@
 %token ELSE
 %token WHILE
 %token FUNCTION
+%token GLOBAL
 %token EQUAL
 %token LEFT_PAREN
 %token RIGHT_PAREN
@@ -78,6 +79,8 @@ statement:
       { stmt }
   | stmt = loop_statement;
       { stmt }
+  | GLOBAL ident = IDENTIFIER; SEMICOLON;
+      { Batshast.Global ident }
   ;
 
 statement_list:

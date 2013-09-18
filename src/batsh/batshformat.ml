@@ -82,6 +82,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
     print_if_else_statement out expr thenStmt elseStmt ~indent
   | While (expr, stmt) ->
     print_while_statement out expr stmt ~indent
+  | Global ident ->
+    fprintf out "global %s;" ident
   | Empty -> ()
 
 and print_statements = Formatutil.print_statements ~f: print_statement

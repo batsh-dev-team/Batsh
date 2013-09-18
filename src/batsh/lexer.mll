@@ -36,6 +36,7 @@ rule read =
   | "else"   { ELSE }
   | "while"  { WHILE }
   | "function" { FUNCTION }
+  | "global" { GLOBAL }
   | '='      { EQUAL }
   | '"'      { read_string (Buffer.create 17) lexbuf }
   | '('      { LEFT_PAREN }

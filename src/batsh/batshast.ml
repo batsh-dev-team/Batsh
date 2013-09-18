@@ -36,6 +36,7 @@ type statement =
   | If of (expression * statement)
   | IfElse of (expression * statement * statement)
   | While of (expression * statement)
+  | Global of identifier
   | Empty
 
 and statements = statement list

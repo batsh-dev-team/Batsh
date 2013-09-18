@@ -129,6 +129,8 @@ let rec compile_statement
     compile_while_statement expr stmt ~symtable
   | Batshast.Block stmts ->
     Block (List.map stmts ~f: (compile_statement ~symtable))
+  | Batshast.Global _ ->
+    Empty
   | Batshast.Empty ->
     Empty
 
@@ -167,8 +169,14 @@ let compile_function
     ~(symtable: Symbol_table.t)
   :toplevel =
   let ident_local ident = Local ident in
-  let locals = Symbol_table.map_variables symtable ~scope: (Some name)
-      ~f: ident_local
+  let locals = Symbol_table.fold_variables symtable ~scope: (Some name)
+      ~init: []
+      ~f: (fun ident global acc ->
+          if global then
+            acc
+          else
+            (Local ident) :: acc
+        )
   in
   let param_locals = List.map params ~f: ident_local in
   let param_defines = List.mapi params ~f: (fun i param ->
