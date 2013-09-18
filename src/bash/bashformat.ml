@@ -118,12 +118,11 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
     print_if_else out expr then_stmts else_stmts ~indent
   | While (expr, stmts) ->
     print_while out expr stmts ~indent
-  | Empty ->
-    output_string out "-"
   | Block [] ->
-    print_statements out [Empty] ~indent
+    output_string out "-"
   | Block stmts ->
     print_statements out stmts ~indent
+  | Empty -> ()
 
 and print_condition (out: out_channel) (expr: expression) =
   match expr with
