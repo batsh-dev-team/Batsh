@@ -139,7 +139,7 @@ and extract_temporary_expr expr :(statements * expression) =
     let assignments, test_expr = extract_temporary_expr test_expr in
     let test_stmt = Expression test_expr in
     let assignment = Assignment (variable, Result (ArithUnary ("!", Leftvalue (Identifier "?")))) in
-    (assignment :: test_stmt :: assignments, Variable variable)
+    (test_stmt :: assignment :: assignments, Variable variable)
   | String _ | Variable _ ->
     ([], expr)
   | Result arith ->

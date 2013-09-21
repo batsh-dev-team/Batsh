@@ -1,3 +1,6 @@
 Yes
 2
 True
+a != b
+43 == num
+43 === num
