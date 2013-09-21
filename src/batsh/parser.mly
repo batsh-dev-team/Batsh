@@ -144,29 +144,29 @@ leftvalue:
 
 binary_expression:
   | left = expression; PLUS; right = expression;
-      { Batshast.Plus (left, right) }
+      { Batshast.ArithBinary ("+", left, right) }
   | left = expression; MINUS; right = expression;
-      { Batshast.Minus (left, right) }
+      { Batshast.ArithBinary ("-", left, right) }
   | left = expression; MULTIPLY; right = expression;
-      { Batshast.Multiply (left, right) }
+      { Batshast.ArithBinary ("*", left, right) }
   | left = expression; DIVIDE; right = expression;
-      { Batshast.Divide (left, right) }
+      { Batshast.ArithBinary ("/", left, right) }
   | left = expression; MODULO; right = expression;
-      { Batshast.Modulo (left, right) }
+      { Batshast.ArithBinary ("%", left, right) }
+  | left = expression; EQ; right = expression;
+      { Batshast.ArithBinary ("==", left, right) }
+  | left = expression; NE; right = expression;
+      { Batshast.ArithBinary ("!=", left, right) }
+  | left = expression; GT; right = expression;
+      { Batshast.ArithBinary (">", left, right) }
+  | left = expression; LT; right = expression;
+      { Batshast.ArithBinary ("<", left, right) }
+  | left = expression; GE; right = expression;
+      { Batshast.ArithBinary (">=", left, right) }
+  | left = expression; LE; right = expression;
+      { Batshast.ArithBinary ("<=", left, right) }
   | left = expression; CONCAT; right = expression;
       { Batshast.Concat (left, right) }
-  | left = expression; EQ; right = expression;
-      { Batshast.Equal (left, right) }
-  | left = expression; NE; right = expression;
-      { Batshast.NotEqual (left, right) }
-  | left = expression; GT; right = expression;
-      { Batshast.Greater (left, right) }
-  | left = expression; LT; right = expression;
-      { Batshast.Less (left, right) }
-  | left = expression; GE; right = expression;
-      { Batshast.GreaterEqual (left, right) }
-  | left = expression; LE; right = expression;
-      { Batshast.LessEqual (left, right) }
   ;
 
 list_fields:

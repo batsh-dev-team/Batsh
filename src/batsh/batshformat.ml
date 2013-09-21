@@ -16,9 +16,10 @@ and print_expression out (expr: expression) =
   | String str -> fprintf out "\"%s\"" (Formatutil.escape str)
   | Bool true  -> output_string out "true"
   | Bool false -> output_string out "false"
-  | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _ | Concat _
-  | Equal _ | NotEqual _ | Greater _ | Less _ | GreaterEqual _ | LessEqual _ ->
-    print_binary_expression out expr
+  | ArithBinary binary ->
+    print_binary_expression out binary
+  | Concat (left, right) ->
+    print_binary_expression out ("++", left, right)
   | Parentheses expr ->
     fprintf out "(%a)" print_expression expr
   | Call (ident, exprs) ->
@@ -30,37 +31,12 @@ and print_expressions (outx: out_channel) (exprs: expression list) =
   Formatutil.print_separate_list outx exprs
     ~f: print_expression ~separator: ", "
 
-and print_binary_expression out (expr: expression) =
-  let print_binary operator left right =
-    fprintf out "%a %s %a"
-      print_expression left operator print_expression right
-  in
-  match expr with
-  | Plus (left, right) ->
-    print_binary "+" left right
-  | Minus (left, right) ->
-    print_binary "-" left right
-  | Multiply (left, right) ->
-    print_binary "*" left right
-  | Divide (left, right) ->
-    print_binary "/" left right
-  | Modulo (left, right) ->
-    print_binary "%" left right
-  | Concat (left, right) ->
-    print_binary "++" left right
-  | Equal (left, right) ->
-    print_binary "==" left right
-  | NotEqual (left, right) ->
-    print_binary "!=" left right
-  | Greater (left, right) ->
-    print_binary ">" left right
-  | Less (left, right) ->
-    print_binary "<" left right
-  | GreaterEqual (left, right) ->
-    print_binary ">=" left right
-  | LessEqual (left, right) ->
-    print_binary "<=" left right
-  | _ -> assert false
+and print_binary_expression
+    (outx :out_channel)
+    (operator, left, right)
+  =
+  fprintf outx "%a %s %a"
+    print_expression left operator print_expression right
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
   let () = match stmt with

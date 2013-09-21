@@ -1,22 +1,19 @@
 function fact(num) {
   if (num == 0) {
-  	echo(1);
+    echo(1);
   } else {
-  	v = fact(num - 1);
-  	echo(v * num);
+    echo(fact(num - 1) * num);
   }
 }
 fact(5);
 
 function fibonacci(num) {
   if (num == 0) {
-  	echo(0);
+    echo(0);
   } else if (num == 1) {
-  	echo(1);
+    echo(1);
   } else {
-  	v0 = fibonacci(num - 2);
-  	v1 = fibonacci(num - 1);
-  	echo(v0 + v1);
+    echo(fibonacci(num - 2) + fibonacci(num - 1));
   }
 }
 

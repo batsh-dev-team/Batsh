@@ -19,40 +19,18 @@ and print_arith out (expr: arithmetic) =
   | Leftvalue lvalue -> print_lvalue out lvalue ~bare: true
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
-  | Plus _ | Minus _ | Multiply _ | Divide _  | Modulo _
-  | AEQ _ | ANE _ | AGT _ | ALT _ | AGE _ | ALE _ ->
-    print_binary_arith out expr
+  | ArithBinary binary ->
+    print_binary_arith out binary
   | Parentheses expr ->
     fprintf out "(%a)" print_arith expr
+  | Temporary _ ->
+    failwith "BUG: Temporary should be all replaced."
 
-and print_binary_arith out (expr: arithmetic) =
-  let print_binary operator left right =
-    fprintf out "%a %s %a" print_arith left operator print_arith right
-  in
-  match expr with
-  | Plus (left, right) ->
-    print_binary "+" left right
-  | Minus (left, right) ->
-    print_binary "-" left right
-  | Multiply (left, right) ->
-    print_binary "*" left right
-  | Divide (left, right) ->
-    print_binary "/" left right
-  | Modulo (left, right) ->
-    print_binary "%" left right
-  | AEQ (left, right) ->
-    print_binary "==" left right
-  | ANE (left, right) ->
-    print_binary "!=" left right
-  | AGT (left, right) ->
-    print_binary ">" left right
-  | ALT (left, right) ->
-    print_binary "<" left right
-  | AGE (left, right) ->
-    print_binary ">=" left right
-  | ALE (left, right) ->
-    print_binary "<=" left right
-  | _ -> assert false
+and print_binary_arith
+    (outx: out_channel)
+    (operator, left, right)
+  =
+  fprintf outx "%a %s %a" print_arith left operator print_arith right
 
 let rec print_expression out (expr: expression) =
   match expr with
@@ -85,8 +63,8 @@ let rec print_expression out (expr: expression) =
     output_string out ")"
 
 and print_command (outx: out_channel) (ident, params) =
-  fprintf outx "%a %a"
-    print_expression ident
+  fprintf outx "%s %a"
+    ident
     (Formatutil.print_separate_list ~f: print_expression ~separator: " ") params
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
@@ -100,10 +78,6 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
     fprintf out "#%s" comment
   | Local ident ->
     fprintf out "local %s" ident
-  | Let (lvalue, arith) ->
-    fprintf out "let \"%a = %a\""
-      print_lvalue lvalue
-      print_arith arith
   | Assignment (lvalue, expr) ->
     fprintf out "%a=%a"
       print_lvalue lvalue

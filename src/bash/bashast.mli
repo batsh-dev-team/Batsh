@@ -10,37 +10,27 @@ and arithmetic =
   | Leftvalue of leftvalue
   | Int of int
   | Float of float
-  | Plus of (arithmetic * arithmetic)
-  | Minus of (arithmetic * arithmetic)
-  | Multiply of (arithmetic * arithmetic)
-  | Divide of (arithmetic * arithmetic)
-  | Modulo of (arithmetic * arithmetic)
-  | AEQ of (arithmetic * arithmetic)
-  | ANE of (arithmetic * arithmetic)
-  | AGT of (arithmetic * arithmetic)
-  | ALT of (arithmetic * arithmetic)
-  | AGE of (arithmetic * arithmetic)
-  | ALE of (arithmetic * arithmetic)
+  | ArithBinary of (string * arithmetic * arithmetic)
   | Parentheses of arithmetic
+  | Temporary of (identifier * expression)
 
-type expression =
+and expression =
   | Variable of leftvalue
   | String of string
   | Result of arithmetic
   | Concat of (expression * expression)
+  | Command of (identifier * expressions)
+  | List of expressions
   | SEQ of (expression * expression)
   | SNE of (expression * expression)
   | SGT of (expression * expression)
   | SLT of (expression * expression)
-  | Command of (expression * expressions)
-  | List of expressions
 
 and expressions = expression list
 
 type statement =
   | Comment of string
   | Local of identifier
-  | Let of (leftvalue * arithmetic)
   | Assignment of (leftvalue * expression)
   | Expression of expression
   | If of (expression * statement)

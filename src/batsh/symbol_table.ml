@@ -1,6 +1,10 @@
 open Core.Std
 open Batshast
 
+type scope_type =
+  | GlobalScope
+  | FunctionScope of string
+
 type variable_entry = {
   name : string;
   global : bool;
@@ -87,18 +91,48 @@ let find_function (symtable: t) (name: string) :bool =
   | Some _ -> true
   | None -> false
 
+let get_variable_table
+    (symtable: t)
+    ~(scope: scope_type)
+  :variable_table =
+  match scope with
+  | FunctionScope scope -> (
+      match Hashtbl.find_exn symtable.functions scope with
+      | Declare -> failwith "No such function"
+      | Define variables -> variables
+    )
+  | GlobalScope -> symtable.globals
+
 let fold_variables
     (symtable: t)
-    ~(scope: string option)
+    ~(scope: scope_type)
     ~(init: 'a)
     ~(f: string -> bool -> 'a -> 'a) =
-  let variables : variable_table = match scope with
-    | Some scope -> (
-        match Hashtbl.find_exn symtable.functions scope with
-        | Declare -> failwith "No such function"
-        | Define variables -> variables
-      )
-    | None -> symtable.globals
-  in
+  let variables = get_variable_table symtable scope in
   Hashtbl.fold variables ~init
     ~f: (fun ~key ~data acc -> f data.name data.global acc)
+
+let find_variable
+    (symtable: t)
+    ~(scope: scope_type)
+    ~(name: string)
+  =
+  let variables = get_variable_table symtable scope in
+  Hashtbl.find variables name
+
+let rec add_temporary_variable
+    (symtable: t)
+    ~(scope: scope_type)
+  :identifier =
+  let random_string = Random.bits () |> Int.to_string
+                      |> Digest.string |> Digest.to_hex in
+  let name = "TMP_" ^ (String.prefix random_string 4) in
+  match find_variable symtable ~scope ~name with
+  | None ->
+    (* Add to symbol table *)
+    let variables = get_variable_table symtable scope in
+    Hashtbl.add_exn variables ~key: name ~data: {name; global = false};
+    name
+  | Some _ ->
+    (* Duplicated, try again *)
+    add_temporary_variable symtable ~scope
