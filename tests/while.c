@@ -1,7 +1,7 @@
 i = 0;
 while (i < 5) {
-	echo("-n", i ++ " ");
-	i = i + 1;
+  echo("-n", i ++ " ");
+  i = i + 1;
 }
 echo();
 

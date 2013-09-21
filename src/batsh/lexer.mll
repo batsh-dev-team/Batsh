@@ -53,8 +53,10 @@ rule read =
   | '/'      { DIVIDE }
   | '%'      { MODULO }
   | "++"     { CONCAT }
-  | "=="     { EQ }
-  | "!="     { NE }
+  | "=="     { SEQ }
+  | "!="     { SNE }
+  | "==="    { AEQ }
+  | "!=="    { ANE }
   | '>'      { GT }
   | '<'      { LT }
   | ">="     { GE }

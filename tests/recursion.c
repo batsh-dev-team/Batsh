@@ -1,5 +1,5 @@
 function fact(num) {
-  if (num == 0) {
+  if (num === 0) {
     echo(1);
   } else {
     echo(fact(num - 1) * num);
@@ -8,9 +8,9 @@ function fact(num) {
 fact(5);
 
 function fibonacci(num) {
-  if (num == 0) {
+  if (num === 0) {
     echo(0);
-  } else if (num == 1) {
+  } else if (num === 1) {
     echo(1);
   } else {
     echo(fibonacci(num - 2) + fibonacci(num - 1));

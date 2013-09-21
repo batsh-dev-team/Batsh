@@ -1,21 +1,21 @@
 if (2 < 10) {
-	echo("Yes");
+  echo("Yes");
 }
 
 if (true) {
-	if (false){
-		v=(4 + 1);
-	} else {
-		v = 2;
-	}
+  if (false){
+    v=(4 + 1);
+  } else {
+    v = 2;
+  }
 } else {
 
 }
 echo(v);
 
 if (2 > 1)
-	echo("True");
+  echo("True");
 
-if (1 == 12) {
-	echo("No");
+if (1 === 12) {
+  echo("No");
 }

@@ -18,13 +18,9 @@ and expression =
   | Variable of leftvalue
   | String of string
   | Result of arithmetic
-  | Concat of (expression * expression)
+  | StrBinary of (string * expression * expression)
   | Command of (identifier * expressions)
   | List of expressions
-  | SEQ of (expression * expression)
-  | SNE of (expression * expression)
-  | SGT of (expression * expression)
-  | SLT of (expression * expression)
 
 and expressions = expression list
 

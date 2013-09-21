@@ -16,10 +16,8 @@ and print_expression out (expr: expression) =
   | String str -> fprintf out "\"%s\"" (Formatutil.escape str)
   | Bool true  -> output_string out "true"
   | Bool false -> output_string out "false"
-  | ArithBinary binary ->
+  | ArithBinary binary | StrBinary binary ->
     print_binary_expression out binary
-  | Concat (left, right) ->
-    print_binary_expression out ("++", left, right)
   | Parentheses expr ->
     fprintf out "(%a)" print_expression expr
   | Call (ident, exprs) ->

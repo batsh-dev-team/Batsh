@@ -5,7 +5,7 @@ let rec is_arith (expr: Batshast.expression) :bool =
   match expr with
   | Batshast.String _
   | Batshast.List _
-  | Batshast.Concat _
+  | Batshast.StrBinary _
   | Batshast.Call _ ->
     false
   | Batshast.Bool _
@@ -36,7 +36,7 @@ let rec compile_expr_to_arith
     Parentheses (compile_expr_to_arith expr)
   | Batshast.String _ 
   | Batshast.List _
-  | Batshast.Concat _
+  | Batshast.StrBinary _
   | Batshast.Call _ ->
     let ident = Symbol_table.add_temporary_variable symtable ~scope in
     Temporary (ident, compile_expr expr ~symtable ~scope)
@@ -56,8 +56,8 @@ and compile_expr
     | Batshast.Int number -> String (string_of_int number)
     | Batshast.Float number -> String (Float.to_string number)
     | Batshast.String str -> String str
-    | Batshast.Concat (left, right) ->
-      Concat (compile_expr left, compile_expr right)
+    | Batshast.StrBinary (operator, left, right) ->
+      StrBinary (operator, compile_expr left, compile_expr right)
     | Batshast.Call (ident, exprs) ->
       let params = List.map exprs ~f: compile_expr in
       Command (ident, params)
@@ -119,10 +119,10 @@ and extract_temporary_expr expr :(statements * expression) =
   | Result arith ->
     let assignments, arith = extract_temporary_arith arith in
     (assignments, Result arith)
-  | Concat (left, right) ->
+  | StrBinary (operator, left, right) ->
     let assignments_left, left = extract_temporary_expr left in
     let assignments_right, right = extract_temporary_expr right in
-    (assignments_left @ assignments_right, Concat(left, right))
+    (assignments_left @ assignments_right, StrBinary (operator, left, right))
   | Command (ident, exprs) ->
     let assignments, exprs = extract_temporary_exprs exprs in
     (assignments, Command (ident, exprs))

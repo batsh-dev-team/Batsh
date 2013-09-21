@@ -25,15 +25,17 @@
 %token DIVIDE
 %token MODULO
 %token CONCAT
-%token EQ
-%token NE
+%token SEQ
+%token SNE
+%token AEQ
+%token ANE
 %token GT
 %token LT
 %token GE
 %token LE
 %token EOF
 
-%nonassoc EQ NE
+%nonassoc SEQ SNE AEQ ANE
 %nonassoc GT LT GE LE
 %left CONCAT
 %left PLUS MINUS
@@ -153,10 +155,10 @@ binary_expression:
       { Batshast.ArithBinary ("/", left, right) }
   | left = expression; MODULO; right = expression;
       { Batshast.ArithBinary ("%", left, right) }
-  | left = expression; EQ; right = expression;
-      { Batshast.ArithBinary ("==", left, right) }
-  | left = expression; NE; right = expression;
-      { Batshast.ArithBinary ("!=", left, right) }
+  | left = expression; AEQ; right = expression;
+      { Batshast.ArithBinary ("===", left, right) }
+  | left = expression; ANE; right = expression;
+      { Batshast.ArithBinary ("!==", left, right) }
   | left = expression; GT; right = expression;
       { Batshast.ArithBinary (">", left, right) }
   | left = expression; LT; right = expression;
@@ -166,7 +168,11 @@ binary_expression:
   | left = expression; LE; right = expression;
       { Batshast.ArithBinary ("<=", left, right) }
   | left = expression; CONCAT; right = expression;
-      { Batshast.Concat (left, right) }
+      { Batshast.StrBinary ("++", left, right) }
+  | left = expression; SEQ; right = expression;
+      { Batshast.StrBinary ("==", left, right) }
+  | left = expression; SNE; right = expression;
+      { Batshast.StrBinary ("!=", left, right) }
   ;
 
 list_fields:

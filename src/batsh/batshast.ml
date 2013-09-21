@@ -14,7 +14,7 @@ and expression =
   | String of string
   | Leftvalue of leftvalue
   | ArithBinary of (string * expression * expression)
-  | Concat of (expression * expression)
+  | StrBinary of (string * expression * expression)
   | Parentheses of expression
   | Call of (identifier * expression list)
 

@@ -20,16 +20,21 @@ and print_arith out (expr: arithmetic) =
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
   | ArithBinary binary ->
-    print_binary_arith out binary
+    print_arith_binary out binary
   | Parentheses expr ->
     fprintf out "(%a)" print_arith expr
   | Temporary _ ->
     failwith "BUG: Temporary should be all replaced."
 
-and print_binary_arith
+and print_arith_binary
     (outx: out_channel)
     (operator, left, right)
   =
+  let operator = match operator with
+    | "===" -> "=="
+    | "!==" -> "!="
+    | _ -> operator
+  in
   fprintf outx "%a %s %a" print_arith left operator print_arith right
 
 let rec print_expression out (expr: expression) =
@@ -40,18 +45,10 @@ let rec print_expression out (expr: expression) =
     fprintf out "\"%s\"" (Formatutil.escape str)
   | Result arith ->
     fprintf out "$((%a))" print_arith arith
-  | Concat (left, right) ->
-    fprintf out "%a%a" print_expression left print_expression right
+  | StrBinary binary ->
+    print_str_binary out binary
   | Command cmd ->
     fprintf out "$(%a)" print_command cmd
-  | SEQ (left, right) ->
-    fprintf out "[ %a == %a ]" print_expression left print_expression right
-  | SNE (left, right) ->
-    fprintf out "[ %a != %a ]" print_expression left print_expression right
-  | SGT (left, right) ->
-    fprintf out "[ %a > %a ]" print_expression left print_expression right
-  | SLT (left, right) ->
-    fprintf out "[ %a < %a ]" print_expression left print_expression right
   | List exprs ->
     output_string out "(";
     let num_exprs = List.length exprs in
@@ -61,6 +58,17 @@ let rec print_expression out (expr: expression) =
           output_string out " "
       );
     output_string out ")"
+
+and print_str_binary (outx: out_channel) (operator, left, right) =
+  match operator with
+  | "++" ->
+    fprintf outx "%a%a" print_expression left print_expression right
+  | "==" ->
+    fprintf outx "[ %a == %a ]" print_expression left print_expression right
+  | "!=" ->
+    fprintf outx "[ %a != %a ]" print_expression left print_expression right
+  | _ ->
+    failwith ("Unknown operator: " ^ operator)
 
 and print_command (outx: out_channel) (ident, params) =
   fprintf outx "%s %a"
@@ -99,11 +107,7 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
   | Empty -> ()
 
 and print_condition (out: out_channel) (expr: expression) =
-  match expr with
-  | SEQ _ | SNE _ | SGT _ | SLT _ ->
-    print_expression out expr
-  | _ ->
-    fprintf out "[ %a == 1 ]" print_expression expr
+  fprintf out "[ %a == 1 ]" print_expression expr
 
 and print_if_while
     (out: out_channel)
