@@ -12,6 +12,7 @@ let rec is_arith (expr: Batshast.expression) :bool =
   | Batshast.Int _
   | Batshast.Float _
   | Batshast.Leftvalue _
+  | Batshast.ArithUnary _
   | Batshast.ArithBinary _ ->
     true
   | Batshast.Parentheses expr ->
@@ -30,8 +31,12 @@ let rec compile_expr_to_arith
   | Batshast.Float number -> Float number
   | Batshast.Leftvalue lvalue ->
     Leftvalue (compile_leftvalue lvalue ~symtable ~scope)
+  | Batshast.ArithUnary (operator, expr) ->
+    ArithUnary (operator, compile_expr_to_arith expr)
   | Batshast.ArithBinary (operator, left, right) ->
-    ArithBinary (operator, compile_expr_to_arith left, compile_expr_to_arith right)
+    ArithBinary (operator,
+                 compile_expr_to_arith left,
+                 compile_expr_to_arith right)
   | Batshast.Parentheses expr ->
     Parentheses (compile_expr_to_arith expr)
   | Batshast.String _ 
@@ -66,6 +71,7 @@ and compile_expr
       compile_expr expr
     | Batshast.List exprs ->
       List (List.map exprs ~f: compile_expr)
+    | Batshast.ArithUnary _
     | Batshast.ArithBinary _
     | Batshast.Leftvalue _ ->
       assert false

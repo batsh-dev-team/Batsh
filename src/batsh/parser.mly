@@ -25,6 +25,7 @@
 %token DIVIDE
 %token MODULO
 %token CONCAT
+%token NOT
 %token SEQ
 %token SNE
 %token AEQ
@@ -38,6 +39,7 @@
 %nonassoc SEQ SNE AEQ ANE
 %nonassoc GT LT GE LE
 %left CONCAT
+%nonassoc NOT
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MODULO
 
@@ -119,6 +121,8 @@ expression:
       { Batshast.Bool false }
   | LEFT_BRACK; vl = list_fields; RIGHT_BRACK
       { Batshast.List vl }
+  | expr = unary_expression;
+      { expr }
   | expr = binary_expression;
       { expr }
   | LEFT_PAREN; expr = expression; RIGHT_PAREN;
@@ -142,6 +146,11 @@ leftvalue:
       { Batshast.Identifier ident }
   | lvalue = leftvalue; LEFT_BRACK; index = expression; RIGHT_BRACK;
       { Batshast.ListAccess (lvalue, index) }
+  ;
+
+unary_expression:
+  | NOT; expr = expression;
+      { Batshast.ArithUnary ("!", expr) }
   ;
 
 binary_expression:

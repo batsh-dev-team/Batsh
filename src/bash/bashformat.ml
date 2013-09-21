@@ -20,7 +20,7 @@ and print_arith out (expr: arithmetic) =
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
   | ArithUnary (operator, arith) ->
-    fprintf out "%s %a" operator print_arith arith
+    fprintf out "%s%a" operator print_arith arith
   | ArithBinary binary ->
     print_arith_binary out binary
   | Parentheses expr ->

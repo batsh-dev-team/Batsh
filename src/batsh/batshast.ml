@@ -13,6 +13,7 @@ and expression =
   | List of expression list
   | String of string
   | Leftvalue of leftvalue
+  | ArithUnary of (string * expression)
   | ArithBinary of (string * expression * expression)
   | StrBinary of (string * expression * expression)
   | Parentheses of expression

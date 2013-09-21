@@ -11,3 +11,4 @@ echo(3 > 2);
 echo(4 < 5);
 echo(6 >= 2);
 echo(19 <= 30);
+echo(!true);
