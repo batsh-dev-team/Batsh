@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-ocamlbuild -quiet -use-ocamlfind src/main.byte &&\
-./main.byte $@

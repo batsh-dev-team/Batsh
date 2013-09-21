@@ -5,9 +5,9 @@ let test_run_bash name =
   let filename = "tests/" ^ name ^ ".c" in
   let inx = In_channel.create filename in
   let batsh = Batsh.create_from_channel inx filename in
-  let batsh_ast: Batsh.asttype = Batsh.Parser.parse_and_print_error batsh in
+  let batsh_ast: Batshast.asttype = Batsh.ast batsh in
   In_channel.close inx;
-  let bash_ast: Bash.asttype = Batsh.compile_to_bash batsh_ast in
+  let bash_ast: Bash.asttype = Bash.Compile.compile batsh_ast in
 
   let inx, outx = Unix.open_process "bash" in
   Bash.Format.print outx bash_ast;

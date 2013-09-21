@@ -1,6 +1,51 @@
-true: package(core),thread
-true: bin_annot
+# OASIS_START
+# DO NOT EDIT (digest: 606fbf572ac0c2b7c2fc9f8a491eeb74)
+# Ignore VCS directories, you can use the same kind of rule outside 
+# OASIS_START/STOP if you want to exclude directories that contains 
+# useless stuff for the build process
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Library utils
+"src/utils/utils.cmxs": use_utils
+<src/utils/*.ml{,i}>: pkg_threads
+<src/utils/*.ml{,i}>: pkg_core
+# Library batsh_parser
+"src/batsh/batsh_parser.cmxs": use_batsh_parser
+<src/batsh/*.ml{,i}>: use_utils
+<src/batsh/*.ml{,i}>: pkg_threads
+<src/batsh/*.ml{,i}>: pkg_core
+# Library bash_compiler
+"src/bash/bash_compiler.cmxs": use_bash_compiler
+<src/bash/*.ml{,i}>: use_batsh_parser
+<src/bash/*.ml{,i}>: use_utils
+<src/bash/*.ml{,i}>: pkg_threads
+<src/bash/*.ml{,i}>: pkg_core
+# Executable batsh
+"src/main.byte": use_bash_compiler
+"src/main.byte": use_batsh_parser
+"src/main.byte": use_utils
+"src/main.byte": pkg_threads
+"src/main.byte": pkg_core
+# Executable test
+"src/test.byte": use_bash_compiler
+"src/test.byte": use_batsh_parser
+"src/test.byte": use_utils
+"src/test.byte": pkg_ounit
+"src/test.byte": pkg_threads
+"src/test.byte": pkg_core
+<src/*.ml{,i}>: use_bash_compiler
+<src/*.ml{,i}>: use_batsh_parser
+<src/*.ml{,i}>: use_utils
+<src/*.ml{,i}>: pkg_ounit
+<src/*.ml{,i}>: pkg_threads
+<src/*.ml{,i}>: pkg_core
+# OASIS_STOP
 true: use_menhir
-"src": include
-"src/bash": include
-"src/batsh": include
