@@ -10,9 +10,10 @@ and arithmetic =
   | Leftvalue of leftvalue
   | Int of int
   | Float of float
+  | ArithUnary of (string * arithmetic)
   | ArithBinary of (string * arithmetic * arithmetic)
   | Parentheses of arithmetic
-  | Temporary of (identifier * expression)
+  | ArithTemp of (identifier * expression)
 
 and expression =
   | Variable of leftvalue
@@ -21,6 +22,7 @@ and expression =
   | StrBinary of (string * expression * expression)
   | Command of (identifier * expressions)
   | List of expressions
+  | StrTemp of (identifier * expression)
 
 and expressions = expression list
 

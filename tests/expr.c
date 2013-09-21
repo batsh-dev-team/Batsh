@@ -9,5 +9,5 @@ echo(3 + "3");
 echo(3 + "3" ++ "2");
 echo(3 + ("3" ++ "2"));
 echo(("10" ++ a[0]) * 2);
-//echo("BYVoid" == "BYVoid");
+echo("BYVoid" == "BYVoid");
 //echo([1, 2, 3]);

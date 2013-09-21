@@ -39,7 +39,7 @@ let rec compile_expr_to_arith
   | Batshast.StrBinary _
   | Batshast.Call _ ->
     let ident = Symbol_table.add_temporary_variable symtable ~scope in
-    Temporary (ident, compile_expr expr ~symtable ~scope)
+    ArithTemp (ident, compile_expr expr ~symtable ~scope)
 
 and compile_expr
     (expr: Batshast.expression)
@@ -57,7 +57,8 @@ and compile_expr
     | Batshast.Float number -> String (Float.to_string number)
     | Batshast.String str -> String str
     | Batshast.StrBinary (operator, left, right) ->
-      StrBinary (operator, compile_expr left, compile_expr right)
+      compile_str_binary operator (compile_expr left) (compile_expr right)
+        ~symtable ~scope
     | Batshast.Call (ident, exprs) ->
       let params = List.map exprs ~f: compile_expr in
       Command (ident, params)
@@ -68,6 +69,22 @@ and compile_expr
     | Batshast.ArithBinary _
     | Batshast.Leftvalue _ ->
       assert false
+
+and compile_str_binary
+    (operator: string)
+    (left: expression)
+    (right: expression)
+    ~(symtable: Symbol_table.t)
+    ~(scope: Symbol_table.scope_type)
+  :expression =
+  match operator with
+  | "++" ->
+    StrBinary ("++", left, right)
+  | "==" | "!=" ->
+    let ident = Symbol_table.add_temporary_variable symtable ~scope in
+    StrTemp (ident, StrBinary (operator, left, right))
+  | _ ->
+    failwith ("Unknown operator: " ^ operator)
 
 and compile_leftvalue
     (lvalue: Batshast.leftvalue)
@@ -89,7 +106,7 @@ let rec extract_temporary_arith arith :(statements * arithmetic) =
     (assignments_left @ assignments_right, (operator, left, right))
   in
   match arith with
-  | Temporary (ident, expr) ->
+  | ArithTemp (ident, expr) ->
     let variable = Identifier ident in
     let assignments, expr = extract_temporary_expr expr in
     let assignment = Assignment (variable, expr) in
@@ -99,6 +116,9 @@ let rec extract_temporary_arith arith :(statements * arithmetic) =
   | Parentheses arith ->
     let assignments, arith = extract_temporary_arith arith in
     (assignments, Parentheses arith)
+  | ArithUnary (operator, arith) ->
+    let assignments, arith = extract_temporary_arith arith in
+    (assignments, ArithUnary (operator, arith))
   | ArithBinary binary ->
     let assignments, binary = extract_temporary_arith_binary binary in
     (assignments, ArithBinary binary)
@@ -114,6 +134,12 @@ and extract_temporary_expr expr :(statements * expression) =
     (List.rev assignments, List.rev exprs)
   in
   match expr with
+  | StrTemp (ident, test_expr) ->
+    let variable = Identifier ident in
+    let assignments, test_expr = extract_temporary_expr test_expr in
+    let test_stmt = Expression test_expr in
+    let assignment = Assignment (variable, Result (ArithUnary ("!", Leftvalue (Identifier "?")))) in
+    (assignment :: test_stmt :: assignments, Variable variable)
   | String _ | Variable _ ->
     ([], expr)
   | Result arith ->

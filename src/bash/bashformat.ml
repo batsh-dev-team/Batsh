@@ -16,15 +16,17 @@ let rec print_lvalue out (lvalue: leftvalue) ~(bare: bool) =
 
 and print_arith out (expr: arithmetic) =
   match expr with
-  | Leftvalue lvalue -> print_lvalue out lvalue ~bare: true
+  | Leftvalue lvalue -> print_lvalue out lvalue ~bare: false
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
+  | ArithUnary (operator, arith) ->
+    fprintf out "%s %a" operator print_arith arith
   | ArithBinary binary ->
     print_arith_binary out binary
   | Parentheses expr ->
     fprintf out "(%a)" print_arith expr
-  | Temporary _ ->
-    failwith "BUG: Temporary should be all replaced."
+  | ArithTemp _ ->
+    failwith "BUG: ArithTemp should be all replaced."
 
 and print_arith_binary
     (outx: out_channel)
@@ -58,6 +60,8 @@ let rec print_expression out (expr: expression) =
           output_string out " "
       );
     output_string out ")"
+  | StrTemp _ ->
+    failwith "BUG: StrTemp should be all replaced."
 
 and print_str_binary (outx: out_channel) (operator, left, right) =
   match operator with
