@@ -1,10 +1,6 @@
 open Core.Std
 open Batshast
 
-type scope_type =
-  | GlobalScope
-  | FunctionScope of string
-
 type variable_entry = {
   name : string;
   global : bool;
@@ -20,6 +16,47 @@ type t = {
   functions : (string, function_entry) Hashtbl.t;
   globals : variable_table;
 }
+
+module Scope = struct
+  type t =
+    | GlobalScope of variable_table
+    | FunctionScope of (string * variable_table)
+
+  let variables (scope : t) : variable_table =
+    match scope with
+    | GlobalScope variables -> variables
+    | FunctionScope (_, variables) -> variables
+
+  let find_variable
+      (scope: t)
+      ~(name: string)
+    =
+    Hashtbl.find (variables scope) name
+
+  let fold
+      (scope: t)
+      ~(init: 'a)
+      ~(f: string -> bool -> 'a -> 'a) =
+    let variables = variables scope in
+    Hashtbl.fold variables ~init
+      ~f: (fun ~key ~data acc -> f data.name data.global acc)
+
+  let rec add_temporary_variable
+      (scope: t)
+    :identifier =
+    let random_string = Random.bits () |> Int.to_string
+                        |> Digest.string |> Digest.to_hex in
+    let name = "TMP_" ^ (String.prefix random_string 4) in
+    match find_variable scope ~name with
+    | None ->
+      (* Add to symbol table *)
+      let variables = variables scope in
+      Hashtbl.add_exn variables ~key: name ~data: {name; global = false};
+      name
+    | Some _ ->
+      (* Duplicated, try again *)
+      add_temporary_variable scope
+end
 
 let process_identifier
     (scope: variable_table)
@@ -38,7 +75,6 @@ let process_identifier
           entry
         else
           original
-
     )
 
 let rec process_leftvalue
@@ -86,53 +122,12 @@ let create (ast: asttype) :t =
   List.iter ast ~f: (process_toplevel symtable);
   symtable
 
-let find_function (symtable: t) (name: string) :bool =
-  match Hashtbl.find symtable.functions name with
-  | Some _ -> true
-  | None -> false
+let scope (symtable: t) (name: string) : Scope.t =
+  let variables = match Hashtbl.find_exn symtable.functions name with
+    | Declare -> failwith "No such function"
+    | Define variables -> variables
+  in
+  Scope.FunctionScope (name, variables)
 
-let get_variable_table
-    (symtable: t)
-    ~(scope: scope_type)
-  :variable_table =
-  match scope with
-  | FunctionScope scope -> (
-      match Hashtbl.find_exn symtable.functions scope with
-      | Declare -> failwith "No such function"
-      | Define variables -> variables
-    )
-  | GlobalScope -> symtable.globals
-
-let fold_variables
-    (symtable: t)
-    ~(scope: scope_type)
-    ~(init: 'a)
-    ~(f: string -> bool -> 'a -> 'a) =
-  let variables = get_variable_table symtable scope in
-  Hashtbl.fold variables ~init
-    ~f: (fun ~key ~data acc -> f data.name data.global acc)
-
-let find_variable
-    (symtable: t)
-    ~(scope: scope_type)
-    ~(name: string)
-  =
-  let variables = get_variable_table symtable scope in
-  Hashtbl.find variables name
-
-let rec add_temporary_variable
-    (symtable: t)
-    ~(scope: scope_type)
-  :identifier =
-  let random_string = Random.bits () |> Int.to_string
-                      |> Digest.string |> Digest.to_hex in
-  let name = "TMP_" ^ (String.prefix random_string 4) in
-  match find_variable symtable ~scope ~name with
-  | None ->
-    (* Add to symbol table *)
-    let variables = get_variable_table symtable scope in
-    Hashtbl.add_exn variables ~key: name ~data: {name; global = false};
-    name
-  | Some _ ->
-    (* Duplicated, try again *)
-    add_temporary_variable symtable ~scope
+let global_scope (symtable: t) : Scope.t =
+  Scope.GlobalScope symtable.globals

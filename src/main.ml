@@ -1,18 +1,15 @@
 open Core.Std
 
-let compile_to_bash (ast: Batshast.asttype) : Bash.asttype =
-  Bash.Compile.compile ast
-
 let to_bash (batsh: Batsh.t) =
-  let bash_ast: Bash.asttype = compile_to_bash (Batsh.ast batsh) in
+  let bash_ast: Bash.asttype = Bash.Compile.compile batsh in
   printf "%a\n" Bash.Format.print bash_ast;
   ()
 
 let main (filename: string) (format: bool) () =
   let inx = In_channel.create filename in
   let batsh = Batsh.create_from_channel inx filename in
-   if format then
-    Batsh.prettify batsh
+  if format then
+    Batsh.prettify Out_channel.stdout batsh
   else
     to_bash batsh;
   In_channel.close inx

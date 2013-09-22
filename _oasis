@@ -22,11 +22,11 @@ Library utils
 
 Library batsh_parser
   Path:               src/batsh
-  Modules:            Batsh,
-                      Batshast,
-                      Batshformat,
+  Modules:            Batsh
+  InternalModules:    Lexer,
                       Parser,
-                      Lexer,
+                      Batshast,
+                      Batsh_format,
                       Symbol_table
   BuildDepends:       utils
 
@@ -50,4 +50,9 @@ Executable test
 Test unit_test
   Run$:               flag(tests)
   Command:            $test
-  WorkingDirectory:   .
+  WorkingDirectory:   tests
+
+SourceRepository head
+  Type: git
+  Location: https://github.com/BYVoid/Batsh.git
+  Browser: https://github.com/BYVoid/Batsh

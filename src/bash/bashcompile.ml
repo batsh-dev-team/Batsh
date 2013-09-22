@@ -1,6 +1,8 @@
 open Core.Std
 open Bashast
 
+module Symbol_table = Batsh.Symbol_table
+
 let rec is_arith (expr: Batshast.expression) :bool =
   match expr with
   | Batshast.String _
@@ -21,7 +23,7 @@ let rec is_arith (expr: Batshast.expression) :bool =
 let rec compile_expr_to_arith
     (expr: Batshast.expression)
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :arithmetic =
   let compile_expr_to_arith = compile_expr_to_arith ~symtable ~scope in
   match expr with
@@ -43,13 +45,13 @@ let rec compile_expr_to_arith
   | Batshast.List _
   | Batshast.StrBinary _
   | Batshast.Call _ ->
-    let ident = Symbol_table.add_temporary_variable symtable ~scope in
+    let ident = Symbol_table.Scope.add_temporary_variable scope in
     ArithTemp (ident, compile_expr expr ~symtable ~scope)
 
 and compile_expr
     (expr: Batshast.expression)
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :expression =
   if is_arith expr then
     Result (compile_expr_to_arith expr ~symtable ~scope)
@@ -81,13 +83,13 @@ and compile_str_binary
     (left: expression)
     (right: expression)
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :expression =
   match operator with
   | "++" ->
     StrBinary ("++", left, right)
   | "==" | "!=" ->
-    let ident = Symbol_table.add_temporary_variable symtable ~scope in
+    let ident = Symbol_table.Scope.add_temporary_variable scope in
     StrTemp (ident, StrBinary (operator, left, right))
   | _ ->
     failwith ("Unknown operator: " ^ operator)
@@ -95,7 +97,7 @@ and compile_str_binary
 and compile_leftvalue
     (lvalue: Batshast.leftvalue)
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :leftvalue =
   match lvalue with
   | Batshast.Identifier ident ->
@@ -193,7 +195,7 @@ let rec extract_temporary stmt :(statements * statement) =
 let rec compile_statement
     (stmt: Batshast.statement)
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :statement =
   let stmt = match stmt with
     | Batshast.Comment comment ->
@@ -226,7 +228,7 @@ and compile_if_statement
     (expr: Batshast.expression)
     stmt
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :statement =
   If (compile_expr expr ~symtable ~scope, compile_statement stmt ~symtable ~scope)
 
@@ -235,7 +237,7 @@ and compile_if_else_statement
     (thenStmt: Batshast.statement)
     (elseStmt: Batshast.statement)
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :statement =
   IfElse (compile_expr expr ~symtable ~scope,
           compile_statement thenStmt ~symtable ~scope,
@@ -245,7 +247,7 @@ and compile_while_statement
     (expr: Batshast.expression)
     stmt
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :statement =
   While (compile_expr expr ~symtable ~scope,
          compile_statement stmt ~symtable ~scope)
@@ -253,7 +255,7 @@ and compile_while_statement
 let compile_statements
     (stmts: Batshast.statements)
     ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.scope_type)
+    ~(scope: Symbol_table.Scope.t)
   :statements =
   List.map stmts ~f: (compile_statement ~symtable ~scope)
 
@@ -261,10 +263,9 @@ let compile_function
     (name, params, stmts)
     ~(symtable: Symbol_table.t)
   :toplevel =
-  let scope = Symbol_table.FunctionScope name in
+  let scope = Symbol_table.scope symtable name in
   let body = compile_statements stmts ~symtable ~scope in
-  let locals = Symbol_table.fold_variables symtable
-      ~scope
+  let locals = Symbol_table.Scope.fold scope
       ~init: []
       ~f: (fun ident global acc ->
           if global then
@@ -288,10 +289,11 @@ let compile_toplevel
   match topl with
   | Batshast.Statement stmt ->
     Statement (compile_statement stmt ~symtable
-                 ~scope: Symbol_table.GlobalScope)
+                 ~scope: (Symbol_table.global_scope symtable))
   | Batshast.Function func ->
     compile_function func ~symtable
 
-let compile (program: Batshast.asttype) :asttype =
-  let symtable = Symbol_table.create program in
+let compile (batsh: Batsh.t) :asttype =
+  let program = Batsh.ast batsh in
+  let symtable = Batsh.symtable batsh in
   List.map program ~f: (compile_toplevel ~symtable)
