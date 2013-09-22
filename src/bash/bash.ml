@@ -1,9 +1,7 @@
-type asttype = Bashast.asttype
+type t = Bash_ast.asttype
 
-module Compile = struct
-  include Bashcompile
-end
+let compile (batsh : Batsh.t) : t =
+  Bash_compile.compile batsh
 
-module Format = struct
-  include Bashformat
-end
+let print (outx : out_channel) (bash : t) : unit =
+  Bash_format.print outx bash

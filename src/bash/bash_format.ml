@@ -1,5 +1,5 @@
 open Core.Std
-open Bashast
+open Bash_ast
 
 let rec print_lvalue out (lvalue: leftvalue) ~(bare: bool) =
   match lvalue with

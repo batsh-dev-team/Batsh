@@ -33,6 +33,9 @@ Library batsh_lib
 Library bash_lib
   Path:               src/bash
   Modules:            Bash
+  InternalModules:    Bash_ast,
+                      Bash_compile,
+                      Bash_format
   BuildDepends:       utils_lib, batsh_lib
 
 Executable batsh

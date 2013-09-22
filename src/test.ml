@@ -6,10 +6,10 @@ let test_run_bash name =
   let inx = In_channel.create filename in
   let batsh = Batsh.create_from_channel inx filename in
   In_channel.close inx;
-  let bash_ast: Bash.asttype = Bash.Compile.compile batsh in
+  let bash = Bash.compile batsh in
 
   let inx, outx = Unix.open_process "bash" in
-  Bash.Format.print outx bash_ast;
+  Bash.print outx bash;
   Out_channel.close outx;
   let output = In_channel.input_all inx in
   In_channel.close inx;

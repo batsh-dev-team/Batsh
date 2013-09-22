@@ -1,11 +1,4 @@
-open Bashast
+type t
 
-type asttype
-
-module Compile : sig
-  val compile : Batsh.t -> asttype
-end
-
-module Format : sig
-  val print : out_channel -> asttype -> unit
-end
+val compile : Batsh.t -> t
+val print : out_channel -> t -> unit

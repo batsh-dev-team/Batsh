@@ -1,5 +1,5 @@
 open Core.Std
-open Bashast
+open Bash_ast
 
 module BAST = Batsh_ast
 module Symbol_table = Batsh.Symbol_table
