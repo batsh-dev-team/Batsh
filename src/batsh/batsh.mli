@@ -4,7 +4,7 @@ module Symbol_table : sig
   type t
   module Scope : sig
     type t
-    val add_temporary_variable : t -> Batshast.identifier
+    val add_temporary_variable : t -> Batsh_ast.identifier
     val fold : t -> init: 'a -> f: (string -> bool -> 'a -> 'a) -> 'a
   end
   val scope : t -> string -> Scope.t
@@ -13,5 +13,5 @@ end
 
 val create_from_channel : in_channel -> string -> t
 val prettify : out_channel -> t -> unit
-val ast : t -> Batshast.asttype
+val ast : t -> Batsh_ast.asttype
 val symtable : t -> Symbol_table.t

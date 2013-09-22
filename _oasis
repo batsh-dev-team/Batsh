@@ -25,7 +25,7 @@ Library batsh_lib
   Modules:            Batsh
   InternalModules:    Lexer,
                       Parser,
-                      Batshast,
+                      Batsh_ast,
                       Batsh_format,
                       Symbol_table
   BuildDepends:       utils_lib

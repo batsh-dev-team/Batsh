@@ -1,55 +1,56 @@
 open Core.Std
 open Bashast
 
+module BAST = Batsh_ast
 module Symbol_table = Batsh.Symbol_table
 
-let rec is_arith (expr: Batshast.expression) :bool =
+let rec is_arith (expr: BAST.expression) :bool =
   match expr with
-  | Batshast.String _
-  | Batshast.List _
-  | Batshast.StrBinary _
-  | Batshast.Call _ ->
+  | BAST.String _
+  | BAST.List _
+  | BAST.StrBinary _
+  | BAST.Call _ ->
     false
-  | Batshast.Bool _
-  | Batshast.Int _
-  | Batshast.Float _
-  | Batshast.Leftvalue _
-  | Batshast.ArithUnary _
-  | Batshast.ArithBinary _ ->
+  | BAST.Bool _
+  | BAST.Int _
+  | BAST.Float _
+  | BAST.Leftvalue _
+  | BAST.ArithUnary _
+  | BAST.ArithBinary _ ->
     true
-  | Batshast.Parentheses expr ->
+  | BAST.Parentheses expr ->
     is_arith expr
 
 let rec compile_expr_to_arith
-    (expr: Batshast.expression)
+    (expr: BAST.expression)
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
   :arithmetic =
   let compile_expr_to_arith = compile_expr_to_arith ~symtable ~scope in
   match expr with
-  | Batshast.Bool false -> Int 0
-  | Batshast.Bool true -> Int 1
-  | Batshast.Int number -> Int number
-  | Batshast.Float number -> Float number
-  | Batshast.Leftvalue lvalue ->
+  | BAST.Bool false -> Int 0
+  | BAST.Bool true -> Int 1
+  | BAST.Int number -> Int number
+  | BAST.Float number -> Float number
+  | BAST.Leftvalue lvalue ->
     Leftvalue (compile_leftvalue lvalue ~symtable ~scope)
-  | Batshast.ArithUnary (operator, expr) ->
+  | BAST.ArithUnary (operator, expr) ->
     ArithUnary (operator, compile_expr_to_arith expr)
-  | Batshast.ArithBinary (operator, left, right) ->
+  | BAST.ArithBinary (operator, left, right) ->
     ArithBinary (operator,
                  compile_expr_to_arith left,
                  compile_expr_to_arith right)
-  | Batshast.Parentheses expr ->
+  | BAST.Parentheses expr ->
     Parentheses (compile_expr_to_arith expr)
-  | Batshast.String _ 
-  | Batshast.List _
-  | Batshast.StrBinary _
-  | Batshast.Call _ ->
+  | BAST.String _ 
+  | BAST.List _
+  | BAST.StrBinary _
+  | BAST.Call _ ->
     let ident = Symbol_table.Scope.add_temporary_variable scope in
     ArithTemp (ident, compile_expr expr ~symtable ~scope)
 
 and compile_expr
-    (expr: Batshast.expression)
+    (expr: BAST.expression)
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
   :expression =
@@ -58,24 +59,24 @@ and compile_expr
   else
     let compile_expr = compile_expr ~symtable ~scope in
     match expr with
-    | Batshast.Bool false -> String "false"
-    | Batshast.Bool true -> String "true"
-    | Batshast.Int number -> String (string_of_int number)
-    | Batshast.Float number -> String (Float.to_string number)
-    | Batshast.String str -> String str
-    | Batshast.StrBinary (operator, left, right) ->
+    | BAST.Bool false -> String "false"
+    | BAST.Bool true -> String "true"
+    | BAST.Int number -> String (string_of_int number)
+    | BAST.Float number -> String (Float.to_string number)
+    | BAST.String str -> String str
+    | BAST.StrBinary (operator, left, right) ->
       compile_str_binary operator (compile_expr left) (compile_expr right)
         ~symtable ~scope
-    | Batshast.Call (ident, exprs) ->
+    | BAST.Call (ident, exprs) ->
       let params = List.map exprs ~f: compile_expr in
       Command (ident, params)
-    | Batshast.Parentheses expr ->
+    | BAST.Parentheses expr ->
       compile_expr expr
-    | Batshast.List exprs ->
+    | BAST.List exprs ->
       List (List.map exprs ~f: compile_expr)
-    | Batshast.ArithUnary _
-    | Batshast.ArithBinary _
-    | Batshast.Leftvalue _ ->
+    | BAST.ArithUnary _
+    | BAST.ArithBinary _
+    | BAST.Leftvalue _ ->
       assert false
 
 and compile_str_binary
@@ -95,14 +96,14 @@ and compile_str_binary
     failwith ("Unknown operator: " ^ operator)
 
 and compile_leftvalue
-    (lvalue: Batshast.leftvalue)
+    (lvalue: BAST.leftvalue)
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
   :leftvalue =
   match lvalue with
-  | Batshast.Identifier ident ->
+  | BAST.Identifier ident ->
     Identifier ident
-  | Batshast.ListAccess (lvalue, expr) ->
+  | BAST.ListAccess (lvalue, expr) ->
     ListAccess (compile_leftvalue lvalue ~symtable ~scope,
                 compile_expr_to_arith expr ~symtable ~scope)
 
@@ -193,29 +194,29 @@ let rec extract_temporary stmt :(statements * statement) =
     (assignments, Block (List.rev stmts))
 
 let rec compile_statement
-    (stmt: Batshast.statement)
+    (stmt: BAST.statement)
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
   :statement =
   let stmt = match stmt with
-    | Batshast.Comment comment ->
+    | BAST.Comment comment ->
       Comment comment
-    | Batshast.Assignment (lvalue, expr) ->
+    | BAST.Assignment (lvalue, expr) ->
       Assignment (compile_leftvalue lvalue ~symtable ~scope,
                   compile_expr expr ~symtable ~scope)
-    | Batshast.Expression expr ->
+    | BAST.Expression expr ->
       Expression (compile_expr expr ~symtable ~scope)
-    | Batshast.If (expr, stmt) ->
+    | BAST.If (expr, stmt) ->
       compile_if_statement expr stmt ~symtable ~scope
-    | Batshast.IfElse (expr, thenStmt, elseStmt) ->
+    | BAST.IfElse (expr, thenStmt, elseStmt) ->
       compile_if_else_statement expr thenStmt elseStmt ~symtable ~scope
-    | Batshast.While (expr, stmt) ->
+    | BAST.While (expr, stmt) ->
       compile_while_statement expr stmt ~symtable ~scope
-    | Batshast.Block stmts ->
+    | BAST.Block stmts ->
       Block (List.map stmts ~f: (compile_statement ~symtable ~scope))
-    | Batshast.Global _ ->
+    | BAST.Global _ ->
       Empty
-    | Batshast.Empty ->
+    | BAST.Empty ->
       Empty
   in
   let assignments, stmt = extract_temporary stmt in
@@ -225,7 +226,7 @@ let rec compile_statement
     Block (List.concat [assignments; [stmt]])
 
 and compile_if_statement
-    (expr: Batshast.expression)
+    (expr: BAST.expression)
     stmt
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
@@ -233,9 +234,9 @@ and compile_if_statement
   If (compile_expr expr ~symtable ~scope, compile_statement stmt ~symtable ~scope)
 
 and compile_if_else_statement
-    (expr: Batshast.expression)
-    (thenStmt: Batshast.statement)
-    (elseStmt: Batshast.statement)
+    (expr: BAST.expression)
+    (thenStmt: BAST.statement)
+    (elseStmt: BAST.statement)
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
   :statement =
@@ -244,7 +245,7 @@ and compile_if_else_statement
           compile_statement elseStmt ~symtable ~scope)
 
 and compile_while_statement
-    (expr: Batshast.expression)
+    (expr: BAST.expression)
     stmt
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
@@ -253,7 +254,7 @@ and compile_while_statement
          compile_statement stmt ~symtable ~scope)
 
 let compile_statements
-    (stmts: Batshast.statements)
+    (stmts: BAST.statements)
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
   :statements =
@@ -284,13 +285,13 @@ let compile_function
 
 let compile_toplevel
     ~(symtable: Symbol_table.t)
-    (topl: Batshast.toplevel)
+    (topl: BAST.toplevel)
   :toplevel =
   match topl with
-  | Batshast.Statement stmt ->
+  | BAST.Statement stmt ->
     Statement (compile_statement stmt ~symtable
                  ~scope: (Symbol_table.global_scope symtable))
-  | Batshast.Function func ->
+  | BAST.Function func ->
     compile_function func ~symtable
 
 let compile (batsh: Batsh.t) :asttype =

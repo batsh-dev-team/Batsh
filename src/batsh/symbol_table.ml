@@ -1,5 +1,5 @@
 open Core.Std
-open Batshast
+open Batsh_ast
 
 type variable_entry = {
   name : string;
