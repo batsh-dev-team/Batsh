@@ -15,12 +15,12 @@ XStdFilesAUTHORS:     false
 XStdFilesREADME:      false
 BuildTools:           ocamlbuild, camlp4o
 
-Library utils
+Library utils_lib
   Path:               src/utils
   Modules:            Formatutil
   BuildDepends:       threads, core
 
-Library batsh_parser
+Library batsh_lib
   Path:               src/batsh
   Modules:            Batsh
   InternalModules:    Lexer,
@@ -28,24 +28,24 @@ Library batsh_parser
                       Batshast,
                       Batsh_format,
                       Symbol_table
-  BuildDepends:       utils
+  BuildDepends:       utils_lib
 
-Library bash_compiler
+Library bash_lib
   Path:               src/bash
   Modules:            Bash
-  BuildDepends:       utils, batsh_parser
+  BuildDepends:       utils_lib, batsh_lib
 
 Executable batsh
   Path:               src
   MainIs:             main.ml
-  BuildDepends:       batsh_parser, bash_compiler
+  BuildDepends:       batsh_lib, bash_lib
 
 Executable test
   Path:               src
   MainIs:             test.ml
   Build$:             flag(tests)
   Install:            false
-  BuildDepends:       ounit, batsh_parser, bash_compiler
+  BuildDepends:       ounit, batsh_lib, bash_lib
 
 Test unit_test
   Run$:               flag(tests)

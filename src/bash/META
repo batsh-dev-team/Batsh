@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: 8d40f583289329c7cd75a747e585b17c)
+version = "0.0.1"
+description = "Batsh - A language that compiles to Bash and Batch"
+requires = "utils_lib batsh_lib"
+archive(byte) = "bash_lib.cma"
+archive(byte, plugin) = "bash_lib.cma"
+archive(native) = "bash_lib.cmxa"
+archive(native, plugin) = "bash_lib.cmxs"
+exists_if = "bash_lib.cma"
+# OASIS_STOP
+
