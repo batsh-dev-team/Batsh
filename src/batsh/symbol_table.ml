@@ -5,22 +5,34 @@ type variable_entry = {
   name : string;
   global : bool;
 }
+with sexp_of
 
 type variable_table = (string, variable_entry) Hashtbl.t
 
+let sexp_of_variable_table (vtable : variable_table) : Sexp.t =
+  Sexp.List (Hashtbl.fold vtable ~init: []
+               ~f: (fun ~key ~data acc ->
+                   let item = (sexp_of_variable_entry data) in
+                   item :: acc
+                 )
+            )
+
 type function_entry =
-  | Declare
-  | Define of variable_table
+  | Declaration
+  | Defination of variable_table
+with sexp_of
 
 type t = {
   functions : (string, function_entry) Hashtbl.t;
   globals : variable_table;
 }
+with sexp_of
 
 module Scope = struct
   type t =
     | GlobalScope of variable_table
     | FunctionScope of (string * variable_table)
+  with sexp_of
 
   let variables (scope : t) : variable_table =
     match scope with
@@ -37,8 +49,8 @@ module Scope = struct
       (scope: t)
       ~(init: 'a)
       ~(f: string -> bool -> 'a -> 'a) =
-    let variables = variables scope in
-    Hashtbl.fold variables ~init
+    let vtable = variables scope in
+    Hashtbl.fold vtable ~init
       ~f: (fun ~key ~data acc -> f data.name data.global acc)
 
   let rec add_temporary_variable
@@ -105,7 +117,7 @@ let process_function
     let variables = Hashtbl.create ~hashable: String.hashable () in
     Hashtbl.change functions name (fun original ->
         (* TODO declaration *)
-        Some (Define variables)
+        Some (Defination variables)
       );
     List.iter stmts ~f: (process_statement variables)
 
@@ -124,8 +136,8 @@ let create (ast: Batsh_ast.t) :t =
 
 let scope (symtable: t) (name: string) : Scope.t =
   let variables = match Hashtbl.find_exn symtable.functions name with
-    | Declare -> failwith "No such function"
-    | Define variables -> variables
+    | Declaration -> failwith "No such function"
+    | Defination variables -> variables
   in
   Scope.FunctionScope (name, variables)
 

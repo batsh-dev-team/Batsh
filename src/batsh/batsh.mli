@@ -1,3 +1,5 @@
+open Core.Std
+
 type t
 
 module Symbol_table : sig
@@ -9,6 +11,7 @@ module Symbol_table : sig
   end
   val scope : t -> string -> Scope.t
   val global_scope : t -> Scope.t
+  val sexp_of_t : t -> Sexp.t
 end
 
 val create_from_file : string -> t

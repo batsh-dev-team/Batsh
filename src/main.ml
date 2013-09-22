@@ -14,12 +14,11 @@ let bash =
     Command.Spec.(
       empty
       +> anon ("filename" %: regular_file)
-    ) 
-    (fun (filename: string) () ->
-       let batsh = Batsh.create_from_file filename in
-       let bash = Bash.compile batsh in
-       printf "%a\n" Bash.print bash
-    )
+    ) (fun (filename: string) () ->
+        let batsh = Batsh.create_from_file filename in
+        let bash = Bash.compile batsh in
+        printf "%a\n" Bash.print bash
+      )
 
 let format =
   Command.basic
@@ -27,11 +26,10 @@ let format =
     Command.Spec.(
       empty
       +> anon ("filename" %: regular_file)
-    ) 
-    (fun (filename: string) () ->
-       let batsh = Batsh.create_from_file filename in
-       Batsh.prettify Out_channel.stdout batsh
-    )
+    ) (fun (filename: string) () ->
+        let batsh = Batsh.create_from_file filename in
+        Batsh.prettify Out_channel.stdout batsh
+      )
 
 let ast =
   Command.basic
@@ -39,12 +37,16 @@ let ast =
     Command.Spec.(
       empty
       +> anon ("filename" %: regular_file)
-    ) 
-    (fun (filename: string) () ->
-       let batsh = Batsh.create_from_file filename in
-       let ast_sexp = Batsh_ast.sexp_of_t (Batsh.ast batsh) in
-       printf "%a\n" Sexp.output_hum ast_sexp
-    )
+      +> flag "-symbols" no_arg ~doc:" symbol table instead"
+    ) (fun (filename : string) (symbols : bool) () ->
+        let batsh = Batsh.create_from_file filename in
+        if not symbols then
+          let ast_sexp = Batsh_ast.sexp_of_t (Batsh.ast batsh) in
+          printf "%a\n" Sexp.output_hum ast_sexp
+        else
+          let symtable_sexp = Batsh.Symbol_table.sexp_of_t (Batsh.symtable batsh) in
+          printf "%a\n" Sexp.output_hum symtable_sexp
+      )
 
 let () =
   Command.group

@@ -39,4 +39,4 @@ and toplevel =
   | Function of (identifier * identifiers * statements)
 
 and t = toplevel list
-with sexp
+with sexp_of
