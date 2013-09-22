@@ -46,7 +46,7 @@
 %nonassoc IF
 %nonassoc ELSE
 
-%start <Batsh_ast.asttype> program
+%start <Batsh_ast.t> program
 
 %%
 

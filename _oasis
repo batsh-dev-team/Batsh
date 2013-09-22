@@ -28,7 +28,8 @@ Library batsh_lib
                       Batsh_ast,
                       Batsh_format,
                       Symbol_table
-  BuildDepends:       utils_lib
+  BuildDepends:       utils_lib,
+                      sexplib.syntax
 
 Library bash_lib
   Path:               src/bash

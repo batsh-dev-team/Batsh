@@ -2,14 +2,14 @@ open Core.Std
 
 type t = {
   lex: Lexing.lexbuf;
-  ast: Batsh_ast.asttype;
+  ast: Batsh_ast.t;
   symtable: Symbol_table.t
 }
 
 let parse_and_print_error
     (outx : out_channel)
     (lexbuf : Lexing.lexbuf)
-  : Batsh_ast.asttype =
+  : Batsh_ast.t =
   let print_position (outx: out_channel) () =
     let pos = lexbuf.Lexing.lex_curr_p in
     fprintf outx "%s:%d:%d" pos.Lexing.pos_fname
@@ -38,10 +38,16 @@ let create_from_channel (inx: in_channel) (filename: string) : t =
   let symtable = Symbol_table.create ast in
   { lex = lexbuf; ast; symtable }
 
+let create_from_file (filename : string) : t =
+  let inx = In_channel.create filename in
+  let batsh = create_from_channel inx filename in
+  In_channel.close inx;
+  batsh
+
 let prettify (outx: out_channel) (batsh: t) =
   fprintf outx "%a\n" Batsh_format.print_ast batsh.ast
 
-let ast (batsh: t) : Batsh_ast.asttype =
+let ast (batsh: t) : Batsh_ast.t =
   batsh.ast
 
 let symtable (batsh: t) : Symbol_table.t =

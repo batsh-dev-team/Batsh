@@ -109,5 +109,5 @@ let print_toplevel (outx: out_channel) (topl: toplevel) ~indent =
   | Function func ->
     print_function outx func
 
-let print_ast (outx: out_channel) (ast: asttype) =
+let print_ast (outx: out_channel) (ast: t) =
   Formatutil.print_statements outx ast ~f: print_toplevel ~indent: 0

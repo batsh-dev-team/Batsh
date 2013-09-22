@@ -11,7 +11,8 @@ module Symbol_table : sig
   val global_scope : t -> Scope.t
 end
 
+val create_from_file : string -> t
 val create_from_channel : in_channel -> string -> t
 val prettify : out_channel -> t -> unit
-val ast : t -> Batsh_ast.asttype
+val ast : t -> Batsh_ast.t
 val symtable : t -> Symbol_table.t

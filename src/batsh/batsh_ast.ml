@@ -1,8 +1,10 @@
+open Core.Std
+
 type identifier = string
 
-type identifiers = identifier list
+and identifiers = identifier list
 
-type leftvalue =
+and leftvalue =
   | Identifier of identifier
   | ListAccess of (leftvalue * expression)
 
@@ -19,7 +21,7 @@ and expression =
   | Parentheses of expression
   | Call of (identifier * expression list)
 
-type statement =
+and statement =
   | Comment of string
   | Block of statements
   | Expression of expression
@@ -32,8 +34,9 @@ type statement =
 
 and statements = statement list
 
-type toplevel =
+and toplevel =
   | Statement of statement
   | Function of (identifier * identifiers * statements)
 
-type asttype = toplevel list
+and t = toplevel list
+with sexp

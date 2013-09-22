@@ -3,9 +3,7 @@ open OUnit
 
 let test_run_bash name =
   let filename = name ^ ".c" in
-  let inx = In_channel.create filename in
-  let batsh = Batsh.create_from_channel inx filename in
-  In_channel.close inx;
+  let batsh = Batsh.create_from_file filename in
   let bash = Bash.compile batsh in
 
   let inx, outx = Unix.open_process "bash" in
