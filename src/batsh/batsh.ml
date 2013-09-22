@@ -6,8 +6,11 @@ type t = {
   symtable: Symbol_table.t
 }
 
-let parse_and_print_error (lexbuf: Lexing.lexbuf) : Batsh_ast.asttype =
-  let print_position (outx: out_channel) (lexbuf: Lexing.lexbuf) =
+let parse_and_print_error
+    (outx : out_channel)
+    (lexbuf : Lexing.lexbuf)
+  : Batsh_ast.asttype =
+  let print_position (outx: out_channel) () =
     let pos = lexbuf.Lexing.lex_curr_p in
     fprintf outx "%s:%d:%d" pos.Lexing.pos_fname
       pos.Lexing.pos_lnum (pos.Lexing.pos_cnum - pos.Lexing.pos_bol + 1)
@@ -16,10 +19,10 @@ let parse_and_print_error (lexbuf: Lexing.lexbuf) : Batsh_ast.asttype =
     Parser.program Lexer.read lexbuf
   with
   | Lexer.SyntaxError msg ->
-    fprintf stderr "%a: %s\n" print_position lexbuf msg;
+    fprintf outx "%a: %s\n" print_position () msg;
     exit (-1)
   | Parser.Error ->
-    fprintf stderr "%a: syntax error\n" print_position lexbuf;
+    fprintf outx "%a: syntax error\n" print_position ();
     exit (-1)
 
 module Symbol_table = struct
@@ -31,7 +34,7 @@ let create_from_channel (inx: in_channel) (filename: string) : t =
   lexbuf.Lexing.lex_curr_p <- {
     lexbuf.Lexing.lex_curr_p with Lexing.pos_fname = filename
   };
-  let ast = parse_and_print_error lexbuf in
+  let ast = parse_and_print_error stderr lexbuf in
   let symtable = Symbol_table.create ast in
   { lex = lexbuf; ast; symtable }
 
