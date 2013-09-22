@@ -15,9 +15,14 @@ Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and dependencies ar
 
 1. Install OPAM. See [instructions](http://opam.ocamlpro.com/doc/Quick_Install.html).
 2. Switch to the latest version (or at least 4.00.1) of OCaml by running `opam switch`.
-3. Install dependencies: `opam install core menhir`
-4. Run unit testa: `./test`
-5. Compile your own code: `./batsh filename`
+3. Install dependencies: `opam install core menhir ounit`
+4. `./configure`
+5. `make`
+6. Compile your own code: `./main.byte filename`
+
+If you want to run unit tests, configure with `./configure --enable-tests`, and run `make test`.
+
+Build framework is managed by [Oasis](http://oasis.forge.ocamlcore.org/).
 
 ## Syntax
 
@@ -102,9 +107,7 @@ function fibonacci(num) {
   } else if (num == 1) {
     echo(1);
   } else {
-    v0 = fibonacci(num - 2);
-    v1 = fibonacci(num - 1);
-    echo(v0 + v1);
+    echo(fibonacci(num - 2) + fibonacci(num - 1));
   }
 }
 ```
