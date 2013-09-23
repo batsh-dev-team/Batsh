@@ -294,7 +294,7 @@ let compile_toplevel
   | BAST.Function func ->
     compile_function func ~symtable
 
-let compile (batsh: Batsh.t) :asttype =
+let compile (batsh: Batsh.t) :t =
   let program = Batsh.ast batsh in
   let symtable = Batsh.symtable batsh in
   List.map program ~f: (compile_toplevel ~symtable)

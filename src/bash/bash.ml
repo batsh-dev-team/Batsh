@@ -1,4 +1,4 @@
-type t = Bash_ast.asttype
+type t = Bash_ast.t
 
 let compile (batsh : Batsh.t) : t =
   Bash_compile.compile batsh

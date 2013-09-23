@@ -43,4 +43,4 @@ type toplevel =
   | Statement of statement
   | Function of (identifier * statements)
 
-type asttype = toplevel list
+type t = toplevel list
