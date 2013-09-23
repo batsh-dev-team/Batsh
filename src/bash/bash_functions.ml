@@ -3,7 +3,7 @@ open Bash_ast
 
 let rec expand_leftvalue (lvalue : leftvalue) : leftvalue =
   match lvalue with
-  | Identifier _ ->
+  | Identifier _ | EntireList _ | Cardinal _ ->
     lvalue
   | ListAccess (lvalue, arith) ->
     ListAccess (expand_leftvalue lvalue, arith)
@@ -15,7 +15,7 @@ let rec expand_expression (expr : expression) : expression =
   | StrBinary (operator, left, right) ->
     StrBinary (operator, expand_expression left, expand_expression right)
   | Command (name, exprs) ->
-    Command (expand_command name exprs)
+    expand_command name exprs
   | List (exprs) ->
     List (expand_expressions exprs)
   | StrTemp _ ->
@@ -29,9 +29,9 @@ and expand_command (name : expression) (exprs : expressions) =
   let exprs = expand_expressions exprs in
   match name with
   | String "println" ->
-    String "echo", (String "-e") :: exprs
+    Command (String "echo", (String "-e") :: exprs)
   | String "print" ->
-    String "echo", (String "-ne") :: exprs
+    Command (String "echo", (String "-ne") :: exprs)
   | String "call" -> (
       match exprs with
       | cmd :: args ->
@@ -39,8 +39,15 @@ and expand_command (name : expression) (exprs : expressions) =
       | [] ->
         failwith "call must have at least 1 argument."
     )
+  | String "len" -> (
+      match exprs with
+      | [Variable lvalue] | [Result (Leftvalue lvalue)] ->
+        Variable (Cardinal (EntireList lvalue))
+      | _ ->
+        failwith "len must have exactly 1 argument."
+    )
   | _ ->
-    name, exprs
+    Command (name, exprs)
 
 let rec expand_statement (stmt : statement) : statement =
   match stmt with

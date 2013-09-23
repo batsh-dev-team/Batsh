@@ -13,4 +13,6 @@ println("BYVoid" == "BYVoid");
 call("println", "Println Called");
 cmd = "ec" ++ "ho";
 call(cmd, "Echo Called");
+println(len(a));
+println(len(a) * 8);
 //println([1, 2, 3]);

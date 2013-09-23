@@ -12,3 +12,5 @@ NewLine!Backslash\ Quote" Slash/ Tab
 1
 Println Called
 Echo Called
+3
+24

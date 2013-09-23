@@ -1,18 +1,28 @@
 open Core.Std
 open Bash_ast
 
-let rec print_lvalue out (lvalue: leftvalue) ~(bare: bool) =
+let rec print_lvalue outx (lvalue: leftvalue) ~(bare: bool) =
+  let print_lvalue_bare = print_lvalue ~bare: true in
   match lvalue with
   | Identifier ident ->
     if not bare then
-      output_string out "$";
-    output_string out ident
+      output_string outx "$";
+    output_string outx ident
   | ListAccess (lvalue, arith) ->
-    let print_lvalue_bare = print_lvalue ~bare: true in
     if bare then
-      fprintf out "%a[%a]" print_lvalue_bare lvalue print_arith arith
+      fprintf outx "%a[%a]" print_lvalue_bare lvalue print_arith arith
     else
-      fprintf out "${%a[%a]}" print_lvalue_bare lvalue print_arith arith
+      fprintf outx "${%a[%a]}" print_lvalue_bare lvalue print_arith arith
+  | EntireList lvalue ->
+    if bare then
+      fprintf outx "%a[@]" print_lvalue_bare lvalue
+    else
+      fprintf outx "${%a[@]}" print_lvalue_bare lvalue
+  | Cardinal lvalue ->
+    if bare then
+      fprintf outx "#%a" print_lvalue_bare lvalue
+    else
+      fprintf outx "${#%a}" print_lvalue_bare lvalue
 
 and print_arith out (expr: arithmetic) =
   match expr with

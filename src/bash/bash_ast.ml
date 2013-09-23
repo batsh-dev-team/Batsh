@@ -5,6 +5,8 @@ type identifiers = identifier list
 type leftvalue =
   | Identifier of identifier
   | ListAccess of (leftvalue * arithmetic)
+  | EntireList of leftvalue
+  | Cardinal of leftvalue
 
 and arithmetic =
   | Leftvalue of leftvalue
