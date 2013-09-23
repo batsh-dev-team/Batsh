@@ -1,6 +1,6 @@
 // Function call
 function func1(p1, p2) {
-  echo(p1, p2);
+  println(p1, p2);
 }
 func1("Hello", "World");
 
@@ -10,20 +10,20 @@ v2 = "Global V2";
 v3 = "Global V3";
 function func2(p) {
   v1 = "Local " ++ p;
-  echo(v1);
-  echo(v2);
+  println(v1);
+  println(v2);
   global v3;
   v3 = "V3 Modified.";
 }
 func2("Var");
-echo(v1);
-echo(p);
-echo(v3);
+println(v1);
+println(p);
+println(v3);
 
 // Return value
 function func3(num) {
-  echo(num + 41);
+  println(num + 41);
 }
 func3(4);
 ret = func3(1);
-echo("Returned:", ret);
+println("Returned:", ret);

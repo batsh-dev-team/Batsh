@@ -1,8 +1,8 @@
 a = "Value: " ++ 1+(4+6)*3;
-echo(a);
+println(a);
 b = 3 + 4;
-echo(b);
+println(b);
 c = a;
-echo(c);
+println(c);
 d = b ++ c;
-echo(d);
+println(d);

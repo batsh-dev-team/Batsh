@@ -1,9 +1,9 @@
 i = 0;
 while (i < 5) {
-  echo("-n", i ++ " ");
+  print(i ++ " ");
   i = i + 1;
 }
-echo();
+println();
 
 // Fibonacci
 n = 0;
@@ -14,5 +14,5 @@ while (n < 60) {
   i = j;
   j = k;
   n = n + 1;
-  echo(k);
+  println(k);
 }

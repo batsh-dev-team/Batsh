@@ -36,7 +36,8 @@ Library bash_lib
   Modules:            Bash
   InternalModules:    Bash_ast,
                       Bash_compile,
-                      Bash_format
+                      Bash_format,
+                      Bash_functions
   BuildDepends:       utils_lib, batsh_lib
 
 Executable batsh

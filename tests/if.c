@@ -1,5 +1,5 @@
 if (2 < 10) {
-  echo("Yes");
+  println("Yes");
 }
 
 if (true) {
@@ -11,25 +11,25 @@ if (true) {
 } else {
 
 }
-echo(v);
+println(v);
 
 if (2 > 1)
-  echo("True");
+  println("True");
 
 if (1 === 12) {
-  echo("No");
+  println("No");
 }
 
 if ("a" == "b") {
-  echo("No");
+  println("No");
 } else {
-  echo("a != b");
+  println("a != b");
 }
 
 num = 43;
 if ("43" == num) {
-  echo("43 == num");
+  println("43 == num");
 }
 if ("43" === num) {
-  echo("43 === num");
+  println("43 === num");
 }
