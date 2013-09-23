@@ -25,13 +25,20 @@ let rec expand_expression (expr : expression) : expression =
 and expand_expressions (exprs : expressions) : expressions =
   List.map exprs ~f: expand_expression
 
-and expand_command (name : identifier) (exprs : expressions) =
+and expand_command (name : expression) (exprs : expressions) =
   let exprs = expand_expressions exprs in
   match name with
-  | "println" ->
-    "echo", (String "-e") :: exprs
-  | "print" ->
-    "echo", (String "-ne") :: exprs
+  | String "println" ->
+    String "echo", (String "-e") :: exprs
+  | String "print" ->
+    String "echo", (String "-ne") :: exprs
+  | String "call" -> (
+      match exprs with
+      | cmd :: args ->
+        expand_command cmd args
+      | [] ->
+        failwith "call must have at least 1 argument."
+    )
   | _ ->
     name, exprs
 

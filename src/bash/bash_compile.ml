@@ -69,7 +69,7 @@ and compile_expr
         ~symtable ~scope
     | BAST.Call (ident, exprs) ->
       let params = List.map exprs ~f: compile_expr in
-      Command (ident, params)
+      Command (String ident, params)
     | BAST.Parentheses expr ->
       compile_expr expr
     | BAST.List exprs ->
@@ -158,9 +158,10 @@ and extract_temporary_expr expr :(statements * expression) =
     let assignments_left, left = extract_temporary_expr left in
     let assignments_right, right = extract_temporary_expr right in
     (assignments_left @ assignments_right, StrBinary (operator, left, right))
-  | Command (ident, exprs) ->
-    let assignments, exprs = extract_temporary_exprs exprs in
-    (assignments, Command (ident, exprs))
+  | Command (name, exprs) ->
+    let assignments, name = extract_temporary_expr name in
+    let assignments_params, exprs = extract_temporary_exprs exprs in
+    (assignments @ assignments_params, Command (name, exprs))
   | List exprs ->
     let assignments, exprs = extract_temporary_exprs exprs in
     (assignments, List exprs)

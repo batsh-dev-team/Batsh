@@ -20,7 +20,7 @@ and expression =
   | String of string
   | Result of arithmetic
   | StrBinary of (string * expression * expression)
-  | Command of (identifier * expressions)
+  | Command of (expression * expressions)
   | List of expressions
   | StrTemp of (identifier * expression)
 

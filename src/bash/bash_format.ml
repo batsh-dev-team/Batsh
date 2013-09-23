@@ -74,9 +74,9 @@ and print_str_binary (outx: out_channel) (operator, left, right) =
   | _ ->
     failwith ("Unknown operator: " ^ operator)
 
-and print_command (outx: out_channel) (ident, params) =
-  fprintf outx "%s %a"
-    ident
+and print_command (outx: out_channel) (name, params) =
+  fprintf outx "%a %a"
+    print_expression name
     (Formatutil.print_separate_list ~f: print_expression ~separator: " ") params
 
 let rec print_statement out (stmt: statement) ~(indent: int) =
