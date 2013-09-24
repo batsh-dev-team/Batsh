@@ -40,17 +40,25 @@ Library bash_lib
                       Bash_functions
   BuildDepends:       utils_lib, batsh_lib
 
+Library batch_lib
+  Path:               src/batch
+  Modules:            Batch
+  InternalModules:    Batch_ast,
+                      Batch_compile,
+                      Batch_format
+  BuildDepends:       utils_lib, batsh_lib
+
 Executable batsh
   Path:               src
   MainIs:             main.ml
-  BuildDepends:       batsh_lib, bash_lib
+  BuildDepends:       batsh_lib, bash_lib, batch_lib
 
 Executable test
   Path:               src
   MainIs:             test.ml
   Build$:             flag(tests)
   Install:            false
-  BuildDepends:       ounit, batsh_lib, bash_lib
+  BuildDepends:       ounit, batsh_lib, bash_lib, batch_lib
 
 Test unit_test
   Run$:               flag(tests)

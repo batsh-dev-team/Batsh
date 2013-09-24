@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 0f716ad9f0e6c54ab5eed7fceb05dc90) *)
+(* DO NOT EDIT (digest: ab8bd26b7d7f65caed49567c66e86d45) *)
 module OASISGettext = struct
 (* # 21 "src/oasis/OASISGettext.ml" *)
 
@@ -481,21 +481,23 @@ let package_default =
        [
           ("utils_lib", ["src/utils"]);
           ("batsh_lib", ["src/batsh"]);
-          ("bash_lib", ["src/bash"])
+          ("bash_lib", ["src/bash"]);
+          ("batch_lib", ["src/batch"])
        ];
      lib_c = [];
      flags = [];
      includes =
        [
           ("src/batsh", ["src/utils"]);
+          ("src/batch", ["src/batsh"; "src/utils"]);
           ("src/bash", ["src/batsh"; "src/utils"]);
-          ("src", ["src/bash"; "src/batsh"])
+          ("src", ["src/bash"; "src/batch"; "src/batsh"])
        ];
      }
   ;;
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default package_default;;
 
-# 500 "myocamlbuild.ml"
+# 502 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;

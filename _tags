@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 08ad6fb2de57e002abe00751f215bbe6)
+# DO NOT EDIT (digest: 03c8be68a2af2596bed33f5164f1fef1)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -30,7 +30,15 @@
 <src/bash/*.ml{,i}>: pkg_sexplib.syntax
 <src/bash/*.ml{,i}>: pkg_threads
 <src/bash/*.ml{,i}>: pkg_core
+# Library batch_lib
+"src/batch/batch_lib.cmxs": use_batch_lib
+<src/batch/*.ml{,i}>: use_batsh_lib
+<src/batch/*.ml{,i}>: use_utils_lib
+<src/batch/*.ml{,i}>: pkg_sexplib.syntax
+<src/batch/*.ml{,i}>: pkg_threads
+<src/batch/*.ml{,i}>: pkg_core
 # Executable batsh
+"src/main.byte": use_batch_lib
 "src/main.byte": use_bash_lib
 "src/main.byte": use_batsh_lib
 "src/main.byte": use_utils_lib
@@ -38,6 +46,7 @@
 "src/main.byte": pkg_threads
 "src/main.byte": pkg_core
 # Executable test
+"src/test.byte": use_batch_lib
 "src/test.byte": use_bash_lib
 "src/test.byte": use_batsh_lib
 "src/test.byte": use_utils_lib
@@ -45,6 +54,7 @@
 "src/test.byte": pkg_sexplib.syntax
 "src/test.byte": pkg_threads
 "src/test.byte": pkg_core
+<src/*.ml{,i}>: use_batch_lib
 <src/*.ml{,i}>: use_bash_lib
 <src/*.ml{,i}>: use_batsh_lib
 <src/*.ml{,i}>: use_utils_lib
