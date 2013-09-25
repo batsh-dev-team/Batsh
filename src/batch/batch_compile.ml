@@ -13,16 +13,6 @@ let rec compile_leftvalue
   | BAST.Identifier ident ->
     ident
 
-let rec compile_expr
-    (expr: BAST.expression)
-    ~(symtable: Symbol_table.t)
-    ~(scope: Symbol_table.Scope.t)
-  :expression =
-  let compile_expr = compile_expr ~symtable ~scope in
-  match expr with
-  | BAST.Parentheses expr ->
-    compile_expr expr
-
 let rec compile_statement
     (stmt : BAST.statement)
     ~(symtable : Symbol_table.t)
@@ -31,11 +21,6 @@ let rec compile_statement
   match stmt with
   | BAST.Comment comment ->
     Comment comment
-  | BAST.Assignment (lvalue, expr) ->
-    Assignment (compile_leftvalue lvalue ~symtable ~scope,
-                compile_expr expr ~symtable ~scope)
-  | BAST.Block stmts ->
-    Block (List.map stmts ~f: (compile_statement ~symtable ~scope))
   | BAST.Global _ ->
     Empty
   | BAST.Empty ->
@@ -54,7 +39,7 @@ let compile_function
   : statement =
   let scope = Symbol_table.scope symtable name in
   let body = compile_statements stmts ~symtable ~scope in
-  Block body
+  Empty
 
 let compile_toplevel
     ~(symtable : Symbol_table.t)
