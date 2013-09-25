@@ -3,7 +3,7 @@ OCamlVersion:         >= 4.00.1
 FindlibVersion:       >= 1.3.2
 Name:                 batsh
 Version:              0.0.1
-Synopsis:             Batsh - A language that compiles to Bash and Batch
+Synopsis:             Batsh - A language that compiles to Bash and Windows Batch
 Authors:              BYVoid <byvoid@byvoid.com>
 Copyrights:           (C) 2013 Carbo Kuo <byvoid@byvoid.com>
 Maintainers:          BYVoid <byvoid@byvoid.com>
@@ -40,25 +40,25 @@ Library bash_lib
                       Bash_functions
   BuildDepends:       utils_lib, batsh_lib
 
-Library batch_lib
-  Path:               src/batch
-  Modules:            Batch
-  InternalModules:    Batch_ast,
-                      Batch_compile,
-                      Batch_format
+Library winbat_lib
+  Path:               src/winbat
+  Modules:            Winbat
+  InternalModules:    Winbat_ast,
+                      Winbat_compile,
+                      Winbat_format
   BuildDepends:       utils_lib, batsh_lib
 
 Executable batsh
   Path:               src
   MainIs:             main.ml
-  BuildDepends:       batsh_lib, bash_lib, batch_lib
+  BuildDepends:       batsh_lib, bash_lib, winbat_lib
 
 Executable test
   Path:               src
   MainIs:             test.ml
   Build$:             flag(tests)
   Install:            false
-  BuildDepends:       ounit, batsh_lib, bash_lib, batch_lib
+  BuildDepends:       ounit, batsh_lib, bash_lib, winbat_lib
 
 Test unit_test
   Run$:               flag(tests)

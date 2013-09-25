@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: ab8bd26b7d7f65caed49567c66e86d45) *)
+(* DO NOT EDIT (digest: cd2347e5cfbc6b5e631366bcc2615220) *)
 module OASISGettext = struct
 (* # 21 "src/oasis/OASISGettext.ml" *)
 
@@ -482,16 +482,16 @@ let package_default =
           ("utils_lib", ["src/utils"]);
           ("batsh_lib", ["src/batsh"]);
           ("bash_lib", ["src/bash"]);
-          ("batch_lib", ["src/batch"])
+          ("winbat_lib", ["src/winbat"])
        ];
      lib_c = [];
      flags = [];
      includes =
        [
+          ("src/winbat", ["src/batsh"; "src/utils"]);
           ("src/batsh", ["src/utils"]);
-          ("src/batch", ["src/batsh"; "src/utils"]);
           ("src/bash", ["src/batsh"; "src/utils"]);
-          ("src", ["src/bash"; "src/batch"; "src/batsh"])
+          ("src", ["src/bash"; "src/batsh"; "src/winbat"])
        ];
      }
   ;;

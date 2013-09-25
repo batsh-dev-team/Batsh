@@ -1,5 +1,5 @@
 open Core.Std
-open Batch_ast
+open Winbat_ast
 
 let rec print_leftvalue outx (lvalue : leftvalue) =
   match lvalue with

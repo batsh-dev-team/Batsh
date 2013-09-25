@@ -20,7 +20,7 @@ let bash =
         printf "%a\n" Bash.print bash
       )
 
-let batch =
+let winbat =
   Command.basic
     ~summary: "Compile to Microsoft Windows Batch"
     Command.Spec.(
@@ -28,8 +28,8 @@ let batch =
       +> anon ("filename" %: regular_file)
     ) (fun (filename: string) () ->
         let batsh = Batsh.create_from_file filename in
-        let batch = Batch.compile batsh in
-        printf "%a\n" Batch.print batch
+        let batch = Winbat.compile batsh in
+        printf "%a\n" Winbat.print batch
       )
 
 let format =
@@ -66,7 +66,7 @@ let () =
     ~readme: (fun () -> "Write once and runs with Bash and Batsh")
     [
       ("bash", bash);
-      ("bat", batch);
+      ("bat", winbat);
       ("ast", ast);
       ("format", format)
     ]
