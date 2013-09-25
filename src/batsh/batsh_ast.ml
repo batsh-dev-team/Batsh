@@ -12,14 +12,16 @@ and expression =
   | Bool of bool
   | Float of float
   | Int of int
-  | List of expression list
+  | List of expressions
   | String of string
   | Leftvalue of leftvalue
   | ArithUnary of (string * expression)
   | ArithBinary of (string * expression * expression)
-  | StrBinary of (string * expression * expression)
-  | Parentheses of expression
-  | Call of (identifier * expression list)
+  | Concat of (expression * expression)
+  | StrCompare of (string * expression * expression)
+  | Call of (identifier * expressions)
+
+and expressions = expression list
 
 and statement =
   | Comment of string

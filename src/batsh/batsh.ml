@@ -3,7 +3,7 @@ open Core.Std
 type t = {
   lex: Lexing.lexbuf;
   ast: Batsh_ast.t;
-  symtable: Symbol_table.t
+  symtable: Symbol_table.t;
 }
 
 let parse_and_print_error
@@ -36,7 +36,7 @@ let create_from_channel (inx: in_channel) (filename: string) : t =
   };
   let ast = parse_and_print_error stderr lexbuf in
   let symtable = Symbol_table.create ast in
-  { lex = lexbuf; ast; symtable }
+  { lex = lexbuf; ast; symtable; }
 
 let create_from_file (filename : string) : t =
   let inx = In_channel.create filename in
@@ -49,6 +49,21 @@ let prettify (outx: out_channel) (batsh: t) =
 
 let ast (batsh: t) : Batsh_ast.t =
   batsh.ast
+
+let split_ast
+    (batsh: t)
+    ~(split_string : bool)
+    ~(split_list_literal : bool)
+    ~(split_call : bool)
+    ~(split_string_compare : bool)
+  : Batsh_ast.t =
+  let conf = Batsh_transform.create batsh.symtable
+      ~split_string
+      ~split_list_literal
+      ~split_call
+      ~split_string_compare
+  in
+  Batsh_transform.split batsh.ast ~conf
 
 let symtable (batsh: t) : Symbol_table.t =
   batsh.symtable

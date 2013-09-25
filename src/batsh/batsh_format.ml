@@ -17,11 +17,11 @@ and print_expression out (expr: expression) =
   | Bool true  -> output_string out "true"
   | Bool false -> output_string out "false"
   | ArithUnary (operator, expr) ->
-    fprintf out "%s%a" operator print_expression expr
-  | ArithBinary binary | StrBinary binary ->
+    fprintf out "%s(%a)" operator print_expression expr
+  | ArithBinary binary | StrCompare binary ->
     print_binary_expression out binary
-  | Parentheses expr ->
-    fprintf out "(%a)" print_expression expr
+  | Concat (left, right) ->
+    print_binary_expression out ("++", left, right)
   | Call (ident, exprs) ->
     fprintf out "%s(%a)" ident print_expressions exprs
   | List exprs ->
@@ -35,7 +35,7 @@ and print_binary_expression
     (outx :out_channel)
     (operator, left, right)
   =
-  fprintf outx "%a %s %a"
+  fprintf outx "(%a %s %a)"
     print_expression left operator print_expression right
 
 let rec print_statement out (stmt: statement) ~(indent: int) =

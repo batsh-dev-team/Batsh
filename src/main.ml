@@ -49,11 +49,35 @@ let ast =
     Command.Spec.(
       empty
       +> anon ("filename" %: regular_file)
-      +> flag "-symbols" no_arg ~doc:" symbol table instead"
-    ) (fun (filename : string) (symbols : bool) () ->
+      +> flag "-symbols" no_arg ~doc:" show symbol table instead"
+      +> flag "-split-string" no_arg
+          ~doc:" split string expressions into assignments"
+      +> flag "-split-list" no_arg
+          ~doc:" split list literals into assignments"
+      +> flag "-split-call" no_arg
+          ~doc:" split call expressions into assignments"
+      +> flag "-split-string-compare" no_arg
+          ~doc:" split string comparison expressions into assignments"
+    ) (fun (filename : string)
+        (symbols : bool)
+        (split_string : bool)
+        (split_list_literal : bool)
+        (split_call : bool)
+        (split_string_compare : bool)
+        () ->
         let batsh = Batsh.create_from_file filename in
         if not symbols then
-          let ast_sexp = Batsh_ast.sexp_of_t (Batsh.ast batsh) in
+          let ast =
+            if split_string || split_list_literal || split_call then
+              Batsh.split_ast batsh
+                ~split_string
+                ~split_list_literal
+                ~split_call
+                ~split_string_compare
+            else
+              Batsh.ast batsh
+          in
+          let ast_sexp = Batsh_ast.sexp_of_t ast in
           printf "%a\n" Sexp.output_hum ast_sexp
         else
           let symtable_sexp = Batsh.Symbol_table.sexp_of_t (Batsh.symtable batsh) in

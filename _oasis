@@ -27,6 +27,7 @@ Library batsh_lib
                       Parser,
                       Batsh_ast,
                       Batsh_format,
+                      Batsh_transform,
                       Symbol_table
   BuildDepends:       utils_lib,
                       sexplib.syntax

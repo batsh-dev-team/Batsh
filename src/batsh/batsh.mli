@@ -19,3 +19,5 @@ val create_from_channel : in_channel -> string -> t
 val prettify : out_channel -> t -> unit
 val ast : t -> Batsh_ast.t
 val symtable : t -> Symbol_table.t
+val split_ast : t -> split_string : bool -> split_list_literal : bool
+  -> split_call : bool -> split_string_compare : bool -> Batsh_ast.t

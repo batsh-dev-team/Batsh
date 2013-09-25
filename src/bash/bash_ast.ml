@@ -14,8 +14,6 @@ and arithmetic =
   | Float of float
   | ArithUnary of (string * arithmetic)
   | ArithBinary of (string * arithmetic * arithmetic)
-  | Parentheses of arithmetic
-  | ArithTemp of (identifier * expression)
 
 and expression =
   | Variable of leftvalue
@@ -24,7 +22,6 @@ and expression =
   | StrBinary of (string * expression * expression)
   | Command of (expression * expressions)
   | List of expressions
-  | StrTemp of (identifier * expression)
 
 and expressions = expression list
 

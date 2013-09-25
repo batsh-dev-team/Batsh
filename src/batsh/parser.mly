@@ -126,7 +126,7 @@ expression:
   | expr = binary_expression;
       { expr }
   | LEFT_PAREN; expr = expression; RIGHT_PAREN;
-      { Batsh_ast.Parentheses expr }
+      { expr }
   | ident = IDENTIFIER; LEFT_PAREN; exprs = expression_list; RIGHT_PAREN;
       { Batsh_ast.Call (ident, exprs) }
   ;
@@ -177,11 +177,11 @@ binary_expression:
   | left = expression; LE; right = expression;
       { Batsh_ast.ArithBinary ("<=", left, right) }
   | left = expression; CONCAT; right = expression;
-      { Batsh_ast.StrBinary ("++", left, right) }
+      { Batsh_ast.Concat (left, right) }
   | left = expression; SEQ; right = expression;
-      { Batsh_ast.StrBinary ("==", left, right) }
+      { Batsh_ast.StrCompare ("==", left, right) }
   | left = expression; SNE; right = expression;
-      { Batsh_ast.StrBinary ("!=", left, right) }
+      { Batsh_ast.StrCompare ("!=", left, right) }
   ;
 
 list_fields:

@@ -30,13 +30,9 @@ and print_arith out (expr: arithmetic) =
   | Int number -> output_string out (string_of_int number)
   | Float number -> output_string out (Float.to_string number)
   | ArithUnary (operator, arith) ->
-    fprintf out "%s%a" operator print_arith arith
+    fprintf out "%s(%a)" operator print_arith arith
   | ArithBinary binary ->
     print_arith_binary out binary
-  | Parentheses expr ->
-    fprintf out "(%a)" print_arith expr
-  | ArithTemp _ ->
-    failwith "BUG: ArithTemp should be all replaced."
 
 and print_arith_binary
     (outx: out_channel)
@@ -47,7 +43,7 @@ and print_arith_binary
     | "!==" -> "!="
     | _ -> operator
   in
-  fprintf outx "%a %s %a" print_arith left operator print_arith right
+  fprintf outx "(%a %s %a)" print_arith left operator print_arith right
 
 let rec print_expression out (expr: expression) =
   match expr with
@@ -70,8 +66,6 @@ let rec print_expression out (expr: expression) =
           output_string out " "
       );
     output_string out ")"
-  | StrTemp _ ->
-    failwith "BUG: StrTemp should be all replaced."
 
 and print_str_binary (outx: out_channel) (operator, left, right) =
   match operator with

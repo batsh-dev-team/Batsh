@@ -18,8 +18,6 @@ let rec expand_expression (expr : expression) : expression =
     expand_command name exprs
   | List (exprs) ->
     List (expand_expressions exprs)
-  | StrTemp _ ->
-    failwith "StrTemp should be all replaced."
   | String _ | Result _ -> expr
 
 and expand_expressions (exprs : expressions) : expressions =
