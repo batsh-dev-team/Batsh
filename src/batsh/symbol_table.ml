@@ -53,21 +53,22 @@ module Scope = struct
     Hashtbl.fold vtable ~init
       ~f: (fun ~key ~data acc -> f data.name data.global acc)
 
-  let rec add_temporary_variable
+  let add_temporary_variable
       (scope: t)
-    :identifier =
-    let random_string = Random.bits () |> Int.to_string
-                        |> Digest.string |> Digest.to_hex in
-    let name = "TMP_" ^ (String.prefix random_string 4) in
-    match find_variable scope ~name with
-    | None ->
-      (* Add to symbol table *)
-      let variables = variables scope in
-      Hashtbl.add_exn variables ~key: name ~data: {name; global = false};
-      name
-    | Some _ ->
-      (* Duplicated, try again *)
-      add_temporary_variable scope
+    : identifier =
+    let rec find_available_name (num : int) : string =
+      let name = "_" ^ (Int.to_string num) in
+      match find_variable scope ~name with
+      | None ->
+        (* Add to symbol table *)
+        let variables = variables scope in
+        Hashtbl.add_exn variables ~key: name ~data: {name; global = false};
+        name
+      | Some _ ->
+        (* Duplicated, try again *)
+        find_available_name (num + 1)
+    in
+    find_available_name 0
 end
 
 let process_identifier
