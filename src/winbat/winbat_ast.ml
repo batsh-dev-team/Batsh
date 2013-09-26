@@ -12,7 +12,6 @@ type arithmetic =
   | Int of int
   | ArithUnary of (string * arithmetic)
   | ArithBinary of (string * arithmetic * arithmetic)
-  | Parentheses of arithmetic
 
 type varstring =
   | Variable of leftvalue
@@ -27,6 +26,7 @@ type statement =
   | Goto of label
   | Assignment of (leftvalue * varstrings)
   | ArithAssign of (leftvalue * arithmetic)
+  | Call of (varstring * varstrings)
   | Empty
 
 and statements = statement list

@@ -7,6 +7,7 @@ type t = {
   split_list_literal : bool;
   split_call : bool;
   split_string_compare : bool;
+  split_arithmetic : bool;
 }
 
 let rec split_expression
@@ -32,10 +33,16 @@ let rec split_expression
     [], expr
   | ArithUnary (operator, expr) ->
     let assignments, expr = split_expression expr ~subexpression: true in
-    assignments, ArithUnary (operator, expr)
+    if subexpression && conf.split_arithmetic then
+      split_expr_to_assignment assignments (ArithUnary (operator, expr))
+    else
+      assignments, ArithUnary (operator, expr)
   | ArithBinary (operator, left, right) ->
     let assignments, (left, right) = split_binary (left, right) ~subexpression: true in
-    assignments, ArithBinary (operator, left, right)
+    if subexpression && conf.split_arithmetic then
+      split_expr_to_assignment assignments (ArithBinary (operator, left, right))
+    else
+      assignments, ArithBinary (operator, left, right)
   | String str ->
     if subexpression && conf.split_string then
       split_expr_to_assignment [] (String str)
@@ -154,5 +161,13 @@ let create
     ~(split_list_literal : bool)
     ~(split_call : bool)
     ~(split_string_compare : bool)
+    ~(split_arithmetic : bool)
   : t =
-  { symtable; split_string; split_list_literal; split_call; split_string_compare }
+  {
+    symtable;
+    split_string;
+    split_list_literal;
+    split_call;
+    split_string_compare;
+    split_arithmetic;
+  }

@@ -63,12 +63,14 @@ let split_ast
     ~(split_list_literal : bool)
     ~(split_call : bool)
     ~(split_string_compare : bool)
+    ~(split_arithmetic : bool)
   : Batsh_ast.t =
   let conf = Batsh_transform.create batsh.symtable
       ~split_string
       ~split_list_literal
       ~split_call
       ~split_string_compare
+      ~split_arithmetic
   in
   Batsh_transform.split batsh.ast ~conf
 

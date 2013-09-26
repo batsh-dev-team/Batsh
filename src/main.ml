@@ -58,12 +58,15 @@ let ast =
           ~doc:" split call expressions into assignments"
       +> flag "-split-string-compare" no_arg
           ~doc:" split string comparison expressions into assignments"
+      +> flag "-split-arithmetic" no_arg
+          ~doc:" split arithmetic expressions into assignments"
     ) (fun (filename : string)
         (symbols : bool)
         (split_string : bool)
         (split_list_literal : bool)
         (split_call : bool)
         (split_string_compare : bool)
+        (split_arithmetic : bool)
         () ->
         let batsh = Batsh.create_from_file filename in
         if not symbols then
@@ -74,6 +77,7 @@ let ast =
                 ~split_list_literal
                 ~split_call
                 ~split_string_compare
+                ~split_arithmetic
             else
               Batsh.ast batsh
           in

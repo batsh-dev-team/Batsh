@@ -13,18 +13,16 @@ let rec print_arith outx (arith : arithmetic) =
   | Int num ->
     fprintf outx "%d" num
   | ArithUnary (operator, arith) ->
-    fprintf outx "%s%a" operator print_arith arith
+    fprintf outx "%s(%a)" operator print_arith arith
   | ArithBinary (operator, left, right) ->
-    fprintf outx "%a %s %a" print_arith left operator print_arith right
-  | Parentheses expr ->
-    fprintf outx "(%a)" print_arith expr
+    fprintf outx "(%a %s %a)" print_arith left operator print_arith right
 
 let print_varstring outx (var : varstring) =
   match var with
   | Variable lvalue ->
     print_leftvalue outx lvalue
   | String str ->
-    output_string outx str
+    fprintf outx "\"%s\"" str
 
 let print_varstrings outx (vars : varstrings) =
   List.iter vars ~f: (print_varstring outx)
@@ -47,6 +45,10 @@ let rec print_statement outx (stmt: statement) ~(indent: int) =
     fprintf outx "set /a %a=%a"
       print_leftvalue lvalue
       print_arith arith
+  | Call (name, params) ->
+    fprintf outx "%a %a"
+      print_varstring name
+      print_varstrings params
   | Empty -> ()
 
 and print_statements: out_channel -> statements -> indent:int -> unit =

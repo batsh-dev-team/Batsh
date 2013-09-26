@@ -21,4 +21,5 @@ val prettify : out_channel -> t -> unit
 val ast : t -> Batsh_ast.t
 val symtable : t -> Symbol_table.t
 val split_ast : t -> split_string : bool -> split_list_literal : bool
-  -> split_call : bool -> split_string_compare : bool -> Batsh_ast.t
+  -> split_call : bool -> split_string_compare : bool -> split_arithmetic : bool
+  -> Batsh_ast.t

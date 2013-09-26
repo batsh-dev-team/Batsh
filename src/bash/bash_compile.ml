@@ -216,6 +216,7 @@ let compile (batsh: Batsh.t) :t =
       ~split_list_literal: true
       ~split_call: true
       ~split_string_compare: true
+      ~split_arithmetic: true
   in
   let symtable = Batsh.symtable batsh in
   List.map program ~f: (compile_toplevel ~symtable)
