@@ -29,8 +29,7 @@ module Symbol_table = struct
   include Symbol_table
 end
 
-let create_from_channel (inx: in_channel) (filename: string) : t =
-  let lexbuf = Lexing.from_channel inx in
+let create_from_lexbuf (lexbuf : Lexing.lexbuf) (filename: string) : t =
   lexbuf.Lexing.lex_curr_p <- {
     lexbuf.Lexing.lex_curr_p with Lexing.pos_fname = filename
   };
@@ -38,11 +37,19 @@ let create_from_channel (inx: in_channel) (filename: string) : t =
   let symtable = Symbol_table.create ast in
   { lex = lexbuf; ast; symtable; }
 
+let create_from_channel (inx: in_channel) (filename: string) : t =
+  let lexbuf = Lexing.from_channel inx in
+  create_from_lexbuf lexbuf filename
+
 let create_from_file (filename : string) : t =
   let inx = In_channel.create filename in
   let batsh = create_from_channel inx filename in
   In_channel.close inx;
   batsh
+
+let create_from_string (source : string) : t =
+  let lexbuf = Lexing.from_string source in
+  create_from_lexbuf lexbuf "input"
 
 let prettify (outx: out_channel) (batsh: t) =
   fprintf outx "%a\n" Batsh_format.print_ast batsh.ast
