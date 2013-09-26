@@ -21,8 +21,14 @@ let rec print_arith outx (arith : arithmetic) =
     fprintf outx "%d" num
   | ArithUnary (operator, arith) ->
     fprintf outx "%s(%a)" operator print_arith arith
-  | ArithBinary (operator, left, right) ->
-    fprintf outx "(%a %s %a)" print_arith left operator print_arith right
+  | ArithBinary (operator, left, right) -> (
+      let operator = if operator = "%" then "%%" else operator in
+      fprintf outx "(%a %s %a)"
+        print_arith left
+        operator
+        print_arith right
+    )
+
 
 let print_varstring outx (var : varstring) =
   match var with

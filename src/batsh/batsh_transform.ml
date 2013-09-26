@@ -33,13 +33,13 @@ let rec split_expression
     [], expr
   | ArithUnary (operator, expr) ->
     let assignments, expr = split_expression expr ~subexpression: true in
-    if subexpression && conf.split_arithmetic then
+    if conf.split_arithmetic then
       split_expr_to_assignment assignments (ArithUnary (operator, expr))
     else
       assignments, ArithUnary (operator, expr)
   | ArithBinary (operator, left, right) ->
     let assignments, (left, right) = split_binary (left, right) ~subexpression: true in
-    if subexpression && conf.split_arithmetic then
+    if conf.split_arithmetic then
       split_expr_to_assignment assignments (ArithBinary (operator, left, right))
     else
       assignments, ArithBinary (operator, left, right)

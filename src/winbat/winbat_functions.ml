@@ -21,16 +21,16 @@ let rec expand_statement (stmt : statement) : statement =
   match stmt with
   | Call (name, exprs) ->
     expand_command name exprs
-(*   | If (expr, stmt) ->
-    If (expand_expression expr, expand_statement stmt)
-  | IfElse (expr, then_stmt, else_stmt) ->
-    IfElse (expand_expression expr,
-            expand_statement then_stmt,
-            expand_statement else_stmt)
-  | While (expr, stmt) ->
-    While (expand_expression expr, expand_statement stmt)
-  | Block stmts ->
-    Block (expand_statements stmts) *)
+  (*   | If (expr, stmt) ->
+       If (expand_expression expr, expand_statement stmt)
+       | IfElse (expr, then_stmt, else_stmt) ->
+       IfElse (expand_expression expr,
+              expand_statement then_stmt,
+              expand_statement else_stmt)
+       | While (expr, stmt) ->
+       While (expand_expression expr, expand_statement stmt)
+       | Block stmts ->
+       Block (expand_statements stmts) *)
   | Assignment _
   | ArithAssign _
   | Comment _ | Raw _ | Label _ | Goto _ | Empty -> stmt

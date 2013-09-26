@@ -101,46 +101,49 @@ let rec compile_statement
     (stmt : BAST.statement)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
-  : statement =
+  : statements =
   match stmt with
   | BAST.Comment comment ->
-    Comment comment
+    [Comment comment]
   | BAST.Block stmts ->
-    Empty (* TODO *)
+    compile_statements stmts ~symtable ~scope
   | BAST.Expression expr ->
-    compile_expression_statement expr ~symtable ~scope
+    [compile_expression_statement expr ~symtable ~scope]
   | BAST.Assignment (lvalue, expr) ->
     let lvalue = compile_leftvalue lvalue ~symtable ~scope in
     if is_arith expr then
-      ArithAssign (lvalue, compile_expression_to_arith expr ~symtable ~scope)
+      [ArithAssign (lvalue, compile_expression_to_arith expr ~symtable ~scope)]
     else
-      Empty
+      [Empty] (* TODO *)
   | BAST.If _
   | BAST.IfElse _
   | BAST.While _
   | BAST.Global _
   | BAST.Empty ->
-    Empty
+    []
 
-let compile_statements
+and compile_statements
     (stmts: BAST.statements)
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
   :statements =
-  List.map stmts ~f: (compile_statement ~symtable ~scope)
+  List.fold stmts ~init: [] ~f: (fun acc stmt ->
+      let stmts = compile_statement stmt ~symtable ~scope in
+      acc @ stmts
+    )
 
 let compile_function
     (name, params, stmts)
     ~(symtable : Symbol_table.t)
-  : statement =
+  : statements =
   (* let scope = Symbol_table.scope symtable name in *)
   (* let body = compile_statements stmts ~symtable ~scope in *)
-  Empty (* TODO implement function *)
+  [] (* TODO implement function *)
 
 let compile_toplevel
     ~(symtable : Symbol_table.t)
     (topl: BAST.toplevel)
-  : statement =
+  : statements =
   match topl with
   | BAST.Statement stmt ->
     compile_statement stmt ~symtable
@@ -157,5 +160,8 @@ let compile (batsh: Batsh.t) : t =
       ~split_arithmetic: true
   in
   let symtable = Batsh.symtable batsh in
-  let stmts = List.map program ~f: (compile_toplevel ~symtable) in
+  let stmts = List.fold program ~init: [] ~f: (fun acc topl ->
+      let stmts = compile_toplevel topl ~symtable in
+      acc @ stmts
+    ) in
   (Raw "@echo off") :: (Raw "setlocal EnableDelayedExpansion") :: stmts
