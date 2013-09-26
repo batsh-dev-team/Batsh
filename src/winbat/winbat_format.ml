@@ -1,15 +1,22 @@
 open Core.Std
 open Winbat_ast
 
-let rec print_leftvalue outx (lvalue : leftvalue) =
+let rec print_leftvalue
+    (outx : out_channel)
+    (lvalue : leftvalue)
+    ~(bare : bool)
+  =
   match lvalue with
   | Identifier ident ->
-    fprintf outx "%s" ident
+    if bare then
+      fprintf outx "%s" ident
+    else
+      fprintf outx "!%s!" ident
 
 let rec print_arith outx (arith : arithmetic) =
   match arith with
   | Leftvalue lvalue ->
-    print_leftvalue outx lvalue
+    print_leftvalue outx lvalue ~bare: false
   | Int num ->
     fprintf outx "%d" num
   | ArithUnary (operator, arith) ->
@@ -20,9 +27,9 @@ let rec print_arith outx (arith : arithmetic) =
 let print_varstring outx (var : varstring) =
   match var with
   | Variable lvalue ->
-    print_leftvalue outx lvalue
+    print_leftvalue outx lvalue ~bare: false
   | String str ->
-    fprintf outx "\"%s\"" str
+    fprintf outx "%s" str
 
 let print_varstrings outx (vars : varstrings) =
   List.iter vars ~f: (print_varstring outx)
@@ -39,11 +46,11 @@ let rec print_statement outx (stmt: statement) ~(indent: int) =
     fprintf outx "goto %s" lbl
   | Assignment (lvalue, vars) ->
     fprintf outx "set %a=%a"
-      print_leftvalue lvalue
+      (print_leftvalue ~bare: true) lvalue
       print_varstrings vars
   | ArithAssign (lvalue, arith) ->
     fprintf outx "set /a %a=%a"
-      print_leftvalue lvalue
+      (print_leftvalue ~bare: true) lvalue
       print_arith arith
   | Call (name, params) ->
     fprintf outx "%a %a"

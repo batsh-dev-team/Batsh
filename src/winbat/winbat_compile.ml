@@ -158,4 +158,4 @@ let compile (batsh: Batsh.t) : t =
   in
   let symtable = Batsh.symtable batsh in
   let stmts = List.map program ~f: (compile_toplevel ~symtable) in
-  (Raw "@echo off") :: stmts
+  (Raw "@echo off") :: (Raw "setlocal EnableDelayedExpansion") :: stmts
