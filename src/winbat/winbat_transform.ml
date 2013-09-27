@@ -99,29 +99,29 @@ let rec split_statement
     prepend_assignments assignments (Assignment (lvalue, expr))
   | If (expr, stmt) ->
     let assignments, expr = split_expression expr
-      ~symtable
-      ~scope
-      ~subexpression: true
-      ~preserve_top: true
+        ~symtable
+        ~scope
+        ~subexpression: true
+        ~preserve_top: true
     in
     let stmt = split_statement stmt ~symtable ~scope in
     prepend_assignments assignments (If (expr, stmt))
   | IfElse (expr, then_stmt, else_stmt) ->
     let assignments, expr = split_expression expr
-      ~symtable
-      ~scope
-      ~subexpression: true
-      ~preserve_top: true
+        ~symtable
+        ~scope
+        ~subexpression: true
+        ~preserve_top: true
     in
     let then_stmt = split_statement then_stmt ~symtable ~scope in
     let else_stmt = split_statement else_stmt ~symtable ~scope in
     prepend_assignments assignments (IfElse (expr, then_stmt, else_stmt))
   | While (expr, stmt) ->
     let assignments, expr = split_expression expr
-      ~symtable
-      ~scope
-      ~subexpression: true
-      ~preserve_top: true
+        ~symtable
+        ~scope
+        ~subexpression: true
+        ~preserve_top: true
     in
     let stmt = split_statement stmt ~symtable ~scope in
     prepend_assignments assignments (While (expr, stmt))
@@ -155,6 +155,6 @@ let split_toplevel
     Function (split_function func ~symtable)
 
 (* Split arithmetic expressions, string literals, string comparisons,
-  list literals, and command calls *)
+   list literals, and command calls *)
 let split (ast : Batsh_ast.t) ~(symtable : Symbol_table.t) : Batsh_ast.t =
   List.map ast ~f: (split_toplevel ~symtable)

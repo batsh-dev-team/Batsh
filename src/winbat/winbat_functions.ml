@@ -3,10 +3,15 @@ open Winbat_ast
 
 let rec expand_command (name : varstring) (exprs : varstrings) =
   match name with
-  | `Str "println" ->
-    `Call (`Str "echo", exprs)
+  | `Str "println" -> (
+      match exprs with
+      | [] ->
+        `Call (`Str "echo:", [])
+      | _ ->
+        `Call (`Str "echo", exprs)
+    )
   | `Str "print" ->
-    `Call (`Str "echo.", exprs)
+    `Call (`Str "echo | set /p =", exprs)
   | `Str "call" -> (
       match exprs with
       | cmd :: args ->

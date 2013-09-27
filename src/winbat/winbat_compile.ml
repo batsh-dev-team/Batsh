@@ -143,7 +143,15 @@ let rec compile_statement
     [`IfElse (compile_expression_to_comparison expr ~symtable ~scope,
               compile_statement then_stmt ~symtable ~scope,
               compile_statement else_stmt ~symtable ~scope)]
-  | While _
+  | While (expr, stmt) ->
+    let condition = compile_expression_to_comparison expr ~symtable ~scope in
+    let body = compile_statement stmt ~symtable ~scope in
+    let label = sprintf "WHILE_%d" (Random.int 32768) in
+    (* TODO check conflict *)
+    [
+      `Label label;
+      `If (condition, body @ [`Goto label]);
+    ]
   | Global _
   | Empty ->
     []

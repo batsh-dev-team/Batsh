@@ -39,10 +39,10 @@ let rec print_arith outx (arith : arithmetic) =
   | `Int num ->
     fprintf outx "%d" num
   | `ArithUnary (operator, arith) ->
-    fprintf outx "%s(%a)" operator print_arith arith
+    fprintf outx "%s^(%a^)" operator print_arith arith
   | `ArithBinary (operator, left, right) -> (
       let operator = if operator = "%" then "%%" else operator in
-      fprintf outx "(%a %s %a)"
+      fprintf outx "^(%a %s %a^)"
         print_arith left
         operator
         print_arith right
@@ -89,7 +89,7 @@ let rec print_statement outx (stmt: statement) ~(indent: int) =
   | `Raw str ->
     output_string outx str
   | `Label lbl ->
-    fprintf outx "%s:" lbl
+    fprintf outx ":%s" lbl
   | `Goto lbl ->
     fprintf outx "goto %s" lbl
   | `Assignment (lvalue, vars) ->
