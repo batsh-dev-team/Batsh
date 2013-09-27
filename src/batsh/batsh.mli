@@ -12,6 +12,7 @@ module Symbol_table : sig
   val scope : t -> string -> Scope.t
   val global_scope : t -> Scope.t
   val sexp_of_t : t -> Sexp.t
+  val is_function : t -> string -> bool
 end
 
 val create_from_file : string -> t

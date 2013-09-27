@@ -89,11 +89,14 @@ let rec split_statement
     | _ -> Block (assignments @ [stmt])
   in
   match stmt with
-  | Empty | Global _ | Comment _ ->
+  | Empty | Global _ | Comment _ | Return None ->
     stmt
   | Expression expr ->
     let assignments, expr = split_expression expr ~symtable ~scope ~subexpression: false in
     prepend_assignments assignments (Expression expr)
+  | Return (Some expr) ->
+    let assignments, expr = split_expression expr ~symtable ~scope ~subexpression: false in
+    prepend_assignments assignments (Return (Some expr))
   | Assignment (lvalue, expr) ->
     let assignments, expr = split_expression expr ~symtable ~scope ~subexpression: false in
     prepend_assignments assignments (Assignment (lvalue, expr))

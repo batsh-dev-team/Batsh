@@ -8,7 +8,7 @@ let rec print_leftvalue
   =
   match lvalue with
   | `Identifier ident ->
-    if bare then
+    if bare || ((String.get ident 0) = '%') then
       fprintf outx "%s" ident
     else
       fprintf outx "!%s!" ident
@@ -16,19 +16,20 @@ let rec print_leftvalue
     if bare then
       fprintf outx "%a_%a"
         (print_leftvalue ~bare: true) lvalue
-        print_varint index
+        (print_varint ~bare: true) index
     else
       fprintf outx "!%a_%a!" 
         (print_leftvalue ~bare: true) lvalue
-        print_varint index
+        (print_varint ~bare: true) index
 
 and print_varint
     (outx : out_channel)
     (index : varint)
+    ~(bare : bool)
   =
   match index with
   | `Var lvalue ->
-    print_leftvalue outx lvalue ~bare: false
+    (print_leftvalue ~bare) outx lvalue
   | `Int num ->
     fprintf outx "%d" num
 

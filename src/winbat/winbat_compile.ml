@@ -118,7 +118,12 @@ let rec compile_expression_statement
   : statement =
   match expr with
   | Call (ident, exprs) ->
-    `Call (`Str ident, compile_expressions exprs ~symtable ~scope)
+    let exprs = compile_expressions exprs ~symtable ~scope in
+    if Symbol_table.is_function symtable ident then
+      `Call (`Str "call", [`Str ("call :" ^ ident); `Str "_"; `Str "0"] @ exprs)
+    else
+      (* external command *)
+      `Call (`Str ident, exprs)
   | _ ->
     assert false (* TODO *)
 
@@ -152,6 +157,13 @@ let rec compile_statement
       `Label label;
       `If (condition, body @ [`Goto label]);
     ]
+  | Return (Some expr) ->
+    [
+      `Assignment (`Identifier "%~1", compile_expression expr ~symtable ~scope);
+      `Goto ":EOF"
+    ]
+  | Return None ->
+    [`Goto ":EOF"]
   | Global _
   | Empty ->
     []
@@ -192,13 +204,110 @@ and compile_statements
       acc @ stmts
     )
 
+let rec compile_function_leftvalue
+    (lvalue : leftvalue)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : leftvalue =
+  match lvalue with
+  | `Identifier ident ->
+    (* TODO global variable *)
+    `ListAccess (lvalue, `Var (`Identifier "%~2"))
+  | `ListAccess (lvalue, index) ->
+    `ListAccess (compile_function_leftvalue lvalue ~symtable ~scope, index)
+
+let compile_function_varstring
+    (var : varstring)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : varstring =
+  match var with
+  | `Var lvalue ->
+    `Var (compile_function_leftvalue lvalue ~symtable ~scope)
+  | `Str _ ->
+    var
+
+let compile_function_varstrings
+    (vars : varstrings)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : varstrings =
+  List.map vars ~f: (compile_function_varstring ~symtable ~scope)
+
+let rec compile_function_arithmetic
+    (arith : arithmetic)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : arithmetic =
+  match arith with
+  | `Var lvalue ->
+    `Var (compile_function_leftvalue lvalue ~symtable ~scope)
+  | `Int _ ->
+    arith
+  | `ArithUnary (operator, arith) ->
+    `ArithUnary (operator, compile_function_arithmetic arith ~symtable ~scope)
+  | `ArithBinary (operator, left, right) ->
+    `ArithBinary (operator,
+                  compile_function_arithmetic left ~symtable ~scope,
+                  compile_function_arithmetic right ~symtable ~scope)
+
+let compile_function_comparison
+    (cond : comparison)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : comparison =
+  match cond with
+  | `StrCompare (operator, left, right) ->
+    `StrCompare (operator,
+                 compile_function_varstrings left ~symtable ~scope,
+                 compile_function_varstrings right ~symtable ~scope)
+
+let rec compile_function_statement
+    (stmt : statement)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : statement =
+  match stmt with
+  | `Comment _ | `Raw _ | `Label _ | `Goto _ | `Empty ->
+    stmt
+  | `Assignment (lvalue, vars) ->
+    `Assignment (compile_function_leftvalue lvalue ~symtable ~scope,
+                 compile_function_varstrings vars ~symtable ~scope)
+  | `ArithAssign (lvalue, arith) ->
+    `ArithAssign (compile_function_leftvalue lvalue ~symtable ~scope,
+                  compile_function_arithmetic arith ~symtable ~scope)
+  | `Call (name, params) ->
+    `Call (compile_function_varstring name ~symtable ~scope,
+           compile_function_varstrings params ~symtable ~scope)
+  | `If (cond, stmts) ->
+    `If (compile_function_comparison cond ~symtable ~scope,
+         compile_function_statements stmts ~symtable ~scope)
+  | `IfElse (cond, then_stmts, else_stmts) ->
+    `IfElse (compile_function_comparison cond ~symtable ~scope,
+             compile_function_statements then_stmts ~symtable ~scope,
+             compile_function_statements else_stmts ~symtable ~scope)
+
+and compile_function_statements
+    (stmts : statements)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : statements =
+  List.map stmts ~f: (compile_function_statement ~symtable ~scope)
+
 let compile_function
     (name, params, stmts)
     ~(symtable : Symbol_table.t)
   : statements =
-  (* let scope = Symbol_table.scope symtable name in *)
-  (* let body = compile_statements stmts ~symtable ~scope in *)
-  [] (* TODO implement function *)
+  let scope = Symbol_table.scope symtable name in
+  let body = compile_statements stmts ~symtable ~scope in
+  let replaced_body = compile_function_statements body ~symtable ~scope in
+  let params_assignments : statements = List.mapi params ~f: (fun i param ->
+      let lvalue : leftvalue = `ListAccess (`Identifier param, `Var (`Identifier "%~2")) in
+      `Assignment (lvalue,
+                   [`Var (`Identifier (sprintf "%%~%d" (i + 3)))])
+    )
+  in
+  ((`Goto ":EOF") :: (`Label name) :: params_assignments) @ replaced_body
 
 let compile_toplevel
     ~(symtable : Symbol_table.t)
@@ -211,11 +320,33 @@ let compile_toplevel
   | Function func ->
     compile_function func ~symtable
 
+let sort_functions (topls : Batsh_ast.t) : Batsh_ast.t =
+  let is_function topl : bool =
+    match topl with
+    | Function _ -> true
+    | Statement _ -> false
+  in
+  List.sort topls ~cmp: (fun a b ->
+      let func_a = is_function a in
+      let func_b = is_function b in
+      if func_a then
+        if func_b then
+          0
+        else
+          1
+      else
+      if func_b then
+        -1
+      else
+        0
+    )
+
 let compile (batsh: Batsh.t) : t =
   let ast = Batsh.ast batsh in
   let symtable = Batsh.symtable batsh in
   let transformed_ast = Winbat_transform.split ast ~symtable in
-  let stmts = List.fold transformed_ast ~init: [] ~f: (fun acc topl ->
+  let sorted_ast = sort_functions transformed_ast in
+  let stmts = List.fold sorted_ast ~init: [] ~f: (fun acc topl ->
       let stmts = compile_toplevel topl ~symtable in
       acc @ stmts
     ) in
