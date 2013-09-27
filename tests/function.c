@@ -22,8 +22,9 @@ println(v3);
 
 // Return value
 function func3(num) {
-  println(num + 41);
+  return num + 41;
 }
 func3(4);
+println();
 ret = func3(1);
 println("Returned:", ret);

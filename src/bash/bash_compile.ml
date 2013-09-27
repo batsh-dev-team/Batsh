@@ -119,6 +119,11 @@ let rec compile_statement
     Block (List.map stmts ~f: (compile_statement ~symtable ~scope))
   | BAST.Global _ ->
     Empty
+  | BAST.Return (Some expr) ->
+    let call_stmt = BAST.Expression (BAST.Call ("print", [expr])) in
+    Block [compile_statement call_stmt ~symtable ~scope; Return]
+  | BAST.Return None ->
+    Return
   | BAST.Empty ->
     Empty
 

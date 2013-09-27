@@ -101,7 +101,7 @@ let rec split_statement
     | _ -> Block (assignments @ [stmt])
   in
   match stmt with
-  | Empty | Global _ | Comment _ ->
+  | Empty | Global _ | Comment _ | Return None ->
     stmt
   | Expression expr ->
     let assignments, expr = split_expression expr ~conf ~scope ~subexpression: false in
@@ -124,6 +124,9 @@ let rec split_statement
     prepend_assignments assignments (While (expr, stmt))
   | Block stmts ->
     Block (split_statements stmts ~conf ~scope)
+  | Return (Some expr) ->
+    let assignments, expr = split_expression expr ~conf ~scope ~subexpression: false in
+    prepend_assignments assignments (Return (Some expr))
 
 and split_statements
     (stmts : statements)

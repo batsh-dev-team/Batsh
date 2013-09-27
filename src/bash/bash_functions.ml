@@ -63,7 +63,7 @@ let rec expand_statement (stmt : statement) : statement =
     While (expand_expression expr, expand_statement stmt)
   | Block stmts ->
     Block (expand_statements stmts)
-  | Comment _ | Local _ | Empty -> stmt
+  | Comment _ | Local _ | Empty | Return -> stmt
 
 and expand_statements (stmts: statements) : statements =
   List.map stmts ~f: expand_statement

@@ -112,6 +112,8 @@ let rec print_statement out (stmt: statement) ~(indent: int) =
     output_string out "-"
   | Block stmts ->
     print_statements out stmts ~indent
+  | Return ->
+    output_string out "return"
   | Empty -> ()
 
 and print_condition (out: out_channel) (expr: expression) =

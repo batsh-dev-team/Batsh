@@ -34,6 +34,7 @@ type statement =
   | IfElse of (expression * statement * statement)
   | While of (expression * statement)
   | Block of statements
+  | Return
   | Empty
 
 and statements = statement list

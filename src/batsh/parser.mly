@@ -10,6 +10,7 @@
 %token WHILE
 %token FUNCTION
 %token GLOBAL
+%token RETURN
 %token EQUAL
 %token LEFT_PAREN
 %token RIGHT_PAREN
@@ -85,6 +86,10 @@ statement:
       { stmt }
   | GLOBAL ident = IDENTIFIER; SEMICOLON;
       { Batsh_ast.Global ident }
+  | RETURN expr = expression; SEMICOLON;
+      { Batsh_ast.Return (Some expr)}
+  | RETURN SEMICOLON;
+      { Batsh_ast.Return None}
   ;
 
 statement_list:

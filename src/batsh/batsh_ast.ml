@@ -32,6 +32,7 @@ and statement =
   | IfElse of (expression * statement * statement)
   | While of (expression * statement)
   | Global of identifier
+  | Return of expression option
   | Empty
 
 and statements = statement list
