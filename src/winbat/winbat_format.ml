@@ -63,7 +63,26 @@ let print_varstrings outx (vars : varstrings) ~(separater : string) =
         output_string outx separater
     )
 
+let print_comparison outx (condition : comparison) =
+  match condition with
+  | `StrCompare (operator, left, right) -> (
+      let sign = match operator with
+        | "==" | "===" -> "EQU"
+        | "!=" | "!==" -> "NEQ"
+        | ">" -> "GTR"
+        | "<" -> "LSS"
+        | ">=" -> "GEQ"
+        | "<=" -> "LEQ"
+        | _ -> failwith ("Unknown operator: " ^ operator)
+      in
+      fprintf outx "%a %s %a"
+        (print_varstrings ~separater: "") left
+        sign
+        (print_varstrings ~separater: "") right
+    )
+
 let rec print_statement outx (stmt: statement) ~(indent: int) =
+  Formatutil.print_indent outx indent;
   match stmt with
   | `Comment comment ->
     fprintf outx "::%s" comment
@@ -85,6 +104,18 @@ let rec print_statement outx (stmt: statement) ~(indent: int) =
     fprintf outx "%a %a"
       print_varstring name
       (print_varstrings ~separater: " ") params
+  | `If (condition, stmts) ->
+    fprintf outx "if /i %a (\n%a\n%a)"
+      print_comparison condition
+      (print_statements ~indent: (indent + 2)) stmts
+      Formatutil.print_indent indent
+  | `IfElse (condition, then_stmts, else_stmts) ->
+    fprintf outx "if /i %a (\n%a\n%a) else (\n%a\n%a)"
+      print_comparison condition
+      (print_statements ~indent: (indent + 2)) then_stmts
+      Formatutil.print_indent indent
+      (print_statements ~indent: (indent + 2)) else_stmts
+      Formatutil.print_indent indent
   | `Empty -> ()
 
 and print_statements: out_channel -> statements -> indent:int -> unit =

@@ -47,7 +47,8 @@ Library winbat_lib
   InternalModules:    Winbat_ast,
                       Winbat_compile,
                       Winbat_format,
-                      Winbat_functions
+                      Winbat_functions,
+                      Winbat_transform
   BuildDepends:       utils_lib, batsh_lib
 
 Executable batsh

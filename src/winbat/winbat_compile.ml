@@ -48,8 +48,8 @@ let rec compile_expression_to_arith
     `ArithUnary (operator, compile_expression_to_arith expr ~symtable ~scope)
   | ArithBinary (operator, left, right) ->
     `ArithBinary (operator,
-                 compile_expression_to_arith left ~symtable ~scope,
-                 compile_expression_to_arith right ~symtable ~scope)
+                  compile_expression_to_arith left ~symtable ~scope,
+                  compile_expression_to_arith right ~symtable ~scope)
   | String _
   | Float _
   | List _
@@ -90,6 +90,27 @@ let compile_expressions
   : varstrings =
   List.concat (List.map exprs ~f: (compile_expression ~symtable ~scope))
 
+let compile_expression_to_comparison
+    (expr : Batsh_ast.expression)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : comparison =
+  match expr with
+  | StrCompare (operator, left, right)
+  | ArithBinary (operator, left, right) ->
+    let left = compile_expression left ~symtable ~scope in
+    let right = compile_expression right ~symtable ~scope in
+    `StrCompare (operator, left, right)
+  | Leftvalue lvalue ->
+    let lvalue = `Var (compile_leftvalue lvalue ~symtable ~scope) in
+    `StrCompare ("==", [lvalue], [`Str "1"])
+  | Bool true | Int 1 ->
+    `StrCompare ("==", [`Str "1"], [`Str "1"])
+  | Bool false | Int _ ->
+    `StrCompare ("==", [`Str "0"], [`Str "1"])
+  | _ ->
+    failwith "Expression can not compile to comparison"
+
 let rec compile_expression_statement
     (expr : Batsh_ast.expression)
     ~(symtable : Symbol_table.t)
@@ -115,8 +136,13 @@ let rec compile_statement
     [compile_expression_statement expr ~symtable ~scope]
   | Assignment (lvalue, expr) ->
     compile_assignment lvalue expr ~symtable ~scope
-  | If _
-  | IfElse _
+  | If (expr, stmt) ->
+    [`If (compile_expression_to_comparison expr ~symtable ~scope,
+          compile_statement stmt ~symtable ~scope)]
+  | IfElse (expr, then_stmt, else_stmt) ->
+    [`IfElse (compile_expression_to_comparison expr ~symtable ~scope,
+              compile_statement then_stmt ~symtable ~scope,
+              compile_statement else_stmt ~symtable ~scope)]
   | While _
   | Global _
   | Empty ->
@@ -178,15 +204,10 @@ let compile_toplevel
     compile_function func ~symtable
 
 let compile (batsh: Batsh.t) : t =
-  let program = Batsh.split_ast batsh
-      ~split_string: true
-      ~split_list_literal: true
-      ~split_call: true
-      ~split_string_compare: true
-      ~split_arithmetic: true
-  in
+  let ast = Batsh.ast batsh in
   let symtable = Batsh.symtable batsh in
-  let stmts = List.fold program ~init: [] ~f: (fun acc topl ->
+  let transformed_ast = Winbat_transform.split ast ~symtable in
+  let stmts = List.fold transformed_ast ~init: [] ~f: (fun acc topl ->
       let stmts = compile_toplevel topl ~symtable in
       acc @ stmts
     ) in

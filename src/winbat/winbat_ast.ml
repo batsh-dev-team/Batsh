@@ -28,6 +28,10 @@ type varstring = [
 
 and varstrings = varstring list
 
+type comparison = [
+  | `StrCompare of (string * varstrings * varstrings)
+]
+
 type statement = [
   | `Comment of string
   | `Raw of string
@@ -36,6 +40,8 @@ type statement = [
   | `Assignment of (leftvalue * varstrings)
   | `ArithAssign of (leftvalue * arithmetic)
   | `Call of (varstring * varstrings)
+  | `If of (comparison * statements)
+  | `IfElse of (comparison * statements * statements)
   | `Empty
 ]
 
