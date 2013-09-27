@@ -4,10 +4,15 @@ type identifiers = identifier list
 
 type label = string
 
-type leftvalue =
-  | Identifier of identifier
+type varint =
+  | Var of leftvalue
+  | Integer of int
 
-type arithmetic =
+and leftvalue =
+  | Identifier of identifier
+  | ListAccess of (leftvalue * varint)
+
+and arithmetic =
   | Leftvalue of leftvalue
   | Int of int
   | ArithUnary of (string * arithmetic)

@@ -12,6 +12,25 @@ let rec print_leftvalue
       fprintf outx "%s" ident
     else
       fprintf outx "!%s!" ident
+  | ListAccess (lvalue, index) ->
+    if bare then
+      fprintf outx "%a_%a"
+        (print_leftvalue ~bare: true) lvalue
+        print_varint index
+    else
+      fprintf outx "!%a_%a!" 
+        (print_leftvalue ~bare: true) lvalue
+        print_varint index
+
+and print_varint
+    (outx : out_channel)
+    (index : varint)
+  =
+  match index with
+  | Var lvalue ->
+    print_leftvalue outx lvalue ~bare: false
+  | Integer num ->
+    fprintf outx "%d" num
 
 let rec print_arith outx (arith : arithmetic) =
   match arith with
@@ -29,7 +48,6 @@ let rec print_arith outx (arith : arithmetic) =
         print_arith right
     )
 
-
 let print_varstring outx (var : varstring) =
   match var with
   | Variable lvalue ->
@@ -37,8 +55,13 @@ let print_varstring outx (var : varstring) =
   | String str ->
     fprintf outx "%s" str
 
-let print_varstrings outx (vars : varstrings) =
-  List.iter vars ~f: (print_varstring outx)
+let print_varstrings outx (vars : varstrings) ~(separater : string) =
+  let num_items = List.length vars in
+  List.iteri vars ~f: (fun i var ->
+      print_varstring outx var;
+      if i < num_items - 1 then
+        output_string outx separater
+    )
 
 let rec print_statement outx (stmt: statement) ~(indent: int) =
   match stmt with
@@ -53,7 +76,7 @@ let rec print_statement outx (stmt: statement) ~(indent: int) =
   | Assignment (lvalue, vars) ->
     fprintf outx "set %a=%a"
       (print_leftvalue ~bare: true) lvalue
-      print_varstrings vars
+      (print_varstrings ~separater: "") vars
   | ArithAssign (lvalue, arith) ->
     fprintf outx "set /a %a=%a"
       (print_leftvalue ~bare: true) lvalue
@@ -61,7 +84,7 @@ let rec print_statement outx (stmt: statement) ~(indent: int) =
   | Call (name, params) ->
     fprintf outx "%a %a"
       print_varstring name
-      print_varstrings params
+      (print_varstrings ~separater: " ") params
   | Empty -> ()
 
 and print_statements: out_channel -> statements -> indent:int -> unit =
