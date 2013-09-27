@@ -7,12 +7,12 @@ let rec print_leftvalue
     ~(bare : bool)
   =
   match lvalue with
-  | Identifier ident ->
+  | `Identifier ident ->
     if bare then
       fprintf outx "%s" ident
     else
       fprintf outx "!%s!" ident
-  | ListAccess (lvalue, index) ->
+  | `ListAccess (lvalue, index) ->
     if bare then
       fprintf outx "%a_%a"
         (print_leftvalue ~bare: true) lvalue
@@ -27,20 +27,20 @@ and print_varint
     (index : varint)
   =
   match index with
-  | Var lvalue ->
+  | `Var lvalue ->
     print_leftvalue outx lvalue ~bare: false
-  | Integer num ->
+  | `Int num ->
     fprintf outx "%d" num
 
 let rec print_arith outx (arith : arithmetic) =
   match arith with
-  | Leftvalue lvalue ->
+  | `Var lvalue ->
     print_leftvalue outx lvalue ~bare: false
-  | Int num ->
+  | `Int num ->
     fprintf outx "%d" num
-  | ArithUnary (operator, arith) ->
+  | `ArithUnary (operator, arith) ->
     fprintf outx "%s(%a)" operator print_arith arith
-  | ArithBinary (operator, left, right) -> (
+  | `ArithBinary (operator, left, right) -> (
       let operator = if operator = "%" then "%%" else operator in
       fprintf outx "(%a %s %a)"
         print_arith left
@@ -50,9 +50,9 @@ let rec print_arith outx (arith : arithmetic) =
 
 let print_varstring outx (var : varstring) =
   match var with
-  | Variable lvalue ->
+  | `Var lvalue ->
     print_leftvalue outx lvalue ~bare: false
-  | String str ->
+  | `Str str ->
     fprintf outx "%s" str
 
 let print_varstrings outx (vars : varstrings) ~(separater : string) =
@@ -65,27 +65,27 @@ let print_varstrings outx (vars : varstrings) ~(separater : string) =
 
 let rec print_statement outx (stmt: statement) ~(indent: int) =
   match stmt with
-  | Comment comment ->
+  | `Comment comment ->
     fprintf outx "::%s" comment
-  | Raw str ->
+  | `Raw str ->
     output_string outx str
-  | Label lbl ->
+  | `Label lbl ->
     fprintf outx "%s:" lbl
-  | Goto lbl ->
+  | `Goto lbl ->
     fprintf outx "goto %s" lbl
-  | Assignment (lvalue, vars) ->
+  | `Assignment (lvalue, vars) ->
     fprintf outx "set %a=%a"
       (print_leftvalue ~bare: true) lvalue
       (print_varstrings ~separater: "") vars
-  | ArithAssign (lvalue, arith) ->
+  | `ArithAssign (lvalue, arith) ->
     fprintf outx "set /a %a=%a"
       (print_leftvalue ~bare: true) lvalue
       print_arith arith
-  | Call (name, params) ->
+  | `Call (name, params) ->
     fprintf outx "%a %a"
       print_varstring name
       (print_varstrings ~separater: " ") params
-  | Empty -> ()
+  | `Empty -> ()
 
 and print_statements: out_channel -> statements -> indent:int -> unit =
   Formatutil.print_statements ~f: print_statement
