@@ -60,22 +60,28 @@ let rec compile_expression_to_arith
   | BAST.Call _ ->
     failwith "Can not be here"
 
-let compile_expression
+let rec compile_expression
     (expr : BAST.expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
-  : varstring =
+  : varstrings =
   match expr with
   | BAST.Bool false ->
-    String "0"
+    [String "0"]
   | BAST.Bool true ->
-    String "1"
+    [String "1"]
   | BAST.Int num ->
-    String (string_of_int num)
+    [String (string_of_int num)]
   | BAST.String str ->
-    String str
+    [String str]
   | BAST.Leftvalue lvalue ->
-    Variable (compile_leftvalue lvalue ~symtable ~scope)
+    [Variable (compile_leftvalue lvalue ~symtable ~scope)]
+  | BAST.Concat (left, right) ->
+    let left = compile_expression left ~symtable ~scope in
+    let right = compile_expression right ~symtable ~scope in
+    left @ right
+  | BAST.Call _ ->
+    failwith "Not implemented: get stdout of given command"
   | _ ->
     assert false (* TODO *)
 
@@ -84,7 +90,7 @@ let compile_expressions
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
   : varstrings =
-  List.map exprs ~f: (compile_expression ~symtable ~scope)
+  List.concat (List.map exprs ~f: (compile_expression ~symtable ~scope))
 
 let rec compile_expression_statement
     (expr : BAST.expression)
@@ -114,7 +120,7 @@ let rec compile_statement
     if is_arith expr then
       [ArithAssign (lvalue, compile_expression_to_arith expr ~symtable ~scope)]
     else
-      [Empty] (* TODO *)
+      [Assignment (lvalue, compile_expression expr ~symtable ~scope)]
   | BAST.If _
   | BAST.IfElse _
   | BAST.While _
