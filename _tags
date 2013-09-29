@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 623af9d23253a0edee8b90be3c6a2940)
+# DO NOT EDIT (digest: a33ac1baeb99c8075e9a7d4fcc297f6a)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -13,51 +13,51 @@
 ".git": not_hygienic
 "_darcs": -traverse
 "_darcs": not_hygienic
-# Library utils_lib
-"src/utils/utils_lib.cmxs": use_utils_lib
+# Library batsh_utils
+"src/utils/batsh_utils.cmxs": use_batsh_utils
 <src/utils/*.ml{,i}>: pkg_threads
 <src/utils/*.ml{,i}>: pkg_core
 # Library batsh_lib
 "src/batsh/batsh_lib.cmxs": use_batsh_lib
-<src/batsh/*.ml{,i}>: use_utils_lib
+<src/batsh/*.ml{,i}>: use_batsh_utils
 <src/batsh/*.ml{,i}>: pkg_sexplib.syntax
 <src/batsh/*.ml{,i}>: pkg_threads
 <src/batsh/*.ml{,i}>: pkg_core
-# Library bash_lib
-"src/bash/bash_lib.cmxs": use_bash_lib
+# Library batsh_bash_lib
+"src/bash/batsh_bash_lib.cmxs": use_batsh_bash_lib
 <src/bash/*.ml{,i}>: use_batsh_lib
-<src/bash/*.ml{,i}>: use_utils_lib
+<src/bash/*.ml{,i}>: use_batsh_utils
 <src/bash/*.ml{,i}>: pkg_sexplib.syntax
 <src/bash/*.ml{,i}>: pkg_threads
 <src/bash/*.ml{,i}>: pkg_core
-# Library winbat_lib
-"src/winbat/winbat_lib.cmxs": use_winbat_lib
+# Library batsh_winbat_lib
+"src/winbat/batsh_winbat_lib.cmxs": use_batsh_winbat_lib
 <src/winbat/*.ml{,i}>: use_batsh_lib
-<src/winbat/*.ml{,i}>: use_utils_lib
+<src/winbat/*.ml{,i}>: use_batsh_utils
 <src/winbat/*.ml{,i}>: pkg_sexplib.syntax
 <src/winbat/*.ml{,i}>: pkg_threads
 <src/winbat/*.ml{,i}>: pkg_core
 # Executable batsh
-"src/main.byte": use_winbat_lib
-"src/main.byte": use_bash_lib
+"src/main.byte": use_batsh_winbat_lib
+"src/main.byte": use_batsh_bash_lib
 "src/main.byte": use_batsh_lib
-"src/main.byte": use_utils_lib
+"src/main.byte": use_batsh_utils
 "src/main.byte": pkg_sexplib.syntax
 "src/main.byte": pkg_threads
 "src/main.byte": pkg_core
 # Executable test
-"src/test.byte": use_winbat_lib
-"src/test.byte": use_bash_lib
+"src/test.byte": use_batsh_winbat_lib
+"src/test.byte": use_batsh_bash_lib
 "src/test.byte": use_batsh_lib
-"src/test.byte": use_utils_lib
+"src/test.byte": use_batsh_utils
 "src/test.byte": pkg_ounit
 "src/test.byte": pkg_sexplib.syntax
 "src/test.byte": pkg_threads
 "src/test.byte": pkg_core
-<src/*.ml{,i}>: use_winbat_lib
-<src/*.ml{,i}>: use_bash_lib
+<src/*.ml{,i}>: use_batsh_winbat_lib
+<src/*.ml{,i}>: use_batsh_bash_lib
 <src/*.ml{,i}>: use_batsh_lib
-<src/*.ml{,i}>: use_utils_lib
+<src/*.ml{,i}>: use_batsh_utils
 <src/*.ml{,i}>: pkg_ounit
 <src/*.ml{,i}>: pkg_sexplib.syntax
 <src/*.ml{,i}>: pkg_threads

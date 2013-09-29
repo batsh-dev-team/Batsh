@@ -15,7 +15,7 @@ XStdFilesAUTHORS:     false
 XStdFilesREADME:      false
 BuildTools:           ocamlbuild, camlp4o
 
-Library utils_lib
+Library batsh_utils
   Path:               src/utils
   Modules:            Formatutil
   BuildDepends:       threads, core
@@ -29,19 +29,19 @@ Library batsh_lib
                       Batsh_format,
                       Batsh_transform,
                       Symbol_table
-  BuildDepends:       utils_lib,
+  BuildDepends:       batsh_utils,
                       sexplib.syntax
 
-Library bash_lib
+Library batsh_bash_lib
   Path:               src/bash
   Modules:            Bash
   InternalModules:    Bash_ast,
                       Bash_compile,
                       Bash_format,
                       Bash_functions
-  BuildDepends:       utils_lib, batsh_lib
+  BuildDepends:       batsh_utils, batsh_lib
 
-Library winbat_lib
+Library batsh_winbat_lib
   Path:               src/winbat
   Modules:            Winbat
   InternalModules:    Winbat_ast,
@@ -49,19 +49,19 @@ Library winbat_lib
                       Winbat_format,
                       Winbat_functions,
                       Winbat_transform
-  BuildDepends:       utils_lib, batsh_lib
+  BuildDepends:       batsh_utils, batsh_lib
 
 Executable batsh
   Path:               src
   MainIs:             main.ml
-  BuildDepends:       batsh_lib, bash_lib, winbat_lib
+  BuildDepends:       batsh_lib, batsh_bash_lib, batsh_winbat_lib
 
 Executable test
   Path:               src
   MainIs:             test.ml
   Build$:             flag(tests)
   Install:            false
-  BuildDepends:       ounit, batsh_lib, bash_lib, winbat_lib
+  BuildDepends:       ounit, batsh_lib, batsh_bash_lib, batsh_winbat_lib
 
 Test unit_test
   Run$:               flag(tests)
