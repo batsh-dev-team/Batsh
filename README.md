@@ -9,6 +9,8 @@ If you happen to be a maintainer of a cross-platform tool which relies on Bash o
 
 ## How to get it
 
+You can try it [online](http://batsh.byvoid.com/) now!
+
 Batsh is under early-stage development and may change dramatically. No stable version is released. Use it at your risk.
 
 Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and dependencies are managed by [OPAM](http://opam.ocamlpro.com/). Follow the steps below to run it on your computer:
