@@ -9,25 +9,28 @@ let rec split_expression
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
     ~(subexpression : bool)
-  : (statements * expression) =
+  : (statement Dlist.t * expression) =
   let split_expression = split_expression ~symtable ~scope in
   let split_binary (left, right) ~subexpression =
     let assignments_left, left = split_expression left ~subexpression in
     let assignments_right, right = split_expression right ~subexpression in
-    assignments_left @ assignments_right, (left, right)
+    Dlist.append assignments_left assignments_right, (left, right)
   in
-  let split_expr_to_assignment assignments expr : (statements * expression) =
+  let split_expr_to_assignment assignments expr : (statement Dlist.t * expression) =
     if preserve_top then
       assignments, expr
     else
       let ident = Symbol_table.Scope.add_temporary_variable scope in
       let variable = Identifier ident in
-      let assignments = assignments @ [Assignment (variable, expr)] in
+      let assignments = Dlist.append
+          assignments
+          (Dlist.of_list [Assignment (variable, expr)])
+      in
       assignments, (Leftvalue variable)
   in
   match expr with
   | Bool _ | Int _ | Float _ | Leftvalue _ ->
-    [], expr
+    Dlist.empty (), expr
   | ArithUnary (operator, expr) ->
     let assignments, expr = split_expression expr ~subexpression: true in
     split_expr_to_assignment assignments (ArithUnary (operator, expr))
@@ -36,9 +39,9 @@ let rec split_expression
     split_expr_to_assignment assignments (ArithBinary (operator, left, right))
   | String str ->
     if subexpression then
-      split_expr_to_assignment [] (String str)
+      split_expr_to_assignment (Dlist.empty ()) (String str)
     else
-      [], (String str)
+      Dlist.empty (), (String str)
   | Concat (left, right) ->
     let assignments, (left, right) = split_binary (left, right) ~subexpression: false in
     if subexpression then
@@ -65,16 +68,16 @@ and split_expressions
     (exprs : expressions)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
-  : (statements * expressions) =
-  let assignments, exprs = List.fold exprs ~init: ([], [])
+  : (statement Dlist.t * expressions) =
+  let assignments, exprs = List.fold exprs ~init: (Dlist.empty (), [])
       ~f: (fun (assignments_acc, exprs_acc) expr ->
-          let assignments, expr = split_expression expr
-              ~symtable
-              ~scope
-              ~subexpression: false
-          in
-          (assignments @ assignments_acc, expr :: exprs_acc)
-        )
+        let assignments, expr = split_expression expr
+            ~symtable
+            ~scope
+            ~subexpression: false
+        in
+        (Dlist.append assignments assignments_acc, expr :: exprs_acc)
+      )
   in
   assignments, List.rev exprs
 
@@ -84,9 +87,10 @@ let rec split_statement
     ~(scope : Symbol_table.Scope.t)
   : statement =
   let prepend_assignments assignments stmt : statement =
-    match assignments with
-    | [] -> stmt
-    | _ -> Block (assignments @ [stmt])
+    if Dlist.length assignments = 0 then
+      stmt
+    else
+      Block (Dlist.to_list (Dlist.append assignments (Dlist.of_list [stmt])))
   in
   match stmt with
   | Empty | Global _ | Comment _ | Return None ->
@@ -153,7 +157,7 @@ let split_toplevel
   match topl with
   | Statement stmt ->
     Statement (split_statement stmt ~symtable
-                 ~scope: (Symbol_table.global_scope symtable))
+        ~scope: (Symbol_table.global_scope symtable))
   | Function func ->
     Function (split_function func ~symtable)
 

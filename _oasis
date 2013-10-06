@@ -18,7 +18,7 @@ BuildTools:           ocamlbuild, camlp4o
 Library batsh_utils
   Path:               src/utils
   Modules:            Formatutil
-  BuildDepends:       threads, core
+  BuildDepends:       threads, core, dlist
 
 Library batsh_lib
   Path:               src/batsh

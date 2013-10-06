@@ -17,7 +17,7 @@ Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and dependencies ar
 
 1. Install OPAM. See [instructions](http://opam.ocamlpro.com/doc/Quick_Install.html).
 2. Switch to the latest version (or at least 4.00.1) of OCaml by running `opam switch`.
-3. Install dependencies: `opam install core menhir ounit`
+3. Install dependencies: `opam install core menhir ounit dlist`
 4. `./configure`
 5. `make`
 6. Compile your own code: `./main.byte filename`

@@ -1,8 +1,8 @@
 # OASIS_START
-# DO NOT EDIT (digest: 0b9d0c8e2058d9ec42610a1e14fd3a70)
+# DO NOT EDIT (digest: c91812bf59d34c86d762eea408c1a234)
 version = "0.0.1"
 description = "Batsh - A language that compiles to Bash and Windows Batch"
-requires = "threads core"
+requires = "threads core dlist"
 archive(byte) = "batsh_utils.cma"
 archive(byte, plugin) = "batsh_utils.cma"
 archive(native) = "batsh_utils.cmxa"

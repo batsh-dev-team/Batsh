@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: a33ac1baeb99c8075e9a7d4fcc297f6a)
+# DO NOT EDIT (digest: 65e160385f093ddfa96df9a1d5839277)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -17,12 +17,14 @@
 "src/utils/batsh_utils.cmxs": use_batsh_utils
 <src/utils/*.ml{,i}>: pkg_threads
 <src/utils/*.ml{,i}>: pkg_core
+<src/utils/*.ml{,i}>: pkg_dlist
 # Library batsh_lib
 "src/batsh/batsh_lib.cmxs": use_batsh_lib
 <src/batsh/*.ml{,i}>: use_batsh_utils
 <src/batsh/*.ml{,i}>: pkg_sexplib.syntax
 <src/batsh/*.ml{,i}>: pkg_threads
 <src/batsh/*.ml{,i}>: pkg_core
+<src/batsh/*.ml{,i}>: pkg_dlist
 # Library batsh_bash_lib
 "src/bash/batsh_bash_lib.cmxs": use_batsh_bash_lib
 <src/bash/*.ml{,i}>: use_batsh_lib
@@ -30,6 +32,7 @@
 <src/bash/*.ml{,i}>: pkg_sexplib.syntax
 <src/bash/*.ml{,i}>: pkg_threads
 <src/bash/*.ml{,i}>: pkg_core
+<src/bash/*.ml{,i}>: pkg_dlist
 # Library batsh_winbat_lib
 "src/winbat/batsh_winbat_lib.cmxs": use_batsh_winbat_lib
 <src/winbat/*.ml{,i}>: use_batsh_lib
@@ -37,6 +40,7 @@
 <src/winbat/*.ml{,i}>: pkg_sexplib.syntax
 <src/winbat/*.ml{,i}>: pkg_threads
 <src/winbat/*.ml{,i}>: pkg_core
+<src/winbat/*.ml{,i}>: pkg_dlist
 # Executable batsh
 "src/main.byte": use_batsh_winbat_lib
 "src/main.byte": use_batsh_bash_lib
@@ -45,6 +49,7 @@
 "src/main.byte": pkg_sexplib.syntax
 "src/main.byte": pkg_threads
 "src/main.byte": pkg_core
+"src/main.byte": pkg_dlist
 # Executable test
 "src/test.byte": use_batsh_winbat_lib
 "src/test.byte": use_batsh_bash_lib
@@ -54,6 +59,7 @@
 "src/test.byte": pkg_sexplib.syntax
 "src/test.byte": pkg_threads
 "src/test.byte": pkg_core
+"src/test.byte": pkg_dlist
 <src/*.ml{,i}>: use_batsh_winbat_lib
 <src/*.ml{,i}>: use_batsh_bash_lib
 <src/*.ml{,i}>: use_batsh_lib
@@ -62,6 +68,7 @@
 <src/*.ml{,i}>: pkg_sexplib.syntax
 <src/*.ml{,i}>: pkg_threads
 <src/*.ml{,i}>: pkg_core
+<src/*.ml{,i}>: pkg_dlist
 # OASIS_STOP
 true: use_menhir
 <src/batsh/*.ml{,i}>: syntax_camlp4o

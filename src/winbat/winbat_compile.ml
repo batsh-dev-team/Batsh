@@ -48,8 +48,8 @@ let rec compile_expression_to_arith
     `ArithUnary (operator, compile_expression_to_arith expr ~symtable ~scope)
   | ArithBinary (operator, left, right) ->
     `ArithBinary (operator,
-                  compile_expression_to_arith left ~symtable ~scope,
-                  compile_expression_to_arith right ~symtable ~scope)
+      compile_expression_to_arith left ~symtable ~scope,
+      compile_expression_to_arith right ~symtable ~scope)
   | String _
   | Float _
   | List _
@@ -58,30 +58,35 @@ let rec compile_expression_to_arith
   | Call _ ->
     failwith "Can not be here"
 
-let rec compile_expression
+let compile_expression
     (expr : Batsh_ast.expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
   : varstrings =
-  match expr with
-  | Bool false ->
-    [`Str "0"]
-  | Bool true ->
-    [`Str "1"]
-  | Int num ->
-    [`Str (string_of_int num)]
-  | String str ->
-    [`Str str]
-  | Leftvalue lvalue ->
-    [`Var (compile_leftvalue lvalue ~symtable ~scope)]
-  | Concat (left, right) ->
-    let left = compile_expression left ~symtable ~scope in
-    let right = compile_expression right ~symtable ~scope in
-    left @ right
-  | Call _ ->
-    failwith "Not implemented: get stdout of given command"
-  | _ ->
-    assert false (* TODO *)
+  let rec compile_expression_impl
+      (expr : Batsh_ast.expression)
+    : varstring Dlist.t =
+    match expr with
+    | Bool false ->
+      Dlist.of_list [`Str "0"]
+    | Bool true ->
+      Dlist.of_list [`Str "1"]
+    | Int num ->
+      Dlist.of_list [`Str (string_of_int num)]
+    | String str ->
+      Dlist.of_list [`Str str]
+    | Leftvalue lvalue ->
+      Dlist.of_list [`Var (compile_leftvalue lvalue ~symtable ~scope)]
+    | Concat (left, right) ->
+      let left = compile_expression_impl left in
+      let right = compile_expression_impl right in
+      Dlist.append left right
+    | Call _ ->
+      failwith "Not implemented: get stdout of given command"
+    | _ ->
+      assert false (* TODO *)
+  in
+  Dlist.to_list (compile_expression_impl expr)
 
 let compile_expressions
     (exprs : Batsh_ast.expressions)
@@ -143,11 +148,11 @@ let rec compile_statement
     compile_assignment lvalue expr ~symtable ~scope
   | If (expr, stmt) ->
     [`If (compile_expression_to_comparison expr ~symtable ~scope,
-          compile_statement stmt ~symtable ~scope)]
+       compile_statement stmt ~symtable ~scope)]
   | IfElse (expr, then_stmt, else_stmt) ->
     [`IfElse (compile_expression_to_comparison expr ~symtable ~scope,
-              compile_statement then_stmt ~symtable ~scope,
-              compile_statement else_stmt ~symtable ~scope)]
+       compile_statement then_stmt ~symtable ~scope,
+       compile_statement else_stmt ~symtable ~scope)]
   | While (expr, stmt) ->
     let condition = compile_expression_to_comparison expr ~symtable ~scope in
     let body = compile_statement stmt ~symtable ~scope in
@@ -198,11 +203,13 @@ and compile_statements
     (stmts: Batsh_ast.statements)
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
-  :statements =
-  List.fold stmts ~init: [] ~f: (fun acc stmt ->
+  : statements =
+  Dlist.to_list (
+    List.fold stmts ~init: (Dlist.empty ()) ~f: (fun acc stmt ->
       let stmts = compile_statement stmt ~symtable ~scope in
-      acc @ stmts
+      Dlist.append acc (Dlist.of_list stmts)
     )
+  )
 
 let rec compile_function_leftvalue
     (lvalue : leftvalue)
@@ -248,8 +255,8 @@ let rec compile_function_arithmetic
     `ArithUnary (operator, compile_function_arithmetic arith ~symtable ~scope)
   | `ArithBinary (operator, left, right) ->
     `ArithBinary (operator,
-                  compile_function_arithmetic left ~symtable ~scope,
-                  compile_function_arithmetic right ~symtable ~scope)
+      compile_function_arithmetic left ~symtable ~scope,
+      compile_function_arithmetic right ~symtable ~scope)
 
 let compile_function_comparison
     (cond : comparison)
@@ -259,8 +266,8 @@ let compile_function_comparison
   match cond with
   | `StrCompare (operator, left, right) ->
     `StrCompare (operator,
-                 compile_function_varstrings left ~symtable ~scope,
-                 compile_function_varstrings right ~symtable ~scope)
+      compile_function_varstrings left ~symtable ~scope,
+      compile_function_varstrings right ~symtable ~scope)
 
 let rec compile_function_statement
     (stmt : statement)
@@ -272,20 +279,20 @@ let rec compile_function_statement
     stmt
   | `Assignment (lvalue, vars) ->
     `Assignment (compile_function_leftvalue lvalue ~symtable ~scope,
-                 compile_function_varstrings vars ~symtable ~scope)
+      compile_function_varstrings vars ~symtable ~scope)
   | `ArithAssign (lvalue, arith) ->
     `ArithAssign (compile_function_leftvalue lvalue ~symtable ~scope,
-                  compile_function_arithmetic arith ~symtable ~scope)
+      compile_function_arithmetic arith ~symtable ~scope)
   | `Call (name, params) ->
     `Call (compile_function_varstring name ~symtable ~scope,
-           compile_function_varstrings params ~symtable ~scope)
+      compile_function_varstrings params ~symtable ~scope)
   | `If (cond, stmts) ->
     `If (compile_function_comparison cond ~symtable ~scope,
-         compile_function_statements stmts ~symtable ~scope)
+      compile_function_statements stmts ~symtable ~scope)
   | `IfElse (cond, then_stmts, else_stmts) ->
     `IfElse (compile_function_comparison cond ~symtable ~scope,
-             compile_function_statements then_stmts ~symtable ~scope,
-             compile_function_statements else_stmts ~symtable ~scope)
+      compile_function_statements then_stmts ~symtable ~scope,
+      compile_function_statements else_stmts ~symtable ~scope)
 
 and compile_function_statements
     (stmts : statements)
@@ -304,7 +311,7 @@ let compile_function
   let params_assignments : statements = List.mapi params ~f: (fun i param ->
       let lvalue : leftvalue = `ListAccess (`Identifier param, `Var (`Identifier "%~2")) in
       `Assignment (lvalue,
-                   [`Var (`Identifier (sprintf "%%~%d" (i + 3)))])
+        [`Var (`Identifier (sprintf "%%~%d" (i + 3)))])
     )
   in
   ((`Goto ":EOF") :: (`Label name) :: params_assignments) @ replaced_body
@@ -327,29 +334,33 @@ let sort_functions (topls : Batsh_ast.t) : Batsh_ast.t =
     | Statement _ -> false
   in
   List.sort topls ~cmp: (fun a b ->
-      let func_a = is_function a in
-      let func_b = is_function b in
-      if func_a then
-        if func_b then
-          0
-        else
-          1
-      else
+    let func_a = is_function a in
+    let func_b = is_function b in
+    if func_a then
       if func_b then
-        -1
-      else
         0
-    )
+      else
+        1
+    else
+    if func_b then
+      -1
+    else
+      0
+  )
 
 let compile (batsh: Batsh.t) : t =
   let ast = Batsh.ast batsh in
   let symtable = Batsh.symtable batsh in
   let transformed_ast = Winbat_transform.split ast ~symtable in
   let sorted_ast = sort_functions transformed_ast in
-  let stmts = List.fold sorted_ast ~init: [] ~f: (fun acc topl ->
-      let stmts = compile_toplevel topl ~symtable in
-      acc @ stmts
-    ) in
+  let stmts = Dlist.to_list (List.fold_left sorted_ast
+        ~init: (Dlist.empty ())
+        ~f: (fun acc topl ->
+          let stmts = compile_toplevel topl ~symtable in
+          Dlist.append acc (Dlist.of_list stmts)
+        )
+    )
+  in
   (`Raw "@echo off")
   :: (`Raw "setlocal EnableDelayedExpansion")
   :: (`Raw "setlocal EnableExtensions")
