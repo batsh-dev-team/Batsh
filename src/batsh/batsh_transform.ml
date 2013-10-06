@@ -83,13 +83,13 @@ and split_expressions
   : (statement Dlist.t * expressions) =
   let assignments, exprs = List.fold exprs ~init: (Dlist.empty (), [])
       ~f: (fun (assignments_acc, exprs_acc) expr ->
-        let assignments, expr = split_expression expr
-            ~conf
-            ~scope
-            ~subexpression: false
-        in
-        (Dlist.append assignments assignments_acc, expr :: exprs_acc)
-      )
+          let assignments, expr = split_expression expr
+              ~conf
+              ~scope
+              ~subexpression: false
+          in
+          (Dlist.append assignments assignments_acc, expr :: exprs_acc)
+        )
   in
   assignments, List.rev exprs
 
@@ -154,7 +154,7 @@ let split_toplevel
   match topl with
   | Statement stmt ->
     Statement (split_statement stmt ~conf
-        ~scope: (Symbol_table.global_scope conf.symtable))
+                 ~scope: (Symbol_table.global_scope conf.symtable))
   | Function func ->
     Function (split_function func ~conf)
 
