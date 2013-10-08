@@ -1,38 +1,54 @@
-# OASIS_START
-# DO NOT EDIT (digest: bc1e05bfc8b39b664f29dae8dbd3ebbb)
+# Generic Makefile for oasis project
 
-SETUP = ocaml setup.ml
+# Set to setup for the release
+SETUP := setup-dev
 
-build: setup.data
-	$(SETUP) -build $(BUILDFLAGS)
+# Default rule
+default: build
 
-doc: setup.data build
-	$(SETUP) -doc $(DOCFLAGS)
+# Setup for the development version
+setup-dev: _oasis setup.ml
+	grep -v '^#' setup.ml > setup_dev.ml
+	ocamlfind ocamlopt -o $@ -linkpkg -package ocamlbuild,oasis.dynrun setup_dev.ml || 	  ocamlfind ocamlc -o $@ -linkpkg -package ocamlbuild,oasis.dynrun setup_dev.ml || true
+	rm -f setup_dev.*
 
-test: setup.data build
-	$(SETUP) -test $(TESTFLAGS)
+# Setup for the release
+setup: setup.ml
+	ocamlopt.opt -o $@ $< || ocamlopt -o $@ $< || ocamlc -o $@ $<
+	rm -f setup.cmx setup.cmi setup.o setup.obj setup.cmo
 
-all: 
-	$(SETUP) -all $(ALLFLAGS)
+build: $(SETUP) setup.data
+	./$(SETUP) -build $(BUILDFLAGS)
 
-install: setup.data
-	$(SETUP) -install $(INSTALLFLAGS)
+doc: $(SETUP) setup.data build
+	./$(SETUP) -doc $(DOCFLAGS)
 
-uninstall: setup.data
-	$(SETUP) -uninstall $(UNINSTALLFLAGS)
+test: $(SETUP) setup.data build
+	./$(SETUP) -test $(TESTFLAGS)
 
-reinstall: setup.data
-	$(SETUP) -reinstall $(REINSTALLFLAGS)
+all: $(SETUP)
+	./$(SETUP) -all $(ALLFLAGS)
 
-clean: 
-	$(SETUP) -clean $(CLEANFLAGS)
+install: $(SETUP) setup.data
+	./$(SETUP) -install $(INSTALLFLAGS)
 
-distclean: 
-	$(SETUP) -distclean $(DISTCLEANFLAGS)
+uninstall: $(SETUP) setup.data
+	./$(SETUP) -uninstall $(UNINSTALLFLAGS)
 
-setup.data:
-	$(SETUP) -configure $(CONFIGUREFLAGS)
+reinstall: $(SETUP) setup.data
+	./$(SETUP) -reinstall $(REINSTALLFLAGS)
 
-.PHONY: build doc test all install uninstall reinstall clean distclean configure
+clean: $(SETUP)
+	./$(SETUP) -clean $(CLEANFLAGS)
 
-# OASIS_STOP
+distclean: $(SETUP)
+	./$(SETUP) -distclean $(DISTCLEANFLAGS)
+	rm -f $(SETUP)
+
+configure: $(SETUP)
+	./$(SETUP) -configure $(CONFIGUREFLAGS)
+
+setup.data: $(SETUP)
+	./$(SETUP) -configure $(CONFIGUREFLAGS)
+
+.PHONY: default build doc test all install uninstall reinstall clean distclean configure
