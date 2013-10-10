@@ -15,53 +15,43 @@ XStdFilesAUTHORS:     false
 XStdFilesREADME:      false
 BuildTools:           ocamlbuild, camlp4o
 
-Library batsh_utils
-  Path:               src/utils
-  Modules:            Formatutil
-  BuildDepends:       threads, core, dlist
-
-Library batsh_lib
-  Path:               src/batsh
-  Modules:            Batsh
+Library batsh
+  Pack:               true
+  FindlibName:        batsh
+  Path:               src
+  Modules:            Parser, Bash, Winbat
   InternalModules:    Lexer,
-                      Parser,
+                      Parser_yacc,
                       Batsh_ast,
                       Batsh_format,
                       Batsh_transform,
-                      Symbol_table
-  BuildDepends:       batsh_utils,
-                      sexplib.syntax
-
-Library batsh_bash_lib
-  Path:               src/bash
-  Modules:            Bash
-  InternalModules:    Bash_ast,
+                      Symbol_table,
+                      Formatutil,
+                      Bash_ast,
                       Bash_compile,
                       Bash_format,
-                      Bash_functions
-  BuildDepends:       batsh_utils, batsh_lib
-
-Library batsh_winbat_lib
-  Path:               src/winbat
-  Modules:            Winbat
-  InternalModules:    Winbat_ast,
+                      Bash_functions,
+                      Winbat_ast,
                       Winbat_compile,
                       Winbat_format,
                       Winbat_functions,
                       Winbat_transform
-  BuildDepends:       batsh_utils, batsh_lib
+  BuildDepends:       threads,
+                      core,
+                      dlist,
+                      sexplib.syntax
 
 Executable batsh
   Path:               src
   MainIs:             main.ml
-  BuildDepends:       batsh_lib, batsh_bash_lib, batsh_winbat_lib
+  BuildDepends:       batsh
 
 Executable test
   Path:               src
   MainIs:             test.ml
   Build$:             flag(tests)
   Install:            false
-  BuildDepends:       ounit, batsh_lib, batsh_bash_lib, batsh_winbat_lib
+  BuildDepends:       ounit, batsh
 
 Test unit_test
   Run$:               flag(tests)

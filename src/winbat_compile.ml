@@ -2,7 +2,7 @@ open Core.Std
 open Batsh_ast
 open Winbat_ast
 
-module Symbol_table = Batsh.Symbol_table
+module Symbol_table = Parser.Symbol_table
 
 let rec compile_leftvalue
     (lvalue: Batsh_ast.leftvalue)
@@ -391,9 +391,9 @@ let sort_functions (topls : Batsh_ast.t) : Batsh_ast.t =
       | (false, false) -> 0
     )
 
-let compile (batsh: Batsh.t) : t =
-  let ast = Batsh.ast batsh in
-  let symtable = Batsh.symtable batsh in
+let compile (batsh: Parser.t) : t =
+  let ast = Parser.ast batsh in
+  let symtable = Parser.symtable batsh in
   let transformed_ast = Winbat_transform.split ast ~symtable in
   let sorted_ast = sort_functions transformed_ast in
   let stmts = Dlist.to_list (

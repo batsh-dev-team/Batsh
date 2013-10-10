@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: 54f13f0abcdfe349e177a7d05697cf56)
+version = "0.0.1"
+description = "Batsh - A language that compiles to Bash and Windows Batch"
+requires = "threads core dlist sexplib.syntax"
+archive(byte) = "batsh.cma"
+archive(byte, plugin) = "batsh.cma"
+archive(native) = "batsh.cmxa"
+archive(native, plugin) = "batsh.cmxs"
+exists_if = "batsh.cma"
+# OASIS_STOP
+

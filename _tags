@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 65e160385f093ddfa96df9a1d5839277)
+# DO NOT EDIT (digest: da312b7d3b25e6e27aaaa73ea25b9f7f)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -13,62 +13,47 @@
 ".git": not_hygienic
 "_darcs": -traverse
 "_darcs": not_hygienic
-# Library batsh_utils
-"src/utils/batsh_utils.cmxs": use_batsh_utils
-<src/utils/*.ml{,i}>: pkg_threads
-<src/utils/*.ml{,i}>: pkg_core
-<src/utils/*.ml{,i}>: pkg_dlist
-# Library batsh_lib
-"src/batsh/batsh_lib.cmxs": use_batsh_lib
-<src/batsh/*.ml{,i}>: use_batsh_utils
-<src/batsh/*.ml{,i}>: pkg_sexplib.syntax
-<src/batsh/*.ml{,i}>: pkg_threads
-<src/batsh/*.ml{,i}>: pkg_core
-<src/batsh/*.ml{,i}>: pkg_dlist
-# Library batsh_bash_lib
-"src/bash/batsh_bash_lib.cmxs": use_batsh_bash_lib
-<src/bash/*.ml{,i}>: use_batsh_lib
-<src/bash/*.ml{,i}>: use_batsh_utils
-<src/bash/*.ml{,i}>: pkg_sexplib.syntax
-<src/bash/*.ml{,i}>: pkg_threads
-<src/bash/*.ml{,i}>: pkg_core
-<src/bash/*.ml{,i}>: pkg_dlist
-# Library batsh_winbat_lib
-"src/winbat/batsh_winbat_lib.cmxs": use_batsh_winbat_lib
-<src/winbat/*.ml{,i}>: use_batsh_lib
-<src/winbat/*.ml{,i}>: use_batsh_utils
-<src/winbat/*.ml{,i}>: pkg_sexplib.syntax
-<src/winbat/*.ml{,i}>: pkg_threads
-<src/winbat/*.ml{,i}>: pkg_core
-<src/winbat/*.ml{,i}>: pkg_dlist
+# Library batsh
+"src/batsh.cmxs": use_batsh
+"src/parser.cmx": for-pack(Batsh)
+"src/bash.cmx": for-pack(Batsh)
+"src/winbat.cmx": for-pack(Batsh)
+"src/lexer.cmx": for-pack(Batsh)
+"src/parser_yacc.cmx": for-pack(Batsh)
+"src/batsh_ast.cmx": for-pack(Batsh)
+"src/batsh_format.cmx": for-pack(Batsh)
+"src/batsh_transform.cmx": for-pack(Batsh)
+"src/symbol_table.cmx": for-pack(Batsh)
+"src/formatutil.cmx": for-pack(Batsh)
+"src/bash_ast.cmx": for-pack(Batsh)
+"src/bash_compile.cmx": for-pack(Batsh)
+"src/bash_format.cmx": for-pack(Batsh)
+"src/bash_functions.cmx": for-pack(Batsh)
+"src/winbat_ast.cmx": for-pack(Batsh)
+"src/winbat_compile.cmx": for-pack(Batsh)
+"src/winbat_format.cmx": for-pack(Batsh)
+"src/winbat_functions.cmx": for-pack(Batsh)
+"src/winbat_transform.cmx": for-pack(Batsh)
 # Executable batsh
-"src/main.byte": use_batsh_winbat_lib
-"src/main.byte": use_batsh_bash_lib
-"src/main.byte": use_batsh_lib
-"src/main.byte": use_batsh_utils
-"src/main.byte": pkg_sexplib.syntax
+"src/main.byte": use_batsh
 "src/main.byte": pkg_threads
 "src/main.byte": pkg_core
 "src/main.byte": pkg_dlist
+"src/main.byte": pkg_sexplib.syntax
 # Executable test
-"src/test.byte": use_batsh_winbat_lib
-"src/test.byte": use_batsh_bash_lib
-"src/test.byte": use_batsh_lib
-"src/test.byte": use_batsh_utils
+"src/test.byte": use_batsh
 "src/test.byte": pkg_ounit
-"src/test.byte": pkg_sexplib.syntax
 "src/test.byte": pkg_threads
 "src/test.byte": pkg_core
 "src/test.byte": pkg_dlist
-<src/*.ml{,i}>: use_batsh_winbat_lib
-<src/*.ml{,i}>: use_batsh_bash_lib
-<src/*.ml{,i}>: use_batsh_lib
-<src/*.ml{,i}>: use_batsh_utils
+"src/test.byte": pkg_sexplib.syntax
+<src/*.ml{,i}>: use_batsh
 <src/*.ml{,i}>: pkg_ounit
-<src/*.ml{,i}>: pkg_sexplib.syntax
 <src/*.ml{,i}>: pkg_threads
 <src/*.ml{,i}>: pkg_core
 <src/*.ml{,i}>: pkg_dlist
+<src/*.ml{,i}>: pkg_sexplib.syntax
 # OASIS_STOP
 true: use_menhir
-<src/batsh/*.ml{,i}>: syntax_camlp4o
+<src/batsh_ast.ml>: syntax_camlp4o
+<src/symbol_table.ml>: syntax_camlp4o

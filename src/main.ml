@@ -15,7 +15,7 @@ let bash =
       empty
       +> anon ("filename" %: regular_file)
     ) (fun (filename: string) () ->
-        let batsh = Batsh.create_from_file filename in
+        let batsh = Parser.create_from_file filename in
         let bash = Bash.compile batsh in
         printf "%a\n" Bash.print bash
       )
@@ -27,7 +27,7 @@ let winbat =
       empty
       +> anon ("filename" %: regular_file)
     ) (fun (filename: string) () ->
-        let batsh = Batsh.create_from_file filename in
+        let batsh = Parser.create_from_file filename in
         let batch = Winbat.compile batsh in
         printf "%a\n" Winbat.print batch
       )
@@ -39,8 +39,8 @@ let format =
       empty
       +> anon ("filename" %: regular_file)
     ) (fun (filename: string) () ->
-        let batsh = Batsh.create_from_file filename in
-        Batsh.prettify Out_channel.stdout batsh
+        let batsh = Parser.create_from_file filename in
+        Parser.prettify Out_channel.stdout batsh
       )
 
 let ast =
@@ -68,23 +68,23 @@ let ast =
         (split_string_compare : bool)
         (split_arithmetic : bool)
         () ->
-        let batsh = Batsh.create_from_file filename in
+        let batsh = Parser.create_from_file filename in
         if not symbols then
           let ast =
             if split_string || split_list_literal || split_call then
-              Batsh.split_ast batsh
+              Parser.split_ast batsh
                 ~split_string
                 ~split_list_literal
                 ~split_call
                 ~split_string_compare
                 ~split_arithmetic
             else
-              Batsh.ast batsh
+              Parser.ast batsh
           in
           let ast_sexp = Batsh_ast.sexp_of_t ast in
           printf "%a\n" Sexp.output_hum ast_sexp
         else
-          let symtable_sexp = Batsh.Symbol_table.sexp_of_t (Batsh.symtable batsh) in
+          let symtable_sexp = Parser.Symbol_table.sexp_of_t (Parser.symtable batsh) in
           printf "%a\n" Sexp.output_hum symtable_sexp
       )
 

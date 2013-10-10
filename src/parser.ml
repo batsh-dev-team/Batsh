@@ -16,12 +16,12 @@ let parse_and_print_error
       pos.Lexing.pos_lnum (pos.Lexing.pos_cnum - pos.Lexing.pos_bol + 1)
   in
   try
-    Parser.program Lexer.read lexbuf
+    Parser_yacc.program Lexer.read lexbuf
   with
   | Lexer.SyntaxError msg ->
     fprintf outx "%a: %s\n" print_position () msg;
     exit (-1)
-  | Parser.Error ->
+  | Parser_yacc.Error ->
     fprintf outx "%a: syntax error\n" print_position ();
     exit (-1)
 

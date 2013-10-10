@@ -2,7 +2,7 @@ open Core.Std
 open Bash_ast
 
 module BAST = Batsh_ast
-module Symbol_table = Batsh.Symbol_table
+module Symbol_table = Parser.Symbol_table
 
 let is_arith (expr: BAST.expression) :bool =
   match expr with
@@ -215,13 +215,13 @@ let compile_toplevel
   | BAST.Function func ->
     compile_function func ~symtable
 
-let compile (batsh: Batsh.t) :t =
-  let program = Batsh.split_ast batsh
+let compile (batsh: Parser.t) :t =
+  let program = Parser.split_ast batsh
       ~split_string: true
       ~split_list_literal: true
       ~split_call: true
       ~split_string_compare: true
       ~split_arithmetic: false
   in
-  let symtable = Batsh.symtable batsh in
+  let symtable = Parser.symtable batsh in
   List.map program ~f: (compile_toplevel ~symtable)
