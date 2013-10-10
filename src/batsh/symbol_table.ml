@@ -34,6 +34,11 @@ module Scope = struct
     | FunctionScope of (string * variable_table)
   with sexp_of
 
+  let is_function (scope : t) : bool =
+    match scope with
+    | GlobalScope _ -> false
+    | FunctionScope _ -> true
+
   let variables (scope : t) : variable_table =
     match scope with
     | GlobalScope variables -> variables
@@ -121,8 +126,7 @@ let process_statement
 
 let process_function
     functions
-    func =
-  let name, _, stmts = func in
+    (name, params, stmts) =
   match Hashtbl.find functions name with
   | Some _ -> () (* TODO duplicate *)
   | None ->
@@ -131,7 +135,8 @@ let process_function
         (* TODO declaration *)
         Some (Defination variables)
       );
-    List.iter stmts ~f: (process_statement variables)
+    List.iter stmts ~f: (process_statement variables);
+    List.iter params ~f: (process_identifier variables ~global: false)
 
 let process_toplevel (symtable: t) (topl: toplevel) =
   match topl with

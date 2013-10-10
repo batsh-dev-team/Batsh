@@ -120,15 +120,37 @@ let rec compile_expression_statement
     (expr : Batsh_ast.expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
-  : statement =
+  : statements =
   match expr with
   | Call (ident, exprs) ->
     let exprs = compile_expressions exprs ~symtable ~scope in
     if Symbol_table.is_function symtable ident then
-      `Call (`Str "call", [`Str ("call :" ^ ident); `Str "_"; `Str "0"] @ exprs)
+      (* function call *)
+      let frame_pointer_assign, frame_pointer =
+        if Symbol_table.Scope.is_function scope then
+          (* increase frame pointer %~2 by 1 *)
+          let frame_pointer = `Identifier (
+              Symbol_table.Scope.add_temporary_variable scope)
+          in
+          [`ArithAssign (
+              frame_pointer,
+              `ArithBinary ("+", `Int 1, `Var (`Identifier "%~2"))
+            )
+          ], `Var (frame_pointer)
+        else
+          [], `Str "0"
+      in
+      frame_pointer_assign @
+        [`Call 
+           (`Str ("call :" ^ ident),
+            [`Str "_"; (* return value *)
+             frame_pointer (* frame pointer *)
+            ] @ exprs
+           )
+        ]
     else
       (* external command *)
-      `Call (`Str ident, exprs)
+      [`Call (`Str ident, exprs)]
   | _ ->
     assert false (* TODO *)
 
@@ -143,7 +165,7 @@ let rec compile_statement
   | Block stmts ->
     compile_statements stmts ~symtable ~scope
   | Expression expr ->
-    [compile_expression_statement expr ~symtable ~scope]
+    compile_expression_statement expr ~symtable ~scope
   | Assignment (lvalue, expr) ->
     compile_assignment lvalue expr ~symtable ~scope
   | If (expr, stmt) ->
