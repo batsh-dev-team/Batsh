@@ -5,6 +5,7 @@ module Symbol_table = Batsh.Symbol_table
 
 let rec split_expression
     ?(preserve_top = false)
+    ?(split_call = true)
     (expr : expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
@@ -53,7 +54,7 @@ let rec split_expression
     split_expr_to_assignment assignments (StrCompare (operator, left, right))
   | Call (ident, exprs) ->
     let assignments, exprs = split_expressions exprs ~symtable ~scope in
-    if subexpression then
+    if split_call then
       split_expr_to_assignment assignments (Call (ident, exprs))
     else
       assignments, (Call (ident, exprs))
@@ -96,7 +97,10 @@ let rec split_statement
   | Empty | Global _ | Comment _ | Return None ->
     stmt
   | Expression expr ->
-    let assignments, expr = split_expression expr ~symtable ~scope ~subexpression: false in
+    let assignments, expr = split_expression expr ~symtable ~scope
+      ~subexpression: false
+      ~split_call: false
+    in
     prepend_assignments assignments (Expression expr)
   | Return (Some expr) ->
     let assignments, expr = split_expression expr ~symtable ~scope ~subexpression: false in

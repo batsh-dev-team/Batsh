@@ -1,3 +1,11 @@
+function loop(num) {
+  println(num);
+  if (num > 0) {
+    loop(num - 1);
+  }
+}
+loop(10);
+
 function fact(num) {
   if (num === 0) {
     print(1);

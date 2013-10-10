@@ -82,7 +82,7 @@ let compile_expression
       let right = compile_expression_impl right in
       Dlist.append left right
     | Call _ ->
-      failwith "Not implemented: get stdout of given command"
+      failwith "Bug: Call must have been split into assignments."
     | _ ->
       assert false (* TODO *)
   in
@@ -116,42 +116,55 @@ let compile_expression_to_comparison
   | _ ->
     failwith "Expression can not compile to comparison"
 
+let compile_call
+    (ident, exprs)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : (statements * leftvalue) =
+  let exprs = compile_expressions exprs ~symtable ~scope in
+  if Symbol_table.is_function symtable ident then
+    (* function call *)
+    let frame_pointer_assign, frame_pointer =
+      if Symbol_table.Scope.is_function scope then
+        (* increase frame pointer %~2 by 1 *)
+        let frame_pointer = `Identifier (
+            Symbol_table.Scope.add_temporary_variable scope)
+        in
+        [`ArithAssign (
+            frame_pointer,
+            `ArithBinary ("+", `Int 1, `Var (`Identifier "%~2"))
+          )
+        ], `Var (frame_pointer)
+      else
+        [], `Str "0"
+    in
+    let retval = Symbol_table.Scope.add_temporary_variable scope in
+    (frame_pointer_assign @
+       [`Call 
+          (`Str ("call :" ^ ident),
+           [`Str retval; (* return value *)
+            frame_pointer (* frame pointer *)
+           ] @ exprs
+          )
+       ]), `Identifier retval
+  else
+    (* external command *)
+    (* TODO return value*)
+    [`Call (`Str ident, exprs)], `Identifier "_"
+
 let rec compile_expression_statement
     (expr : Batsh_ast.expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
   : statements =
   match expr with
-  | Call (ident, exprs) ->
-    let exprs = compile_expressions exprs ~symtable ~scope in
-    if Symbol_table.is_function symtable ident then
-      (* function call *)
-      let frame_pointer_assign, frame_pointer =
-        if Symbol_table.Scope.is_function scope then
-          (* increase frame pointer %~2 by 1 *)
-          let frame_pointer = `Identifier (
-              Symbol_table.Scope.add_temporary_variable scope)
-          in
-          [`ArithAssign (
-              frame_pointer,
-              `ArithBinary ("+", `Int 1, `Var (`Identifier "%~2"))
-            )
-          ], `Var (frame_pointer)
-        else
-          [], `Str "0"
-      in
-      frame_pointer_assign @
-        [`Call 
-           (`Str ("call :" ^ ident),
-            [`Str "_"; (* return value *)
-             frame_pointer (* frame pointer *)
-            ] @ exprs
-           )
-        ]
-    else
-      (* external command *)
-      [`Call (`Str ident, exprs)]
+  | Call call ->
+    let stmts, _ = compile_call call ~symtable ~scope in
+    stmts
+  | Leftvalue _ ->
+    [] (* No side effect *)
   | _ ->
+    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr); 
     assert false (* TODO *)
 
 let rec compile_statement
@@ -205,7 +218,6 @@ and compile_assignment
   | String _
   | StrCompare _
   | Concat _
-  | Call _
   | Leftvalue _ ->
     let lvalue = compile_leftvalue lvalue ~symtable ~scope in
     [`Assignment (lvalue, compile_expression expr ~symtable ~scope)]
@@ -220,6 +232,10 @@ and compile_assignment
     List.concat (List.mapi exprs ~f: (fun i expr ->
         compile_assignment (ListAccess (lvalue, (Int i))) expr ~symtable ~scope
       ))
+  | Call call ->
+    let stmts, retval = compile_call call ~symtable ~scope in
+    let lvalue = compile_leftvalue lvalue ~symtable ~scope in
+    stmts @ [`Assignment (lvalue, [`Var retval])]
 
 and compile_statements
     (stmts: Batsh_ast.statements)
