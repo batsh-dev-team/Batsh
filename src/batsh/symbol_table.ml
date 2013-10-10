@@ -42,8 +42,19 @@ module Scope = struct
   let find_variable
       (scope: t)
       ~(name: string)
-    =
+    : variable_entry option =
     Hashtbl.find (variables scope) name
+
+  let is_global_variable
+      (scope : t)
+      ~(name : string)
+    : bool =
+    match scope with
+    | GlobalScope _ -> true
+    | FunctionScope (_, variable_table) ->
+      match Hashtbl.find variable_table name with
+      | None -> true (* if variable is not found, consider it as external *)
+      | Some variable -> variable.global
 
   let fold
       (scope: t)

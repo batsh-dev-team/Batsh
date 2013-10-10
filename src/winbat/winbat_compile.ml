@@ -220,8 +220,11 @@ let rec compile_function_leftvalue
   : leftvalue =
   match lvalue with
   | `Identifier ident ->
-    (* TODO global variable *)
-    `ListAccess (lvalue, `Var (`Identifier "%~2"))
+    if Symbol_table.Scope.is_global_variable scope ~name: ident then
+      lvalue
+    else
+      (* Add surfix _%~2 to local variable *)
+      `ListAccess (lvalue, `Var (`Identifier "%~2"))
   | `ListAccess (lvalue, index) ->
     `ListAccess (compile_function_leftvalue lvalue ~symtable ~scope, index)
 

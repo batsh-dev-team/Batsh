@@ -6,6 +6,7 @@ module Symbol_table : sig
   type t
   module Scope : sig
     type t
+    val is_global_variable : t -> name: string -> bool
     val add_temporary_variable : t -> Batsh_ast.identifier
     val fold : t -> init: 'a -> f: (string -> bool -> 'a -> 'a) -> 'a
   end
