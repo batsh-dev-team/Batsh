@@ -211,6 +211,8 @@ and compile_statements
       )
   )
 
+(* Function variable, call, return replacement *)
+
 let rec compile_function_leftvalue
     (lvalue : leftvalue)
     ~(symtable : Symbol_table.t)
@@ -308,13 +310,18 @@ let compile_function
   let scope = Symbol_table.scope symtable name in
   let body = compile_statements stmts ~symtable ~scope in
   let replaced_body = compile_function_statements body ~symtable ~scope in
-  let params_assignments : statements = List.mapi params ~f: (fun i param ->
-      let lvalue : leftvalue = `ListAccess (`Identifier param, `Var (`Identifier "%~2")) in
-      `Assignment (lvalue,
-                   [`Var (`Identifier (sprintf "%%~%d" (i + 3)))])
+  let params_assignments = List.mapi params ~f: (fun i param ->
+      (* Add frame pointer surfix to every paramemeter *)
+      let lvalue = `ListAccess (`Identifier param, `Var (`Identifier "%~2")) in
+      let param_var = `Identifier (sprintf "%%~%d" (i + 3)) in
+      `Assignment (lvalue, [`Var param_var])
     )
   in
-  ((`Goto ":EOF") :: (`Label name) :: params_assignments) @ replaced_body
+  (`Empty
+   :: (`Goto ":EOF")
+   :: (`Label name)
+   :: params_assignments)
+  @ replaced_body
 
 let compile_toplevel
     ~(symtable : Symbol_table.t)
@@ -333,19 +340,14 @@ let sort_functions (topls : Batsh_ast.t) : Batsh_ast.t =
     | Function _ -> true
     | Statement _ -> false
   in
-  List.sort topls ~cmp: (fun a b ->
+  List.stable_sort topls ~cmp: (fun a b ->
       let func_a = is_function a in
       let func_b = is_function b in
-      if func_a then
-        if func_b then
-          0
-        else
-          1
-      else
-      if func_b then
-        -1
-      else
-        0
+      match (func_a, func_b) with
+      | (true, true) -> 0
+      | (true, false) -> 1
+      | (false, true) -> -1
+      | (false, false) -> 0
     )
 
 let compile (batsh: Batsh.t) : t =
@@ -353,15 +355,17 @@ let compile (batsh: Batsh.t) : t =
   let symtable = Batsh.symtable batsh in
   let transformed_ast = Winbat_transform.split ast ~symtable in
   let sorted_ast = sort_functions transformed_ast in
-  let stmts = Dlist.to_list (List.fold_left sorted_ast
-                               ~init: (Dlist.empty ())
-                               ~f: (fun acc topl ->
-                                   let stmts = compile_toplevel topl ~symtable in
-                                   Dlist.append acc (Dlist.of_list stmts)
-                                 )
-                            )
+  let stmts = Dlist.to_list (
+      List.fold_left sorted_ast
+        ~init: (Dlist.empty ())
+        ~f: (fun acc topl ->
+            let stmts = compile_toplevel topl ~symtable in
+            Dlist.append acc (Dlist.of_list stmts)
+          )
+    )
   in
   (`Raw "@echo off")
   :: (`Raw "setlocal EnableDelayedExpansion")
   :: (`Raw "setlocal EnableExtensions")
+  :: (`Empty)
   :: stmts
