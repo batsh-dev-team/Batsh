@@ -98,8 +98,8 @@ let rec split_statement
     stmt
   | Expression expr ->
     let assignments, expr = split_expression expr ~symtable ~scope
-      ~subexpression: false
-      ~split_call: false
+        ~subexpression: false
+        ~split_call: false
     in
     prepend_assignments assignments (Expression expr)
   | Return (Some expr) ->

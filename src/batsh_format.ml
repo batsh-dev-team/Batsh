@@ -69,9 +69,9 @@ let rec print_statement (buf : Buffer.t) (stmt: statement) ~(indent: int) =
 and print_statements = Formatutil.print_statements ~f: print_statement
 
 and print_block_statement
-  (buf : Buffer.t)
-  (inner_stmts : statements)
-  ~(indent : int)
+    (buf : Buffer.t)
+    (inner_stmts : statements)
+    ~(indent : int)
   =
   let print_statements_indented = print_statements ~indent:(indent + 2) in
   bprintf buf "{\n%a\n%a}"
@@ -82,9 +82,9 @@ and print_if_while_statement
     (buf : Buffer.t)
     (name : string)
     (expr : expression)
-     (stmt : statement) 
-     ~(indent : int)
-     =
+    (stmt : statement) 
+    ~(indent : int)
+  =
   bprintf buf "%s (%a) " name print_expression expr;
   print_statement buf stmt ~indent
 
@@ -93,7 +93,7 @@ and print_if_statement
     (expr: expression)
     (stmt: statement)
     ~(indent: int)
-    =
+  =
   print_if_while_statement buf "if" expr stmt ~indent
 
 and print_if_else_statement
@@ -102,7 +102,7 @@ and print_if_else_statement
     (thenStmt: statement)
     (elseStmt: statement)
     ~(indent: int)
-    =
+  =
   print_if_statement buf expr thenStmt ~indent;
   Buffer.add_string buf " else ";
   print_statement buf elseStmt ~indent
@@ -112,7 +112,7 @@ and print_while_statement
     (expr: expression)
     (stmt: statement)
     ~(indent: int)
-    =
+  =
   print_if_while_statement buf "while" expr stmt ~indent
 
 let print_params (buf : Buffer.t) (params: identifiers) =
