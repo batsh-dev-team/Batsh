@@ -2,69 +2,69 @@ open Core.Std
 open Winbat_ast
 
 let rec print_leftvalue
-    (outx : out_channel)
+    (buf : Buffer.t)
     (lvalue : leftvalue)
     ~(bare : bool)
   =
   match lvalue with
   | `Identifier ident ->
     if bare || ((String.get ident 0) = '%') then
-      fprintf outx "%s" ident
+      bprintf buf "%s" ident
     else
-      fprintf outx "!%s!" ident
+      bprintf buf "!%s!" ident
   | `ListAccess (lvalue, index) ->
     if bare then
-      fprintf outx "%a_%a"
+      bprintf buf "%a_%a"
         (print_leftvalue ~bare: true) lvalue
         (print_varint ~bare: true) index
     else
-      fprintf outx "!%a_%a!" 
+      bprintf buf "!%a_%a!" 
         (print_leftvalue ~bare: true) lvalue
         (print_varint ~bare: true) index
 
 and print_varint
-    (outx : out_channel)
+    (buf : Buffer.t)
     (index : varint)
     ~(bare : bool)
   =
   match index with
   | `Var lvalue ->
-    (print_leftvalue ~bare) outx lvalue
+    (print_leftvalue ~bare) buf lvalue
   | `Int num ->
-    fprintf outx "%d" num
+    bprintf buf "%d" num
 
-let rec print_arith outx (arith : arithmetic) =
+let rec print_arith buf (arith : arithmetic) =
   match arith with
   | `Var lvalue ->
-    print_leftvalue outx lvalue ~bare: false
+    print_leftvalue buf lvalue ~bare: false
   | `Int num ->
-    fprintf outx "%d" num
+    bprintf buf "%d" num
   | `ArithUnary (operator, arith) ->
-    fprintf outx "%s^(%a^)" operator print_arith arith
+    bprintf buf "%s^(%a^)" operator print_arith arith
   | `ArithBinary (operator, left, right) -> (
       let operator = if operator = "%" then "%%" else operator in
-      fprintf outx "^(%a %s %a^)"
+      bprintf buf "^(%a %s %a^)"
         print_arith left
         operator
         print_arith right
     )
 
-let print_varstring outx (var : varstring) =
+let print_varstring buf (var : varstring) =
   match var with
   | `Var lvalue ->
-    print_leftvalue outx lvalue ~bare: false
+    print_leftvalue buf lvalue ~bare: false
   | `Str str ->
-    fprintf outx "%s" str
+    bprintf buf "%s" str
 
-let print_varstrings outx (vars : varstrings) ~(separater : string) =
+let print_varstrings buf (vars : varstrings) ~(separater : string) =
   let num_items = List.length vars in
   List.iteri vars ~f: (fun i var ->
-      print_varstring outx var;
+      print_varstring buf var;
       if i < num_items - 1 then
-        output_string outx separater
+        Buffer.add_string buf separater
     )
 
-let print_comparison outx (condition : comparison) =
+let print_comparison buf (condition : comparison) =
   match condition with
   | `StrCompare (operator, left, right) -> (
       let sign = match operator with
@@ -76,42 +76,42 @@ let print_comparison outx (condition : comparison) =
         | "<=" -> "LEQ"
         | _ -> failwith ("Unknown operator: " ^ operator)
       in
-      fprintf outx "%a %s %a"
+      bprintf buf "%a %s %a"
         (print_varstrings ~separater: "") left
         sign
         (print_varstrings ~separater: "") right
     )
 
-let rec print_statement outx (stmt: statement) ~(indent: int) =
-  Formatutil.print_indent outx indent;
+let rec print_statement buf (stmt: statement) ~(indent: int) =
+  Formatutil.print_indent buf indent;
   match stmt with
   | `Comment comment ->
-    fprintf outx "::%s" comment
+    bprintf buf "::%s" comment
   | `Raw str ->
-    output_string outx str
+    Buffer.add_string buf str
   | `Label lbl ->
-    fprintf outx ":%s" lbl
+    bprintf buf ":%s" lbl
   | `Goto lbl ->
-    fprintf outx "goto %s" lbl
+    bprintf buf "goto %s" lbl
   | `Assignment (lvalue, vars) ->
-    fprintf outx "set %a=%a"
+    bprintf buf "set %a=%a"
       (print_leftvalue ~bare: true) lvalue
       (print_varstrings ~separater: "") vars
   | `ArithAssign (lvalue, arith) ->
-    fprintf outx "set /a %a=%a"
+    bprintf buf "set /a %a=%a"
       (print_leftvalue ~bare: true) lvalue
       print_arith arith
   | `Call (name, params) ->
-    fprintf outx "%a %a"
+    bprintf buf "%a %a"
       print_varstring name
       (print_varstrings ~separater: " ") params
   | `If (condition, stmts) ->
-    fprintf outx "if /i %a (\n%a\n%a)"
+    bprintf buf "if /i %a (\n%a\n%a)"
       print_comparison condition
       (print_statements ~indent: (indent + 2)) stmts
       Formatutil.print_indent indent
   | `IfElse (condition, then_stmts, else_stmts) ->
-    fprintf outx "if /i %a (\n%a\n%a) else (\n%a\n%a)"
+    bprintf buf "if /i %a (\n%a\n%a) else (\n%a\n%a)"
       print_comparison condition
       (print_statements ~indent: (indent + 2)) then_stmts
       Formatutil.print_indent indent
@@ -119,8 +119,8 @@ let rec print_statement outx (stmt: statement) ~(indent: int) =
       Formatutil.print_indent indent
   | `Empty -> ()
 
-and print_statements: out_channel -> statements -> indent:int -> unit =
+and print_statements: Buffer.t -> statements -> indent:int -> unit =
   Formatutil.print_statements ~f: print_statement
 
-let print (outx: out_channel) (program: t) :unit =
-  print_statements outx program ~indent: 0
+let print (buf: Buffer.t) (program: t) :unit =
+  print_statements buf program ~indent: 0

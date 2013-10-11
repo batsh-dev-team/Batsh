@@ -9,5 +9,7 @@ let compile (batsh : Parser.t) : t =
   let batch_ast_expanded = Winbat_functions.expand batch_ast in
   {batsh; batch_ast; batch_ast_expanded}
 
-let print (outx : out_channel) (batch : t) : unit =
-  Winbat_format.print outx batch.batch_ast_expanded
+let print (batch : t) : string =
+  let buf = Buffer.create 1024 in
+  Winbat_format.print buf batch.batch_ast_expanded;
+  Buffer.contents buf

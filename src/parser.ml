@@ -51,8 +51,10 @@ let create_from_string (source : string) : t =
   let lexbuf = Lexing.from_string source in
   create_from_lexbuf lexbuf "input"
 
-let prettify (outx: out_channel) (batsh: t) =
-  fprintf outx "%a\n" Batsh_format.print_ast batsh.ast
+let prettify (batsh : t) : string =
+  let buf = Buffer.create 1024 in
+  Batsh_format.print_ast buf batsh.ast;
+  Buffer.contents buf
 
 let ast (batsh: t) : Batsh_ast.t =
   batsh.ast

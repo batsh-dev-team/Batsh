@@ -7,7 +7,8 @@ let test_run_bash name =
   let bash = Bash.compile batsh in
 
   let inx, outx = Unix.open_process "bash" in
-  Bash.print outx bash;
+  let code = Bash.print bash in
+  Out_channel.output_string outx code;
   Out_channel.close outx;
   let output = In_channel.input_all inx in
   In_channel.close inx;

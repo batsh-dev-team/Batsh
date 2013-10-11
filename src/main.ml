@@ -17,7 +17,8 @@ let bash =
     ) (fun (filename: string) () ->
         let batsh = Parser.create_from_file filename in
         let bash = Bash.compile batsh in
-        printf "%a\n" Bash.print bash
+        let code = Bash.print bash in
+        printf "%s\n" code
       )
 
 let winbat =
@@ -29,7 +30,8 @@ let winbat =
     ) (fun (filename: string) () ->
         let batsh = Parser.create_from_file filename in
         let batch = Winbat.compile batsh in
-        printf "%a\n" Winbat.print batch
+        let code = Winbat.print batch in
+        printf "%s\n" code
       )
 
 let format =
@@ -40,7 +42,8 @@ let format =
       +> anon ("filename" %: regular_file)
     ) (fun (filename: string) () ->
         let batsh = Parser.create_from_file filename in
-        Parser.prettify Out_channel.stdout batsh
+        let code = Parser.prettify batsh in
+        printf "%s\n" code
       )
 
 let ast =
