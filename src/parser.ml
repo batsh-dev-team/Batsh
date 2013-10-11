@@ -6,24 +6,25 @@ type t = {
   symtable: Symbol_table.t;
 }
 
-let parse_and_print_error
-    (outx : out_channel)
-    (lexbuf : Lexing.lexbuf)
-  : Batsh_ast.t =
-  let print_position (outx: out_channel) () =
+exception ParseError of string
+
+let parse (lexbuf : Lexing.lexbuf) : Batsh_ast.t =
+  let print_position () () =
     let pos = lexbuf.Lexing.lex_curr_p in
-    fprintf outx "%s:%d:%d" pos.Lexing.pos_fname
-      pos.Lexing.pos_lnum (pos.Lexing.pos_cnum - pos.Lexing.pos_bol + 1)
+    sprintf "%s:%d:%d"
+      pos.Lexing.pos_fname
+      pos.Lexing.pos_lnum
+      (pos.Lexing.pos_cnum - pos.Lexing.pos_bol + 1)
   in
   try
     Parser_yacc.program Lexer.read lexbuf
   with
   | Lexer.SyntaxError msg ->
-    fprintf outx "%a: %s\n" print_position () msg;
-    exit (-1)
+    let err = sprintf "%a: %s" print_position () msg in
+    raise (ParseError err)
   | Parser_yacc.Error ->
-    fprintf outx "%a: syntax error\n" print_position ();
-    exit (-1)
+    let err = sprintf "%a: syntax error" print_position () in
+    raise (ParseError err)
 
 module Symbol_table = struct
   include Symbol_table
@@ -33,7 +34,7 @@ let create_from_lexbuf (lexbuf : Lexing.lexbuf) (filename: string) : t =
   lexbuf.Lexing.lex_curr_p <- {
     lexbuf.Lexing.lex_curr_p with Lexing.pos_fname = filename
   };
-  let ast = parse_and_print_error stderr lexbuf in
+  let ast = parse lexbuf in
   let symtable = Symbol_table.create ast in
   { lex = lexbuf; ast; symtable; }
 

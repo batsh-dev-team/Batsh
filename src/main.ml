@@ -8,6 +8,14 @@ let regular_file = Command.Spec.Arg_type.create (fun filename ->
       exit 1
   )
 
+let parse_with_error (filename : string) : Parser.t =
+  try
+    Parser.create_from_file filename
+  with
+  | Parser.ParseError msg ->
+    eprintf "%s\n" msg;
+    exit 1
+
 let bash =
   Command.basic
     ~summary: "Compile to Bash"
@@ -15,7 +23,7 @@ let bash =
       empty
       +> anon ("filename" %: regular_file)
     ) (fun (filename: string) () ->
-        let batsh = Parser.create_from_file filename in
+        let batsh = parse_with_error filename in
         let bash = Bash.compile batsh in
         let code = Bash.print bash in
         printf "%s\n" code
@@ -28,7 +36,7 @@ let winbat =
       empty
       +> anon ("filename" %: regular_file)
     ) (fun (filename: string) () ->
-        let batsh = Parser.create_from_file filename in
+        let batsh = parse_with_error filename in
         let batch = Winbat.compile batsh in
         let code = Winbat.print batch in
         printf "%s\n" code
@@ -41,7 +49,7 @@ let format =
       empty
       +> anon ("filename" %: regular_file)
     ) (fun (filename: string) () ->
-        let batsh = Parser.create_from_file filename in
+        let batsh = parse_with_error filename in
         let code = Parser.prettify batsh in
         printf "%s\n" code
       )
@@ -71,7 +79,7 @@ let ast =
         (split_string_compare : bool)
         (split_arithmetic : bool)
         () ->
-        let batsh = Parser.create_from_file filename in
+        let batsh = parse_with_error filename in
         if not symbols then
           let ast =
             if split_string || split_list_literal || split_call then

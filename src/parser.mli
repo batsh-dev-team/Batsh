@@ -1,6 +1,7 @@
 open Core.Std
 
 type t
+exception ParseError of string
 
 module Symbol_table : sig
   type t
