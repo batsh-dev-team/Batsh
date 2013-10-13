@@ -84,6 +84,7 @@ let compile_expression
     | Call _ ->
       failwith "Bug: Call must have been split into assignments."
     | _ ->
+      Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
       assert false (* TODO *)
   in
   Dlist.to_list (compile_expression_impl expr)
@@ -216,7 +217,6 @@ and compile_assignment
   : statements =
   match expr with
   | String _
-  | StrCompare _
   | Concat _
   | Leftvalue _ ->
     let lvalue = compile_leftvalue lvalue ~symtable ~scope in
@@ -236,6 +236,15 @@ and compile_assignment
     let stmts, retval = compile_call call ~symtable ~scope in
     let lvalue = compile_leftvalue lvalue ~symtable ~scope in
     stmts @ [`Assignment (lvalue, [`Var retval])]
+  | StrCompare _ ->
+    let comp = compile_expression_to_comparison expr ~symtable ~scope in
+    let lvalue = compile_leftvalue lvalue ~symtable ~scope in
+    [`IfElse (
+        comp,
+        [`ArithAssign (lvalue, `Int 1)],
+        [`ArithAssign (lvalue, `Int 0)]
+      )
+    ]
 
 and compile_statements
     (stmts: Batsh_ast.statements)
