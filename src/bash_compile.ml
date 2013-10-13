@@ -196,13 +196,12 @@ let compile_function
             (Local ident) :: acc
         )
   in
-  let param_locals = List.map params ~f: (fun ident -> Local ident) in
   let param_defines = List.mapi params ~f: (fun i param ->
       Assignment (Identifier param,
                   Variable (Identifier (string_of_int (i + 1))))
     )
   in
-  Function (name, List.concat [locals; param_locals; param_defines; body])
+  Function (name, List.concat [locals; param_defines; body])
 
 let compile_toplevel
     ~(symtable: Symbol_table.t)
