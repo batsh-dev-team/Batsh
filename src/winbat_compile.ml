@@ -2,8 +2,6 @@ open Core.Std
 open Batsh_ast
 open Winbat_ast
 
-module Symbol_table = Parser.Symbol_table
-
 let rec compile_leftvalue
     (lvalue: Batsh_ast.leftvalue)
     ~(symtable: Symbol_table.t)

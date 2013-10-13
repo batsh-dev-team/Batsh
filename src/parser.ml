@@ -26,10 +26,6 @@ let parse (lexbuf : Lexing.lexbuf) : Batsh_ast.t =
     let err = sprintf "%a: syntax error" print_position () in
     raise (ParseError err)
 
-module Symbol_table = struct
-  include Symbol_table
-end
-
 let create_from_lexbuf (lexbuf : Lexing.lexbuf) (filename: string) : t =
   lexbuf.Lexing.lex_curr_p <- {
     lexbuf.Lexing.lex_curr_p with Lexing.pos_fname = filename

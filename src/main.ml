@@ -95,7 +95,7 @@ let ast =
           let ast_sexp = Batsh_ast.sexp_of_t ast in
           printf "%a\n" Sexp.output_hum ast_sexp
         else
-          let symtable_sexp = Parser.Symbol_table.sexp_of_t (Parser.symtable batsh) in
+          let symtable_sexp = Symbol_table.sexp_of_t (Parser.symtable batsh) in
           printf "%a\n" Sexp.output_hum symtable_sexp
       )
 

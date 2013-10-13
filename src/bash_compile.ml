@@ -2,7 +2,6 @@ open Core.Std
 open Bash_ast
 
 module BAST = Batsh_ast
-module Symbol_table = Parser.Symbol_table
 
 let is_arith (expr: BAST.expression) :bool =
   match expr with

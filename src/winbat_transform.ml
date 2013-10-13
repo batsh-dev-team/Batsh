@@ -1,8 +1,6 @@
 open Core.Std
 open Batsh_ast
 
-module Symbol_table = Parser.Symbol_table
-
 let rec split_expression
     ?(no_split_top = false)
     ?(split_call = true)
