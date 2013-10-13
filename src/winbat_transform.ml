@@ -6,15 +6,16 @@ module Symbol_table = Parser.Symbol_table
 let rec split_expression
     ?(preserve_top = false)
     ?(split_call = true)
+    ?(split_arith = true)
     (expr : expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
     ~(subexpression : bool)
   : (statement Dlist.t * expression) =
   let split_expression = split_expression ~symtable ~scope in
-  let split_binary (left, right) ~subexpression =
-    let assignments_left, left = split_expression left ~subexpression in
-    let assignments_right, right = split_expression right ~subexpression in
+  let split_binary (left, right) ?(split_arith = true) ~subexpression =
+    let assignments_left, left = split_expression left ~split_arith ~subexpression in
+    let assignments_right, right = split_expression right ~split_arith ~subexpression in
     Dlist.append assignments_left assignments_right, (left, right)
   in
   let split_expr_to_assignment assignments expr : (statement Dlist.t * expression) =
@@ -33,24 +34,30 @@ let rec split_expression
   | Bool _ | Int _ | Float _ | Leftvalue _ ->
     Dlist.empty (), expr
   | ArithUnary (operator, expr) ->
-    let assignments, expr = split_expression expr ~subexpression: true in
-    split_expr_to_assignment assignments (ArithUnary (operator, expr))
+    let assignments, expr = split_expression expr ~subexpression: true ~split_arith:false in
+    if split_arith then
+      split_expr_to_assignment assignments (ArithUnary (operator, expr))
+    else
+      assignments, (ArithUnary (operator, expr))
   | ArithBinary (operator, left, right) ->
-    let assignments, (left, right) = split_binary (left, right) ~subexpression: true in
-    split_expr_to_assignment assignments (ArithBinary (operator, left, right))
+    let assignments, (left, right) = split_binary (left, right) ~split_arith:false ~subexpression: true in
+    if split_arith then
+      split_expr_to_assignment assignments (ArithBinary (operator, left, right))
+    else
+      assignments, (ArithBinary (operator, left, right))
   | String str ->
     if subexpression then
       split_expr_to_assignment (Dlist.empty ()) (String str)
     else
       Dlist.empty (), (String str)
   | Concat (left, right) ->
-    let assignments, (left, right) = split_binary (left, right) ~subexpression: false in
+    let assignments, (left, right) = split_binary (left, right) ~split_arith:true ~subexpression: false in
     if subexpression then
       split_expr_to_assignment assignments (Concat (left, right))
     else
       assignments, (Concat (left, right))
   | StrCompare (operator, left, right) ->
-    let assignments, (left, right) = split_binary (left, right) ~subexpression: false in
+    let assignments, (left, right) = split_binary (left, right) ~split_arith:true ~subexpression: false in
     split_expr_to_assignment assignments (StrCompare (operator, left, right))
   | Call (ident, exprs) ->
     let assignments, exprs = split_expressions exprs ~symtable ~scope in
@@ -106,7 +113,12 @@ let rec split_statement
     let assignments, expr = split_expression expr ~symtable ~scope ~subexpression: false in
     prepend_assignments assignments (Return (Some expr))
   | Assignment (lvalue, expr) ->
-    let assignments, expr = split_expression expr ~symtable ~scope ~subexpression: false in
+    let assignments, expr = split_expression expr
+      ~symtable
+      ~scope
+      ~subexpression: false
+      ~split_arith:false
+    in
     prepend_assignments assignments (Assignment (lvalue, expr))
   | If (expr, stmt) ->
     let assignments, expr = split_expression expr
