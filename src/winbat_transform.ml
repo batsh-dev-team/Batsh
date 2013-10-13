@@ -4,73 +4,79 @@ open Batsh_ast
 module Symbol_table = Parser.Symbol_table
 
 let rec split_expression
-    ?(preserve_top = false)
+    ?(no_split_top = false)
     ?(split_call = true)
     ?(split_arith = true)
+    ?(split_string = false)
+    ?(split_list = true)
     (expr : expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
-    ~(subexpression : bool)
   : (statement Dlist.t * expression) =
-  let split_expression = split_expression ~symtable ~scope in
-  let split_binary (left, right) ?(split_arith = true) ~subexpression =
-    let assignments_left, left = split_expression left ~split_arith ~subexpression in
-    let assignments_right, right = split_expression right ~split_arith ~subexpression in
+  let split_binary (left, right) ~split_arith ~split_string =
+    let assignments_left, left = split_expression left
+        ~split_arith ~split_string ~symtable ~scope
+    in
+    let assignments_right, right = split_expression right
+        ~split_arith ~split_string ~symtable ~scope
+    in
     Dlist.append assignments_left assignments_right, (left, right)
   in
-  let split_expr_to_assignment assignments expr : (statement Dlist.t * expression) =
-    if preserve_top then
-      assignments, expr
+  let split_when ~cond current_assignments new_expr =
+    let split_expr_to_assignment assignments expr
+      : (statement Dlist.t * expression) =
+      if no_split_top then
+        assignments, expr
+      else
+        let ident = Symbol_table.Scope.add_temporary_variable scope in
+        let variable = Identifier ident in
+        let assignments = Dlist.append
+            assignments
+            (Dlist.of_list [Assignment (variable, expr)])
+        in
+        assignments, (Leftvalue variable)
+    in
+    if cond then
+      split_expr_to_assignment current_assignments new_expr
     else
-      let ident = Symbol_table.Scope.add_temporary_variable scope in
-      let variable = Identifier ident in
-      let assignments = Dlist.append
-          assignments
-          (Dlist.of_list [Assignment (variable, expr)])
-      in
-      assignments, (Leftvalue variable)
+      current_assignments, new_expr
   in
   match expr with
   | Bool _ | Int _ | Float _ | Leftvalue _ ->
     Dlist.empty (), expr
   | ArithUnary (operator, expr) ->
-    let assignments, expr = split_expression expr ~subexpression: true ~split_arith:false in
-    if split_arith then
-      split_expr_to_assignment assignments (ArithUnary (operator, expr))
-    else
-      assignments, (ArithUnary (operator, expr))
+    let assignments, expr = split_expression expr ~symtable ~scope
+        ~split_arith:false
+        ~split_string:true
+    in
+    split_when ~cond:split_arith assignments (ArithUnary (operator, expr))
   | ArithBinary (operator, left, right) ->
-    let assignments, (left, right) = split_binary (left, right) ~split_arith:false ~subexpression: true in
-    if split_arith then
-      split_expr_to_assignment assignments (ArithBinary (operator, left, right))
-    else
-      assignments, (ArithBinary (operator, left, right))
+    let assignments, (left, right) = split_binary (left, right)
+        ~split_arith:false
+        ~split_string:true
+    in
+    split_when ~cond:split_arith
+      assignments (ArithBinary (operator, left, right))
   | String str ->
-    if subexpression then
-      split_expr_to_assignment (Dlist.empty ()) (String str)
-    else
-      Dlist.empty (), (String str)
+    split_when ~cond:split_string (Dlist.empty ()) (String str)
   | Concat (left, right) ->
-    let assignments, (left, right) = split_binary (left, right) ~split_arith:true ~subexpression: false in
-    if subexpression then
-      split_expr_to_assignment assignments (Concat (left, right))
-    else
-      assignments, (Concat (left, right))
+    let assignments, (left, right) = split_binary (left, right)
+        ~split_arith:true
+        ~split_string:false
+    in
+    split_when ~cond:split_string assignments (Concat (left, right))
   | StrCompare (operator, left, right) ->
-    let assignments, (left, right) = split_binary (left, right) ~split_arith:true ~subexpression: false in
-    split_expr_to_assignment assignments (StrCompare (operator, left, right))
+    let assignments, (left, right) = split_binary (left, right)
+        ~split_arith:true
+        ~split_string:false
+    in
+    split_when ~cond:true assignments (StrCompare (operator, left, right))
   | Call (ident, exprs) ->
     let assignments, exprs = split_expressions exprs ~symtable ~scope in
-    if split_call then
-      split_expr_to_assignment assignments (Call (ident, exprs))
-    else
-      assignments, (Call (ident, exprs))
+    split_when ~cond:split_call assignments (Call (ident, exprs))
   | List exprs ->
     let assignments, exprs = split_expressions exprs ~symtable ~scope in
-    if subexpression then
-      split_expr_to_assignment assignments (List exprs)
-    else
-      assignments, (List exprs)
+    split_when ~cond:split_list assignments (List exprs)
 
 and split_expressions
     (exprs : expressions)
@@ -82,7 +88,6 @@ and split_expressions
           let assignments, expr = split_expression expr
               ~symtable
               ~scope
-              ~subexpression: false
           in
           (Dlist.append assignments assignments_acc, expr :: exprs_acc)
         )
@@ -105,27 +110,24 @@ let rec split_statement
     stmt
   | Expression expr ->
     let assignments, expr = split_expression expr ~symtable ~scope
-        ~subexpression: false
-        ~split_call: false
+        ~split_call:false
     in
     prepend_assignments assignments (Expression expr)
   | Return (Some expr) ->
-    let assignments, expr = split_expression expr ~symtable ~scope ~subexpression: false in
+    let assignments, expr = split_expression expr ~symtable ~scope in
     prepend_assignments assignments (Return (Some expr))
   | Assignment (lvalue, expr) ->
     let assignments, expr = split_expression expr
-      ~symtable
-      ~scope
-      ~subexpression: false
-      ~split_arith:false
+        ~symtable
+        ~scope
+        ~split_arith:false
     in
     prepend_assignments assignments (Assignment (lvalue, expr))
   | If (expr, stmt) ->
     let assignments, expr = split_expression expr
         ~symtable
         ~scope
-        ~subexpression: true
-        ~preserve_top: true
+        ~no_split_top:true
     in
     let stmt = split_statement stmt ~symtable ~scope in
     prepend_assignments assignments (If (expr, stmt))
@@ -133,8 +135,7 @@ let rec split_statement
     let assignments, expr = split_expression expr
         ~symtable
         ~scope
-        ~subexpression: true
-        ~preserve_top: true
+        ~no_split_top:true
     in
     let then_stmt = split_statement then_stmt ~symtable ~scope in
     let else_stmt = split_statement else_stmt ~symtable ~scope in
@@ -143,8 +144,7 @@ let rec split_statement
     let assignments, expr = split_expression expr
         ~symtable
         ~scope
-        ~subexpression: true
-        ~preserve_top: true
+        ~no_split_top:true
     in
     let stmt = split_statement stmt ~symtable ~scope in
     prepend_assignments assignments (While (expr, stmt))
