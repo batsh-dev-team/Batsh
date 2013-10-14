@@ -190,8 +190,10 @@ let rec compile_statement
   | While (expr, stmt) ->
     let condition = compile_expression_to_comparison expr ~symtable ~scope in
     let body = compile_statement stmt ~symtable ~scope in
-    let label = sprintf "WHILE_%d" (Random.int 32768) in
-    (* TODO check conflict *)
+    let label_surfix = Symbol_table.Scope.add_temporary_variable
+        (Symbol_table.global_scope symtable)
+    in
+    let label = sprintf "WHILE%s" label_surfix in
     [
       `Label label;
       `If (condition, body @ [`Goto label]);
