@@ -71,6 +71,8 @@ let compile_expression
       Dlist.of_list [`Str "1"]
     | Int num ->
       Dlist.of_list [`Str (string_of_int num)]
+    | Float num ->
+      Dlist.of_list [`Str (Float.to_string num)]
     | String str ->
       Dlist.of_list [`Str str]
     | Leftvalue lvalue ->
@@ -79,11 +81,13 @@ let compile_expression
       let left = compile_expression_impl left in
       let right = compile_expression_impl right in
       Dlist.append left right
+    | List _
+    | ArithUnary _
+    | ArithBinary _
+    | StrCompare _
     | Call _ ->
-      failwith "Bug: Call must have been split into assignments."
-    | _ ->
       Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
-      assert false (* TODO *)
+      failwith "Bug: Must have been split into assignments."
   in
   Dlist.to_list (compile_expression_impl expr)
 
