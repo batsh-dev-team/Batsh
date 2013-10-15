@@ -1,26 +1,34 @@
 # Batsh
 
-Batsh is a simple programming language that compiles to Bash, Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx) (and [PowerShell](http://technet.microsoft.com/en-us/scriptcenter/powershell.aspx)).
-Batsh enables you to write code once runs on all platforms without any additional dependency.
+Batsh is a simple programming language that compiles to Bash, Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx) (and [PowerShell](http://technet.microsoft.com/en-us/scriptcenter/powershell.aspx), in development).
+It enables you to write code once runs on all platforms without any additional dependency.
 
-Both Bash and Batch are tricky and messy due to historical reasons.
-You have to spend a lot of time learning either of them, and write platform-dependent code.
+Both Bash and Batch are messy to read and tricky to write due to historical reasons.
+You have to spend a lot of time learning either of them, and write platform-dependent code for each operating system.
 If you happen to be a maintainer of a cross-platform tool which relies on Bash on Linux/Mac and Batch on Windows as "glue code", and found it painful to "synchronize" between them, you would like to try Batsh.
 
 ## How to get it
 
 You can try it [online](http://batsh.byvoid.com/) now!
 
-Batsh is under early-stage development and may change dramatically. No stable version is released. Use it at your risk.
+Batsh is under early-stage development and may change dramatically. No stable version is released. You can check out [prereleases](https://github.com/BYVoid/Batsh/releases) and use it at your risk.
 
-Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and dependencies are managed by [OPAM](http://opam.ocamlpro.com/). Follow the steps below to run it on your computer:
+### Install from OPAM
+
+Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and managed by [OPAM](http://opam.ocamlpro.com/pkg/batsh/0.0.2/).
 
 1. Install OPAM. See [instructions](http://opam.ocamlpro.com/doc/Quick_Install.html).
 2. Switch to the latest version (or at least 4.00.1) of OCaml by running `opam switch`.
-3. Install dependencies: `opam install core menhir ounit dlist`
-4. `./configure`
-5. `make`
-6. Compile your own code: `./main.byte filename`
+3. Install Batsh: `opam install batsh`
+
+### Build from source
+
+1. Check out source code of Batsh.
+2. `./configure`
+3. `make`
+4. Run: `./main.byte`
+
+You can install dependencies by running `opam install core menhir ounit dlist`
 
 If you want to run unit tests, configure with `./configure --enable-tests`, and run `make test`.
 
@@ -57,7 +65,7 @@ output = ls();
 // On Windows
 Output = dir();
 // Platform independent
-output = Batsh.readdir();
+output = readdir();
 ```
 
 ### If condition
@@ -65,9 +73,9 @@ output = Batsh.readdir();
 ```javascript
 a = 3;
 if (a > 2) {
-  echo("Yes");
+  println("Yes");
 } else {
-  echo("No");
+  println("No");
 }
 ```
 
@@ -83,7 +91,7 @@ while (n < 60) {
   i = j;
   j = k;
   n = n + 1;
-  echo(k);
+  println(k);
 }
 ```
 
@@ -105,15 +113,21 @@ func("Var");
 ```javascript
 function fibonacci(num) {
   if (num == 0) {
-    echo(0);
+    return 0;
   } else if (num == 1) {
-    echo(1);
+    return 1;
   } else {
-    echo(fibonacci(num - 2) + fibonacci(num - 1));
+    return (fibonacci(num - 2) + fibonacci(num - 1));
   }
 }
+println(fibonacci(8));
 ```
 
-## Why not Python/Ruby/Node.js
+## Why not Python/Ruby/Node.js/LUA
 
-Because they are not preinstalled on all platforms (including Windows) and functionalities like piping processes are not convenient to use.
+Yes you can use any of them as platform-independent glue code.
+But they are not **preinstalled on all platforms** (including Windows). Also functionalities like piping processes are not convenient to use. You can use Batsh to integrate existing code written in Bash or Batch as well.
+
+## License
+
+[MIT](http://opensource.org/licenses/MIT)
