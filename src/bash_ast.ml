@@ -22,6 +22,7 @@ and expression =
   | StrBinary of (string * expression * expression)
   | Command of (expression * expressions)
   | List of expressions
+  | Raw of string
 
 and expressions = expression list
 

@@ -18,7 +18,7 @@ let rec expand_expression (expr : expression) : expression =
     expand_command name exprs
   | List (exprs) ->
     List (expand_expressions exprs)
-  | String _ | Result _ -> expr
+  | String _ | Result _ | Raw _ -> expr
 
 and expand_expressions (exprs : expressions) : expressions =
   List.map exprs ~f: expand_expression
@@ -26,6 +26,15 @@ and expand_expressions (exprs : expressions) : expressions =
 and expand_command (name : expression) (exprs : expressions) =
   let exprs = expand_expressions exprs in
   match name with
+  | String "bash" -> (
+      match exprs with
+      | [String raw] ->
+        Raw raw
+      | _ ->
+        failwith "bash raw command must have 1 argument of string literal."
+    )
+  | String "batch" ->
+    failwith "batch raw command can not be a part of expression."
   | String "println" ->
     Command (String "echo", (String "-e") :: exprs)
   | String "print" ->
@@ -44,6 +53,8 @@ and expand_command (name : expression) (exprs : expressions) =
       | _ ->
         failwith "len must have exactly 1 argument."
     )
+  | String "readdir" ->
+    Command (String "ls", exprs)
   | _ ->
     Command (name, exprs)
 
@@ -51,6 +62,8 @@ let rec expand_statement (stmt : statement) : statement =
   match stmt with
   | Assignment (lvalue, expr) ->
     Assignment (expand_leftvalue lvalue, expand_expression expr)
+  | Expression (Command (String "batch", _)) ->
+    Empty
   | Expression expr ->
     Expression (expand_expression expr)
   | If (expr, stmt) ->

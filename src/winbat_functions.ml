@@ -3,6 +3,15 @@ open Winbat_ast
 
 let rec expand_command (name : varstring) (exprs : varstrings) =
   match name with
+  | `Str "bash" ->
+    `Empty
+  | `Str "batch" -> (
+      match exprs with
+      | [`Str raw] ->
+        `Raw raw
+      | _ ->
+        failwith "batch raw command must have 1 argument of string literal."
+    )
   | `Str "println" -> (
       match exprs with
       | [] ->
@@ -19,6 +28,8 @@ let rec expand_command (name : varstring) (exprs : varstrings) =
       | [] ->
         failwith "call must have at least 1 argument."
     )
+  | `Str "readdir" ->
+    `Call (`Str "dir /w", exprs)
   | _ ->
     `Call (name, exprs)
 
@@ -32,14 +43,6 @@ let rec expand_statement (stmt : statement) : statement =
     `IfElse (condition,
              expand_statements then_stmts,
              expand_statements else_stmts)
-  (*      | IfElse (expr, then_stmt, else_stmt) ->
-          IfElse (expand_expression expr,
-              expand_statement then_stmt,
-              expand_statement else_stmt)
-          | While (expr, stmt) ->
-          While (expand_expression expr, expand_statement stmt)
-          | Block stmts ->
-          Block (expand_statements stmts) *)
   | `Assignment _
   | `ArithAssign _
   | `Comment _ | `Raw _ | `Label _ | `Goto _ | `Empty -> stmt

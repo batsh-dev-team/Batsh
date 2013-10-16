@@ -66,6 +66,8 @@ let rec print_expression buf (expr: expression) =
           Buffer.add_string buf " "
       );
     Buffer.add_string buf ")"
+  | Raw str ->
+    Buffer.add_string buf str
 
 and print_str_binary (buf: Buffer.t) (operator, left, right) =
   match operator with
