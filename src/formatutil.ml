@@ -28,13 +28,14 @@ let print_separate_list
         Buffer.add_string buf separator
     )
 
-let escaper = Staged.unstage (String.Escaping.escape_gen_exn
-                                ~escapeworthy_map: [
-                                  ('\n', 'n');
-                                  ('\r', 'r');
-                                  ('\"', '"')]
-                                ~escape_char: '\\'
-                             )
+let escaper = Staged.unstage (
+    String.Escaping.escape_gen_exn
+      ~escapeworthy_map: [
+        ('\n', 'n');
+        ('\r', 'r');
+        ('\"', '"')]
+      ~escape_char: '\\'
+  )
 
-let escape (str: string) :string =
+let escape (str : string) : string =
   escaper str

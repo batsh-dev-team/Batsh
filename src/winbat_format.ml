@@ -1,6 +1,36 @@
 open Core.Std
 open Winbat_ast
 
+let escape (str : string) : string =
+  let buffer = Buffer.create (String.length str) in
+  String.iter str ~f:(fun ch ->
+      let escaped = match ch with
+        | '%' -> "%%"
+        | '^' -> "^^"
+        | '&' -> "^&"
+        | '<' -> "^<"
+        | '>' -> "^>"
+        | '|' -> "^|"
+        | '\'' -> "^'"
+        | '`' -> "^`"
+        | ',' -> "^,"
+        | ';' -> "^;"
+        | '=' -> "^="
+        | '(' -> "^("
+        | ')' -> "^)"
+        | '!' -> "^^!"
+        | '\\' -> "\\\\"
+        | '[' -> "\\["
+        | ']' -> "\\]"
+        | '"' -> "\\\""
+        | '\n' -> "^\n"
+        | _ -> String.of_char ch
+      in
+      Buffer.add_string buffer escaped
+    );
+  Buffer.contents buffer
+
+
 let rec print_leftvalue
     (buf : Buffer.t)
     (lvalue : leftvalue)
@@ -54,7 +84,7 @@ let print_varstring buf (var : varstring) =
   | `Var lvalue ->
     print_leftvalue buf lvalue ~bare: false
   | `Str str ->
-    bprintf buf "%s" str
+    bprintf buf "%s" (escape str)
 
 let print_varstrings buf (vars : varstrings) ~(separater : string) =
   let num_items = List.length vars in
