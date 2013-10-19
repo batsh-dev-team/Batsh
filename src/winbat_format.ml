@@ -12,24 +12,20 @@ let escape (str : string) : string =
         | '>' -> "^>"
         | '|' -> "^|"
         | '\'' -> "^'"
+        | '"' -> "^\""
         | '`' -> "^`"
         | ',' -> "^,"
         | ';' -> "^;"
         | '=' -> "^="
         | '(' -> "^("
         | ')' -> "^)"
-        | '!' -> "^^!"
-        | '\\' -> "\\\\"
-        | '[' -> "\\["
-        | ']' -> "\\]"
-        | '"' -> "\\\""
+        | '!' -> "^!"
         | '\n' -> "^\n"
         | _ -> String.of_char ch
       in
       Buffer.add_string buffer escaped
     );
   Buffer.contents buffer
-
 
 let rec print_leftvalue
     (buf : Buffer.t)
