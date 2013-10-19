@@ -9,7 +9,7 @@ println();
 n = 0;
 i = 0;
 j = 1;
-while (n < 60) {
+while (n < 40) {
   k = i + j;
   i = j;
   j = k;

@@ -80,19 +80,21 @@ let print_varstring buf (var : varstring) =
     print_leftvalue buf lvalue ~bare: false
   | `Str str ->
     bprintf buf "%s" (escape str)
-  | `Cont -> ()
 
-let print_varstrings buf (vars : varstrings) ~(separater : string) =
+let print_varstrings buf (vars : varstrings) =
+  List.iter vars ~f: (print_varstring buf)
+
+let print_parameters buf (params : parameters) =
   let comsume = ref false in
-  List.iter vars ~f: (fun var ->
-      match var with
-      | `Cont -> comsume := true
+  List.iter params ~f: (fun vars ->
+      match vars with
+      | [] -> comsume := true
       | _ ->
         if !comsume then
           comsume := false
         else
-          Buffer.add_string buf separater;
-        print_varstring buf var
+          Buffer.add_char buf ' ';
+        print_varstrings buf vars
     )
 
 let print_comparison buf (condition : comparison) =
@@ -108,9 +110,9 @@ let print_comparison buf (condition : comparison) =
         | _ -> failwith ("Unknown operator: " ^ operator)
       in
       bprintf buf "%a %s %a"
-        (print_varstrings ~separater: "") left
+        print_varstrings left
         sign
-        (print_varstrings ~separater: "") right
+        print_varstrings right
     )
 
 let rec print_statement buf (stmt: statement) ~(indent: int) =
@@ -127,15 +129,15 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
   | `Assignment (lvalue, vars) ->
     bprintf buf "set %a=%a"
       (print_leftvalue ~bare: true) lvalue
-      (print_varstrings ~separater: "") vars
+      print_varstrings vars
   | `ArithAssign (lvalue, arith) ->
     bprintf buf "set /a %a=%a"
       (print_leftvalue ~bare: true) lvalue
       print_arith arith
   | `Call (name, params) ->
     bprintf buf "%a%a"
-      print_varstring name
-      (print_varstrings ~separater: " ") params
+      print_varstrings name
+      print_parameters params
   | `If (condition, stmts) ->
     bprintf buf "if /i %a (\n%a\n%a)"
       print_comparison condition

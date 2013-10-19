@@ -1,37 +1,37 @@
 open Core.Std
 open Winbat_ast
 
-let rec expand_command (name : varstring) (exprs : varstrings) =
+let rec expand_command (name : varstrings) (args : parameters) =
   match name with
-  | `Str "bash" ->
+  | [`Str "bash"] ->
     `Empty
-  | `Str "batch" -> (
-      match exprs with
-      | [`Str raw] ->
+  | [`Str "batch"] -> (
+      match args with
+      | [[`Str raw]] ->
         `Raw raw
       | _ ->
         failwith "batch raw command must have 1 argument of string literal."
     )
-  | `Str "println" -> (
-      match exprs with
+  | [`Str "println"] -> (
+      match args with
       | [] ->
-        `Call (`Str "echo:", [])
+        `Call ([`Str "echo:"], [])
       | _ ->
-        `Call (`Str "echo", exprs)
+        `Call ([`Str "echo"], args)
     )
-  | `Str "print" ->
-    `Call (`Str "echo | set /p =", `Cont :: exprs)
-  | `Str "call" -> (
-      match exprs with
-      | cmd :: args ->
-        expand_command cmd args
+  | [`Str "print"] ->
+    `Call ([`Str "echo | set /p ="], [] :: args)
+  | [`Str "call"] -> (
+      match args with
+      | cmd :: real_args ->
+        expand_command cmd real_args
       | [] ->
         failwith "call must have at least 1 argument."
     )
-  | `Str "readdir" ->
-    `Call (`Str "dir /w", exprs)
+  | [`Str "readdir"] ->
+    `Call ([`Str "dir /w"], args)
   | _ ->
-    `Call (name, exprs)
+    `Call (name, args)
 
 let rec expand_statement (stmt : statement) : statement =
   match stmt with

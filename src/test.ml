@@ -69,7 +69,7 @@ let test_cases = "Batsh Unit Tests" >::: [
     (* "[Winbat]Array"       >:: test "array" test_winbat; *)
     (* "[Winbat]Expressions" >:: test "expr" test_winbat; *)
     (* "[Winbat]If"          >:: test "if" test_winbat; *)
-    (* "[Winbat]While"       >:: test "while" test_winbat; *)
+    "[Winbat]While"       >:: test "while" test_winbat;
     "[Winbat]Function"    >:: test "function" test_winbat;
     (* "[Winbat]Recursion"   >:: test "recursion" test_winbat; *)
   ]

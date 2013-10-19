@@ -24,7 +24,6 @@ and arithmetic = [
 type varstring = [
   | `Var of leftvalue
   | `Str of string
-  | `Cont (* comsume next separator *)
 ]
 
 and varstrings = varstring list
@@ -33,6 +32,10 @@ type comparison = [
   | `StrCompare of (string * varstrings * varstrings)
 ]
 
+type parameter = varstrings
+
+type parameters = parameter list
+
 type statement = [
   | `Comment of string
   | `Raw of string
@@ -40,7 +43,7 @@ type statement = [
   | `Goto of label
   | `Assignment of (leftvalue * varstrings)
   | `ArithAssign of (leftvalue * arithmetic)
-  | `Call of (varstring * varstrings)
+  | `Call of (varstrings * parameters)
   | `If of (comparison * statements)
   | `IfElse of (comparison * statements * statements)
   | `Empty

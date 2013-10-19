@@ -91,12 +91,12 @@ let compile_expression
   in
   Dlist.to_list (compile_expression_impl expr)
 
-let compile_expressions
+let compile_expressions_to_arguments
     (exprs : Batsh_ast.expressions)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
-  : varstrings =
-  List.concat (List.map exprs ~f: (compile_expression ~symtable ~scope))
+  : parameters =
+  List.map exprs ~f: (compile_expression ~symtable ~scope)
 
 let compile_expression_to_comparison
     (expr : Batsh_ast.expression)
@@ -124,7 +124,7 @@ let compile_call
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
   : (statements * leftvalue * bool) =
-  let exprs = compile_expressions exprs ~symtable ~scope in
+  let args = compile_expressions_to_arguments exprs ~symtable ~scope in
   if Symbol_table.is_function symtable ident then
     (* function call *)
     let frame_pointer_assign, frame_pointer =
@@ -143,18 +143,17 @@ let compile_call
         [], `Str "0"
     in
     let retval = Symbol_table.Scope.add_temporary_variable scope in
-    (frame_pointer_assign @
-       [`Call 
-          (`Str ("call :" ^ ident),
-           [`Str retval; (* return value *)
-            frame_pointer (* frame pointer *)
-           ] @ exprs
-          )
-       ]), `Identifier retval, true
+    let prefixed_args = [
+      [`Str retval]; (* return value *)
+      [frame_pointer]; (* frame pointer *)
+    ] @ args in
+    let call_stmt = `Call ([`Str ("call :" ^ ident)], prefixed_args) in
+    let stmts = frame_pointer_assign @ [call_stmt] in
+    stmts, `Identifier retval, true
   else
     (* external command *)
     (* TODO return value*)
-    [`Call (`Str ident, exprs)], `Identifier "_", false
+    [`Call ([`Str ident], args)], `Identifier "_", false
 
 let rec compile_expression_statement
     (expr : Batsh_ast.expression)
@@ -165,7 +164,7 @@ let rec compile_expression_statement
   | Call call ->
     let stmts, retval, func_call = compile_call call ~symtable ~scope in
     if func_call then
-      stmts @ [`Call (`Str "print", [`Var retval])]
+      stmts @ [`Call ([`Str "print"], [[`Var retval]])]
     else
       stmts
   | Leftvalue _ ->
@@ -301,6 +300,13 @@ let compile_function_varstrings
   : varstrings =
   List.map vars ~f: (compile_function_varstring ~symtable ~scope)
 
+let compile_function_parameters
+    (params : parameters)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : parameters =
+  List.map params ~f: (compile_function_varstrings ~symtable ~scope)
+
 let rec compile_function_arithmetic
     (arith : arithmetic)
     ~(symtable : Symbol_table.t)
@@ -344,8 +350,8 @@ let rec compile_function_statement
     `ArithAssign (compile_function_leftvalue lvalue ~symtable ~scope,
                   compile_function_arithmetic arith ~symtable ~scope)
   | `Call (name, params) ->
-    `Call (compile_function_varstring name ~symtable ~scope,
-           compile_function_varstrings params ~symtable ~scope)
+    `Call (compile_function_varstrings name ~symtable ~scope,
+           compile_function_parameters params ~symtable ~scope)
   | `If (cond, stmts) ->
     `If (compile_function_comparison cond ~symtable ~scope,
          compile_function_statements stmts ~symtable ~scope)
