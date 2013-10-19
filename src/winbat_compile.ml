@@ -123,7 +123,7 @@ let compile_call
     (ident, exprs)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
-  : (statements * leftvalue) =
+  : (statements * leftvalue * bool) =
   let exprs = compile_expressions exprs ~symtable ~scope in
   if Symbol_table.is_function symtable ident then
     (* function call *)
@@ -139,6 +139,7 @@ let compile_call
           )
         ], `Var (frame_pointer)
       else
+        (* call from toplevel *)
         [], `Str "0"
     in
     let retval = Symbol_table.Scope.add_temporary_variable scope in
@@ -149,11 +150,11 @@ let compile_call
             frame_pointer (* frame pointer *)
            ] @ exprs
           )
-       ]), `Identifier retval
+       ]), `Identifier retval, true
   else
     (* external command *)
     (* TODO return value*)
-    [`Call (`Str ident, exprs)], `Identifier "_"
+    [`Call (`Str ident, exprs)], `Identifier "_", false
 
 let rec compile_expression_statement
     (expr : Batsh_ast.expression)
@@ -162,8 +163,11 @@ let rec compile_expression_statement
   : statements =
   match expr with
   | Call call ->
-    let stmts, _ = compile_call call ~symtable ~scope in
-    stmts
+    let stmts, retval, func_call = compile_call call ~symtable ~scope in
+    if func_call then
+      stmts @ [`Call (`Str "print", [`Var retval])]
+    else
+      stmts
   | Leftvalue _ ->
     [] (* No side effect *)
   | _ ->
@@ -237,7 +241,7 @@ and compile_assignment
         compile_assignment (ListAccess (lvalue, (Int i))) expr ~symtable ~scope
       ))
   | Call call ->
-    let stmts, retval = compile_call call ~symtable ~scope in
+    let stmts, retval, _func_call = compile_call call ~symtable ~scope in
     let lvalue = compile_leftvalue lvalue ~symtable ~scope in
     stmts @ [`Assignment (lvalue, [`Var retval])]
   | StrCompare _ ->

@@ -2,7 +2,6 @@ Hello World
 Local Var
 Global V2
 Global V1
-
 V3 Modified.
 45
 Returned: 42

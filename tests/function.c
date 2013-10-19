@@ -17,7 +17,6 @@ function func2(p) {
 }
 func2("Var");
 println(v1);
-println(p);
 println(v3);
 
 // Return value
