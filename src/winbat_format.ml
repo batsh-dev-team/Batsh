@@ -10,7 +10,6 @@ let escape (str : string) : string =
         | '&' -> "^&"
         | '<' -> "^<"
         | '>' -> "^>"
-        | '|' -> "^|"
         | '\'' -> "^'"
         | '"' -> "^\""
         | '`' -> "^`"
@@ -81,13 +80,19 @@ let print_varstring buf (var : varstring) =
     print_leftvalue buf lvalue ~bare: false
   | `Str str ->
     bprintf buf "%s" (escape str)
+  | `Cont -> ()
 
 let print_varstrings buf (vars : varstrings) ~(separater : string) =
-  let num_items = List.length vars in
-  List.iteri vars ~f: (fun i var ->
-      print_varstring buf var;
-      if i < num_items - 1 then
-        Buffer.add_string buf separater
+  let comsume = ref false in
+  List.iter vars ~f: (fun var ->
+      match var with
+      | `Cont -> comsume := true
+      | _ ->
+        if !comsume then
+          comsume := false
+        else
+          Buffer.add_string buf separater;
+        print_varstring buf var
     )
 
 let print_comparison buf (condition : comparison) =
@@ -128,7 +133,7 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
       (print_leftvalue ~bare: true) lvalue
       print_arith arith
   | `Call (name, params) ->
-    bprintf buf "%a %a"
+    bprintf buf "%a%a"
       print_varstring name
       (print_varstrings ~separater: " ") params
   | `If (condition, stmts) ->

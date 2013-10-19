@@ -20,7 +20,7 @@ let rec expand_command (name : varstring) (exprs : varstrings) =
         `Call (`Str "echo", exprs)
     )
   | `Str "print" ->
-    `Call (`Str "echo | set /p =", exprs)
+    `Call (`Str "echo | set /p =", `Cont :: exprs)
   | `Str "call" -> (
       match exprs with
       | cmd :: args ->
