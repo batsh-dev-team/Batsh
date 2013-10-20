@@ -24,6 +24,7 @@ and arithmetic = [
 type varstring = [
   | `Var of leftvalue
   | `Str of string
+  | `Rawstr of string
 ]
 
 and varstrings = varstring list

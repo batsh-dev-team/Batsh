@@ -79,7 +79,9 @@ let print_varstring buf (var : varstring) =
   | `Var lvalue ->
     print_leftvalue buf lvalue ~bare: false
   | `Str str ->
-    bprintf buf "%s" (escape str)
+    Buffer.add_string buf (escape str)
+  | `Rawstr str ->
+    Buffer.add_string buf str
 
 let print_varstrings buf (vars : varstrings) =
   List.iter vars ~f: (print_varstring buf)

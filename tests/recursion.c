@@ -8,20 +8,20 @@ loop(10);
 
 function fact(num) {
   if (num === 0) {
-    print(1);
+    return 1;
   } else {
-    print(fact(num - 1) * num);
+    return fact(num - 1) * num;
   }
 }
 println(fact(5));
 
 function fibonacci(num) {
   if (num === 0) {
-    print(0);
+    return 0;
   } else if (num === 1) {
-    print(1);
+    return 1;
   } else {
-    print(fibonacci(num - 2) + fibonacci(num - 1));
+    return fibonacci(num - 2) + fibonacci(num - 1);
   }
 }
 

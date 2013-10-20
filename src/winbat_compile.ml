@@ -143,8 +143,16 @@ let compile_call
         [], `Str "0"
     in
     let retval = Symbol_table.Scope.add_temporary_variable scope in
+    let surfixed_retval =
+      if Symbol_table.Scope.is_function scope then
+        (* call from function scope *)
+        retval ^ "_%~2"
+      else
+        (* call from toplevel *)
+        retval
+    in
     let prefixed_args = [
-      [`Str retval]; (* return value *)
+      [`Rawstr surfixed_retval]; (* return value *)
       [frame_pointer]; (* frame pointer *)
     ] @ args in
     let call_stmt = `Call ([`Str ("call :" ^ ident)], prefixed_args) in
@@ -290,7 +298,7 @@ let compile_function_varstring
   match var with
   | `Var lvalue ->
     `Var (compile_function_leftvalue lvalue ~symtable ~scope)
-  | `Str _ ->
+  | `Str _ | `Rawstr _ ->
     var
 
 let compile_function_varstrings
