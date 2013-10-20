@@ -43,14 +43,22 @@ let rec split_expression
   | Bool _ | Int _ | Float _ | Leftvalue _ ->
     Dlist.empty (), expr
   | ArithUnary (operator, expr) ->
+    let split = match operator with
+      | "!" -> true
+      | _ -> false
+    in
     let assignments, expr = split_expression expr ~symtable ~scope
-        ~split_arith:false
+        ~split_arith:split
         ~split_string:true
     in
     split_when ~cond:split_arith assignments (ArithUnary (operator, expr))
   | ArithBinary (operator, left, right) ->
+    let split = match operator with
+      | "===" | "!==" | ">" | "<" | ">=" | "<=" -> true
+      | _ -> false
+    in
     let assignments, (left, right) = split_binary (left, right)
-        ~split_arith:false
+        ~split_arith:split
         ~split_string:true
     in
     split_when ~cond:split_arith

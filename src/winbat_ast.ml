@@ -30,6 +30,7 @@ type varstring = [
 and varstrings = varstring list
 
 type comparison = [
+  | `UniCompare of (string * varstrings)
   | `StrCompare of (string * varstrings * varstrings)
 ]
 

@@ -104,6 +104,9 @@ let compile_expression_to_comparison
     ~(scope : Symbol_table.Scope.t)
   : comparison =
   match expr with
+  | ArithUnary (operator, sub_expr) ->
+    let sub_expr = compile_expression sub_expr ~symtable ~scope in
+    `UniCompare (operator, sub_expr)
   | StrCompare (operator, left, right)
   | ArithBinary (operator, left, right) ->
     let left = compile_expression left ~symtable ~scope in
@@ -113,9 +116,9 @@ let compile_expression_to_comparison
     let lvalue = `Var (compile_leftvalue lvalue ~symtable ~scope) in
     `StrCompare ("==", [lvalue], [`Str "1"])
   | Bool true | Int 1 ->
-    `StrCompare ("==", [`Str "1"], [`Str "1"])
+    `UniCompare ("", [`Str "1"])
   | Bool false | Int _ ->
-    `StrCompare ("==", [`Str "0"], [`Str "1"])
+    `UniCompare ("!", [`Str "1"])
   | _ ->
     failwith "Expression can not compile to comparison"
 
@@ -181,6 +184,38 @@ let rec compile_expression_statement
     Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr); 
     assert false (* TODO *)
 
+let compile_arith_assignment
+    (lvalue : Batsh_ast.leftvalue)
+    (expr : Batsh_ast.expression)
+    ~(symtable : Symbol_table.t)
+    ~(scope : Symbol_table.Scope.t)
+  : statements =
+  match expr with
+  | ArithBinary ("===", _, _)
+  | ArithBinary ("!==", _, _)
+  | ArithBinary (">", _, _)
+  | ArithBinary ("<", _, _)
+  | ArithBinary (">=", _, _)
+  | ArithBinary ("<=", _, _)
+  | ArithUnary ("!", _) ->
+    let cond = compile_expression_to_comparison expr ~symtable ~scope in
+    let lvalue = compile_leftvalue lvalue ~symtable ~scope in
+    let true_stmt = [`ArithAssign (lvalue, `Int 1)] in
+    let false_stmt = [`ArithAssign (lvalue, `Int 0)] in
+    [`IfElse (cond, true_stmt, false_stmt)]
+  | Bool _
+  | Int _
+  | Float _
+  | ArithUnary _
+  | ArithBinary _ ->
+    let lvalue = compile_leftvalue lvalue ~symtable ~scope in
+    let arith = compile_expression_to_arith expr ~symtable ~scope in
+    [`ArithAssign (lvalue, arith)]
+  | _ ->
+    Sexp.output_hum stderr (Batsh_ast.sexp_of_leftvalue lvalue);
+    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
+    failwith "Can not reach here."
+
 let rec compile_statement
     (stmt : Batsh_ast.statement)
     ~(symtable : Symbol_table.t)
@@ -241,8 +276,7 @@ and compile_assignment
   | Float _
   | ArithUnary _
   | ArithBinary _ ->
-    let lvalue = compile_leftvalue lvalue ~symtable ~scope in
-    [`ArithAssign (lvalue, compile_expression_to_arith expr ~symtable ~scope)]
+    compile_arith_assignment lvalue expr ~symtable ~scope
   | List exprs ->
     List.concat (List.mapi exprs ~f: (fun i expr ->
         compile_assignment (ListAccess (lvalue, (Int i))) expr ~symtable ~scope
@@ -338,6 +372,9 @@ let compile_function_comparison
     ~(scope : Symbol_table.Scope.t)
   : comparison =
   match cond with
+  | `UniCompare (operator, expr) ->
+    `UniCompare (operator,
+                 compile_function_varstrings expr ~symtable ~scope)
   | `StrCompare (operator, left, right) ->
     `StrCompare (operator,
                  compile_function_varstrings left ~symtable ~scope,

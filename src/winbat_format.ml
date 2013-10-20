@@ -101,6 +101,16 @@ let print_parameters buf (params : parameters) =
 
 let print_comparison buf (condition : comparison) =
   match condition with
+  | `UniCompare (operator, expr) -> (
+      let sign = match operator with
+        | "" -> "EQU"
+        | "!" -> "NEQ"
+        | _ -> failwith ("Unknown operator: " ^ operator)
+      in
+      bprintf buf "%a %s 1"
+        print_varstrings expr
+        sign
+    )
   | `StrCompare (operator, left, right) -> (
       let sign = match operator with
         | "==" | "===" -> "EQU"

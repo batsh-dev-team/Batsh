@@ -12,3 +12,5 @@ println(4 < 5);
 println(6 >= 2);
 println(19 <= 30);
 println(!true);
+println(!false);
+println(!(2 - 1));

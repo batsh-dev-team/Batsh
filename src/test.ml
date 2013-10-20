@@ -64,7 +64,7 @@ let test_cases = "Batsh Unit Tests" >::: [
     "[Bash]Function"      >:: test "function" test_bash;
     "[Bash]Recursion"     >:: test "recursion" test_bash;
     "[Winbat]Block"       >:: test "block" test_winbat;
-    (* "[Winbat]Arith"       >:: test "arith" test_winbat; *)
+    "[Winbat]Arith"       >:: test "arith" test_winbat;
     "[Winbat]Assignment"  >:: test "assignment" test_winbat;
     (* "[Winbat]Array"       >:: test "array" test_winbat; *)
     (* "[Winbat]Expressions" >:: test "expr" test_winbat; *)
