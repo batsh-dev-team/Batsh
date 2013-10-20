@@ -58,20 +58,22 @@ let test_cases = "Batsh Unit Tests" >::: [
     "[Bash]Arith"         >:: test "arith" test_bash;
     "[Bash]Assignment"    >:: test "assignment" test_bash;
     "[Bash]Array"         >:: test "array" test_bash;
-    "[Bash]Expressions"   >:: test "expr" test_bash;
+    "[Bash]String"        >:: test "string" test_bash;
     "[Bash]If"            >:: test "if" test_bash;
     "[Bash]While"         >:: test "while" test_bash;
     "[Bash]Function"      >:: test "function" test_bash;
     "[Bash]Recursion"     >:: test "recursion" test_bash;
+    "[Bash]Command"       >:: test "command" test_bash;
     "[Winbat]Block"       >:: test "block" test_winbat;
     "[Winbat]Arith"       >:: test "arith" test_winbat;
     "[Winbat]Assignment"  >:: test "assignment" test_winbat;
     (* "[Winbat]Array"       >:: test "array" test_winbat; *)
-    (* "[Winbat]Expressions" >:: test "expr" test_winbat; *)
+    "[Winbat]String"      >:: test "string" test_winbat;
     "[Winbat]If"          >:: test "if" test_winbat;
     "[Winbat]While"       >:: test "while" test_winbat;
     "[Winbat]Function"    >:: test "function" test_winbat;
     "[Winbat]Recursion"   >:: test "recursion" test_winbat;
+    (* "[Winbat]Command"     >:: test "command" test_winbat; *)
   ]
 
 let _ =

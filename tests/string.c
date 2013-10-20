@@ -1,0 +1,13 @@
+println("BYVoid");
+println("Slash/");
+println("Backslash\\");
+println("Quote\"'");
+println("Tab\tTab");
+//println("Newline\nLine2");
+//println("!");
+println("http://" ++ "www." ++ ("byvoid" ++ ".com"));
+println(6 / 2 ++ "BYVoid" ++ 3 + 5);
+println(3 + "3");
+println(3 + "3" ++ "2");
+println(3 + ("3" ++ "2"));
+println("BYVoid" == "BYVoid");
