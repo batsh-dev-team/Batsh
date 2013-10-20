@@ -18,7 +18,7 @@ let escape (str : string) : string =
         | '=' -> "^="
         | '(' -> "^("
         | ')' -> "^)"
-        | '!' -> "^!"
+        | '!' -> "^^!"
         | '\n' -> "^\n"
         | _ -> String.of_char ch
       in

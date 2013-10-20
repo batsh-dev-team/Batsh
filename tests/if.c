@@ -23,7 +23,7 @@ if (1 === 12) {
 if ("a" == "b") {
   println("No");
 } else {
-  println("a != b");
+  println("a is not b");
 }
 
 num = 43;
