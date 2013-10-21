@@ -1,10 +1,12 @@
+open Core.Std
+
 type identifier = string
 
-type identifiers = identifier list
+and identifiers = identifier list
 
-type label = string
+and label = string
 
-type varint = [
+and varint = [
   | `Var of leftvalue
   | `Int of int
 ]
@@ -21,7 +23,7 @@ and arithmetic = [
   | `ArithBinary of (string * arithmetic * arithmetic)
 ]
 
-type varstring = [
+and varstring = [
   | `Var of leftvalue
   | `Str of string
   | `Rawstr of string
@@ -29,16 +31,16 @@ type varstring = [
 
 and varstrings = varstring list
 
-type comparison = [
+and comparison = [
   | `UniCompare of (string * varstrings)
   | `StrCompare of (string * varstrings * varstrings)
 ]
 
-type parameter = varstrings
+and parameter = varstrings
 
-type parameters = parameter list
+and parameters = parameter list
 
-type statement = [
+and statement = [
   | `Comment of string
   | `Raw of string
   | `Label of label
@@ -53,4 +55,5 @@ type statement = [
 
 and statements = statement list
 
-type t = statements
+and t = statements
+with sexp_of

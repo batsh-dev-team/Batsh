@@ -35,11 +35,16 @@ let winbat =
     Command.Spec.(
       empty
       +> anon ("filename" %: regular_file)
-    ) (fun (filename: string) () ->
+      +> flag "-ast" no_arg ~doc:" Print abstract syntax tree"
+    ) (fun (filename : string) (print_ast : bool) () ->
         let batsh = parse_with_error filename in
-        let batch = Winbat.compile batsh in
-        let code = Winbat.print batch in
-        printf "%s\n" code
+        let winbat = Winbat.compile batsh in
+        if not print_ast then
+          let code = Winbat.print winbat in
+          printf "%s\n" code
+        else
+          let ast = Winbat.ast winbat in
+          printf "%a\n" Sexp.output_hum (Winbat_ast.sexp_of_t ast)
       )
 
 let format =

@@ -57,3 +57,4 @@
 true: use_menhir
 <src/batsh_ast.ml>: syntax_camlp4o
 <src/symbol_table.ml>: syntax_camlp4o
+<src/winbat_ast.ml>: syntax_camlp4o
