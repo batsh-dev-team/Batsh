@@ -59,49 +59,16 @@ let format =
         printf "%s\n" code
       )
 
-let ast =
+let symbols =
   Command.basic
-    ~summary: "Print syntax tree of source code"
+    ~summary: "Print symbol table"
     Command.Spec.(
       empty
       +> anon ("filename" %: regular_file)
-      +> flag "-symbols" no_arg ~doc:" show symbol table instead"
-      +> flag "-split-string" no_arg
-          ~doc:" split string expressions into assignments"
-      +> flag "-split-list" no_arg
-          ~doc:" split list literals into assignments"
-      +> flag "-split-call" no_arg
-          ~doc:" split call expressions into assignments"
-      +> flag "-split-string-compare" no_arg
-          ~doc:" split string comparison expressions into assignments"
-      +> flag "-split-arithmetic" no_arg
-          ~doc:" split arithmetic expressions into assignments"
-    ) (fun (filename : string)
-        (symbols : bool)
-        (split_string : bool)
-        (split_list_literal : bool)
-        (split_call : bool)
-        (split_string_compare : bool)
-        (split_arithmetic : bool)
-        () ->
+    ) (fun (filename : string) () ->
         let batsh = parse_with_error filename in
-        if not symbols then
-          let ast =
-            if split_string || split_list_literal || split_call then
-              Parser.split_ast batsh
-                ~split_string
-                ~split_list_literal
-                ~split_call
-                ~split_string_compare
-                ~split_arithmetic
-            else
-              Parser.ast batsh
-          in
-          let ast_sexp = Batsh_ast.sexp_of_t ast in
-          printf "%a\n" Sexp.output_hum ast_sexp
-        else
-          let symtable_sexp = Symbol_table.sexp_of_t (Parser.symtable batsh) in
-          printf "%a\n" Sexp.output_hum symtable_sexp
+        let symtable_sexp = Symbol_table.sexp_of_t (Parser.symtable batsh) in
+        printf "%a\n" Sexp.output_hum symtable_sexp
       )
 
 let () =
@@ -111,7 +78,7 @@ let () =
     [
       ("bash", bash);
       ("bat", winbat);
-      ("ast", ast);
+      ("symbols", symbols);
       ("format", format)
     ]
   |> Command.run ~version: "0.0" ~build_info: ""

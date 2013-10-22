@@ -213,13 +213,7 @@ let compile_toplevel
   | BAST.Function func ->
     compile_function func ~symtable
 
-let compile (batsh: Parser.t) :t =
-  let program = Parser.split_ast batsh
-      ~split_string: true
-      ~split_list_literal: true
-      ~split_call: true
-      ~split_string_compare: true
-      ~split_arithmetic: false
-  in
+let compile (batsh : Parser.t) : t =
   let symtable = Parser.symtable batsh in
+  let program = Bash_transform.split (Parser.ast batsh) ~symtable in
   List.map program ~f: (compile_toplevel ~symtable)

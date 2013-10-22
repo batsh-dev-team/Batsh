@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: da312b7d3b25e6e27aaaa73ea25b9f7f)
+# DO NOT EDIT (digest: c8a573547074b448f0ee507c9cd952d1)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -22,13 +22,13 @@
 "src/parser_yacc.cmx": for-pack(Batsh)
 "src/batsh_ast.cmx": for-pack(Batsh)
 "src/batsh_format.cmx": for-pack(Batsh)
-"src/batsh_transform.cmx": for-pack(Batsh)
 "src/symbol_table.cmx": for-pack(Batsh)
 "src/formatutil.cmx": for-pack(Batsh)
 "src/bash_ast.cmx": for-pack(Batsh)
 "src/bash_compile.cmx": for-pack(Batsh)
 "src/bash_format.cmx": for-pack(Batsh)
 "src/bash_functions.cmx": for-pack(Batsh)
+"src/bash_transform.cmx": for-pack(Batsh)
 "src/winbat_ast.cmx": for-pack(Batsh)
 "src/winbat_compile.cmx": for-pack(Batsh)
 "src/winbat_format.cmx": for-pack(Batsh)

@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 6dd1199311e177193e609262d8f0a162)
+# DO NOT EDIT (digest: f215b97ede0824e57121fb222f1b49ec)
 Parser
 Bash
 Winbat
@@ -7,13 +7,13 @@ Lexer
 Parser_yacc
 Batsh_ast
 Batsh_format
-Batsh_transform
 Symbol_table
 Formatutil
 Bash_ast
 Bash_compile
 Bash_format
 Bash_functions
+Bash_transform
 Winbat_ast
 Winbat_compile
 Winbat_format
