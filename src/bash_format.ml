@@ -10,9 +10,13 @@ let rec print_lvalue buf (lvalue: leftvalue) ~(bare: bool) =
     Buffer.add_string buf ident
   | ListAccess (lvalue, arith) ->
     if bare then
-      bprintf buf "%a[%a]" print_lvalue_bare lvalue print_arith arith
+      bprintf buf "%a[%a]"
+        print_lvalue_bare lvalue
+        (print_arith ~paren:false) arith
     else
-      bprintf buf "${%a[%a]}" print_lvalue_bare lvalue print_arith arith
+      bprintf buf "${%a[%a]}"
+        print_lvalue_bare lvalue
+        (print_arith ~paren:false) arith
   | EntireList lvalue ->
     if bare then
       bprintf buf "%a[@]" print_lvalue_bare lvalue
@@ -24,18 +28,28 @@ let rec print_lvalue buf (lvalue: leftvalue) ~(bare: bool) =
     else
       bprintf buf "${#%a}" print_lvalue_bare lvalue
 
-and print_arith buf (expr: arithmetic) =
+and print_arith
+    ?(paren = true)
+    (buf : Buffer.t)
+    (expr: arithmetic)
+  =
   match expr with
   | Leftvalue lvalue -> print_lvalue buf lvalue ~bare: false
   | Int number -> Buffer.add_string buf (string_of_int number)
   | Float number -> Buffer.add_string buf (Float.to_string number)
   | ArithUnary (operator, arith) ->
-    bprintf buf "%s(%a)" operator print_arith arith
+    if paren then
+      bprintf buf "%s(%a)" operator (print_arith ~paren:true) arith
+    else
+      bprintf buf "%s%a" operator (print_arith ~paren:true) arith
   | ArithBinary binary ->
-    print_arith_binary buf binary
+    if paren then
+      bprintf buf "(%a)" print_arith_binary binary
+    else
+      print_arith_binary buf binary
 
 and print_arith_binary
-    (buf: Buffer.t)
+    (buf : Buffer.t)
     (operator, left, right)
   =
   let operator = match operator with
@@ -43,7 +57,10 @@ and print_arith_binary
     | "!==" -> "!="
     | _ -> operator
   in
-  bprintf buf "(%a %s %a)" print_arith left operator print_arith right
+  bprintf buf "%a %s %a"
+    (print_arith ~paren:true) left
+    operator
+    (print_arith ~paren:true) right
 
 let rec print_expression buf (expr: expression) =
   match expr with
@@ -52,7 +69,7 @@ let rec print_expression buf (expr: expression) =
   | String str ->
     bprintf buf "\"%s\"" (Formatutil.escape str)
   | Result arith ->
-    bprintf buf "$((%a))" print_arith arith
+    bprintf buf "$((%a))" (print_arith ~paren:false) arith
   | StrBinary binary ->
     print_str_binary buf binary
   | Command cmd ->

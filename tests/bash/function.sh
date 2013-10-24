@@ -28,7 +28,7 @@ function func2 {
 function func3 {
   local num
   num=$1
-  "echo" "-ne" $((($num + 41)))
+  "echo" "-ne" $(($num + 41))
   return
 }
 "func3" $((4))
