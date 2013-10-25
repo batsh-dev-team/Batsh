@@ -4,6 +4,7 @@ open Batsh_ast
 let rec split_expression
     ?(split_string = false)
     ?(split_list = true)
+    ?(split_strcmp = true)
     (expr : expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
@@ -53,7 +54,7 @@ let rec split_expression
     split_when ~cond:split_string assignments (Concat (left, right))
   | StrCompare (operator, left, right) ->
     let assignments, (left, right) = split_binary (left, right) in
-    split_when ~cond:true assignments (StrCompare (operator, left, right))
+    split_when ~cond:split_strcmp assignments (StrCompare (operator, left, right))
   | Call (ident, exprs) ->
     let assignments, exprs = split_expressions exprs ~symtable ~scope in
     split_when ~cond:split_string assignments (Call (ident, exprs))
@@ -99,16 +100,22 @@ let rec split_statement
     in
     prepend_assignments assignments (Assignment (lvalue, expr))
   | If (expr, stmt) ->
-    let assignments, expr = split_expression expr ~symtable ~scope in
+    let assignments, expr = split_expression expr
+        ~split_strcmp:false ~symtable ~scope
+    in
     let stmt = split_statement stmt ~symtable ~scope in
     prepend_assignments assignments (If (expr, stmt))
   | IfElse (expr, then_stmt, else_stmt) ->
-    let assignments, expr = split_expression expr ~symtable ~scope in
+    let assignments, expr = split_expression expr
+        ~split_strcmp:false ~symtable ~scope
+    in
     let then_stmt = split_statement then_stmt ~symtable ~scope in
     let else_stmt = split_statement else_stmt ~symtable ~scope in
     prepend_assignments assignments (IfElse (expr, then_stmt, else_stmt))
   | While (expr, stmt) ->
-    let assignments, expr = split_expression expr ~symtable ~scope in
+    let assignments, expr = split_expression expr
+        ~split_strcmp:false ~symtable ~scope
+    in
     let stmt = split_statement stmt ~symtable ~scope in
     prepend_assignments assignments (While (expr, stmt))
   | Block stmts ->

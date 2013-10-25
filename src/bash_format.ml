@@ -135,8 +135,13 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
     Buffer.add_string buf "return"
   | Empty -> ()
 
-and print_condition (buf: Buffer.t) (expr: expression) =
-  bprintf buf "[ %a == 1 ]" print_expression expr
+and print_condition (buf : Buffer.t) (expr : expression) =
+  match expr with
+  | StrBinary (("==", _, _) as bin)
+  | StrBinary (("!=", _, _) as bin) ->
+    print_str_binary buf bin
+  | _ ->
+    bprintf buf "[ %a == 1 ]" print_expression expr
 
 and print_if_while
     (buf: Buffer.t)

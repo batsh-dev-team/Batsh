@@ -17,20 +17,16 @@ fi
 if [ $((1 == 12)) == 1 ]; then
   "echo" "-e" "No"
 fi
-[ "a" == "b" ]
-_0=$((!$?))
-if [ $_0 == 1 ]; then
+if [ "a" == "b" ]; then
   "echo" "-e" "No"
 else
   "echo" "-e" "a is not b"
 fi
 num=$((43))
-[ "43" == $num ]
-_1=$((!$?))
-if [ $_1 == 1 ]; then
+if [ "43" == $num ]; then
   "echo" "-e" "43 == num"
 fi
-_2="43"
-if [ $(($_2 == $num)) == 1 ]; then
+_0="43"
+if [ $(($_0 == $num)) == 1 ]; then
   "echo" "-e" "43 === num"
 fi

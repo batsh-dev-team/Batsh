@@ -136,10 +136,11 @@ and compile_assignment
   match expr with
   | BAST.StrCompare _ ->
     let test_stmt = Expression expr_compiled in
-    let assignment = Assignment (lvalue,
-                                 Result (
-                                   ArithUnary ("!",
-                                               Leftvalue (Identifier "?"))))
+    let assignment = Assignment
+        (lvalue,
+         Result (
+           ArithUnary ("!",
+                       Leftvalue (Identifier "?"))))
     in
     Block [test_stmt; assignment]
   | _ ->
@@ -151,7 +152,8 @@ and compile_if_statement
     ~(symtable: Symbol_table.t)
     ~(scope: Symbol_table.Scope.t)
   :statement =
-  If (compile_expr expr ~symtable ~scope, compile_statement stmt ~symtable ~scope)
+  If (compile_expr expr ~symtable ~scope,
+      compile_statement stmt ~symtable ~scope)
 
 and compile_if_else_statement
     (expr: BAST.expression)
