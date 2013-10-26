@@ -15,9 +15,9 @@ Batsh is under early-stage development and may change dramatically. No stable ve
 
 ### Install from OPAM
 
-Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and managed by [OPAM](http://opam.ocamlpro.com/pkg/batsh/0.0.2/).
+Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and managed by [OPAM](http://opam.ocaml.org/pkg/batsh/0.0.3/).
 
-1. Install OPAM. See [instructions](http://opam.ocamlpro.com/doc/Quick_Install.html).
+1. Install OPAM. See [instructions](http://opam.ocaml.org/doc/Quick_Install.html).
 2. Switch to the latest version (or at least 4.00.1) of OCaml by running `opam switch`.
 3. Install Batsh: `opam install batsh`
 
