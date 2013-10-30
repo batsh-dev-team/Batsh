@@ -1,4 +1,4 @@
-open Core.Std
+open Core_kernel.Std
 open Batsh_ast
 
 let rec print_lvalue (buf : Buffer.t) (lvalue: leftvalue) =

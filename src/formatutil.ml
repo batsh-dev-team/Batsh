@@ -1,4 +1,4 @@
-open Core.Std
+open Core_kernel.Std
 
 let print_indent (buf : Buffer.t) (indent : int) =
   Buffer.add_string buf (String.make indent ' ')

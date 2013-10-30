@@ -1,4 +1,4 @@
-open Core.Std
+open Core_kernel.Std
 open Bash_ast
 
 let rec print_lvalue buf (lvalue: leftvalue) ~(bare: bool) =

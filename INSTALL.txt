@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 0d3e35f8f3ed8201e314c4b61ce1c202) *)
+(* DO NOT EDIT (digest: a9d6e91ad6faf9e8d133ae1c085af545) *)
 This is the INSTALL file for the batsh distribution.
 
 This package uses OASIS to generate its build system. See section OASIS for
@@ -11,9 +11,10 @@ Dependencies
 In order to compile this package, you will need:
 * ocaml (>= 4.00.1) for all, test unit_test
 * findlib (>= 1.3.2)
-* core for library batsh
+* core_kernel for library batsh
 * dlist for library batsh
 * sexplib for library batsh
+* core for executable batsh, executable test
 * ounit for executable test
 
 Installing

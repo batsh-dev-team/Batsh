@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: c8a573547074b448f0ee507c9cd952d1)
+# DO NOT EDIT (digest: 19ea8793458270e73adb79449c9b4218)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -36,21 +36,24 @@
 "src/winbat_transform.cmx": for-pack(Batsh)
 # Executable batsh
 "src/main.byte": use_batsh
-"src/main.byte": pkg_threads
 "src/main.byte": pkg_core
+"src/main.byte": pkg_threads
+"src/main.byte": pkg_core_kernel
 "src/main.byte": pkg_dlist
 "src/main.byte": pkg_sexplib.syntax
 # Executable test
 "src/test.byte": use_batsh
 "src/test.byte": pkg_ounit
-"src/test.byte": pkg_threads
 "src/test.byte": pkg_core
+"src/test.byte": pkg_threads
+"src/test.byte": pkg_core_kernel
 "src/test.byte": pkg_dlist
 "src/test.byte": pkg_sexplib.syntax
 <src/*.ml{,i}>: use_batsh
 <src/*.ml{,i}>: pkg_ounit
-<src/*.ml{,i}>: pkg_threads
 <src/*.ml{,i}>: pkg_core
+<src/*.ml{,i}>: pkg_threads
+<src/*.ml{,i}>: pkg_core_kernel
 <src/*.ml{,i}>: pkg_dlist
 <src/*.ml{,i}>: pkg_sexplib.syntax
 # OASIS_STOP

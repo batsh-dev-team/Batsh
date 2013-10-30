@@ -1,4 +1,4 @@
-open Core.Std
+open Core_kernel.Std
 open Batsh_ast
 
 let rec split_expression

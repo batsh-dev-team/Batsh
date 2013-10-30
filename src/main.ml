@@ -1,4 +1,7 @@
-open Core.Std
+open Core_kernel.Std
+
+module Command = Core.Command
+module Sys = Core.Std.Sys
 
 let regular_file = Command.Spec.Arg_type.create (fun filename ->
     match Sys.is_file filename with

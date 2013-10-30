@@ -4,3 +4,4 @@ _build/
 setup.data
 setup.log
 setup-dev
+*.sublime*

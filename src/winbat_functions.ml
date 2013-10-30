@@ -1,4 +1,4 @@
-open Core.Std
+open Core_kernel.Std
 open Winbat_ast
 
 let rec expand_command (name : varstrings) (args : parameters) =

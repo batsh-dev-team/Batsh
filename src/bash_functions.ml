@@ -1,4 +1,4 @@
-open Core.Std
+open Core_kernel.Std
 open Bash_ast
 
 let rec expand_leftvalue (lvalue : leftvalue) : leftvalue =

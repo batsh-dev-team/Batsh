@@ -37,21 +37,24 @@ Library batsh
                       Winbat_functions,
                       Winbat_transform
   BuildDepends:       threads,
-                      core,
+                      core_kernel,
                       dlist,
                       sexplib.syntax
 
 Executable batsh
   Path:               src
   MainIs:             main.ml
-  BuildDepends:       batsh
+  BuildDepends:       batsh,
+                      core
 
 Executable test
   Path:               src
   MainIs:             test.ml
   Build$:             flag(tests)
   Install:            false
-  BuildDepends:       ounit, batsh
+  BuildDepends:       batsh,
+                      ounit,
+                      core
 
 Test unit_test
   Run$:               flag(tests)

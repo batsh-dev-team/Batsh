@@ -1,4 +1,4 @@
-open Core.Std
+open Core_kernel.Std
 open Winbat_ast
 
 let escape (str : string) : string =
