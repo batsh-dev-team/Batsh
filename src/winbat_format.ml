@@ -3,10 +3,18 @@ open Winbat_ast
 
 let escape (str : string) : string =
   let buffer = Buffer.create (String.length str) in
+  let exclamation = match String.index str '!' with
+    | None -> false
+    | Some _ -> true
+  in
   String.iter str ~f:(fun ch ->
       let escaped = match ch with
         | '%' -> "%%"
-        | '^' -> "^^"
+        | '^' ->
+          if exclamation then
+            "^^^^"
+          else
+            "^^"
         | '&' -> "^&"
         | '<' -> "^<"
         | '>' -> "^>"
