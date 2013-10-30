@@ -13,3 +13,9 @@ let print (bash : t) : string =
   let buf = Buffer.create 1024 in
   Bash_format.print buf bash.bash_ast_expanded;
   Buffer.contents buf
+
+let ast ?(expand_functions=true) (bash : t) : Bash_ast.t =
+  if expand_functions then
+    bash.bash_ast_expanded
+  else
+    bash.bash_ast

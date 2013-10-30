@@ -1,8 +1,10 @@
+open Core_kernel.Std
+
 type identifier = string
 
-type identifiers = identifier list
+and identifiers = identifier list
 
-type leftvalue =
+and leftvalue =
   | Identifier of identifier
   | ListAccess of (leftvalue * arithmetic)
   | EntireList of leftvalue
@@ -26,7 +28,7 @@ and expression =
 
 and expressions = expression list
 
-type statement =
+and statement =
   | Comment of string
   | Local of identifier
   | Assignment of (leftvalue * expression)
@@ -40,8 +42,9 @@ type statement =
 
 and statements = statement list
 
-type toplevel =
+and toplevel =
   | Statement of statement
   | Function of (identifier * statements)
 
-type t = toplevel list
+and t = toplevel list
+with sexp_of
