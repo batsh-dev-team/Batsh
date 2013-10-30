@@ -28,7 +28,7 @@ Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and managed by [OPA
 3. `make`
 4. Run: `./main.byte`
 
-You can install dependencies by running `opam install core menhir ounit dlist`
+You can install dependencies by running `opam install core menhir ounit dlist cmdliner`
 
 If you want to run unit tests, configure with `./configure --enable-tests`, and run `make test`.
 

@@ -2,7 +2,7 @@ OASISFormat:          0.3
 OCamlVersion:         >= 4.00.1
 FindlibVersion:       >= 1.3.2
 Name:                 batsh
-Version:              0.0.3
+Version:              0.0.4
 Synopsis:             Batsh - A language that compiles to Bash and Windows Batch
 Authors:              BYVoid <byvoid@byvoid.com>
 Copyrights:           (C) 2013 Carbo Kuo <byvoid@byvoid.com>
