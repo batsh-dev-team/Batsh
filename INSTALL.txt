@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: a9d6e91ad6faf9e8d133ae1c085af545) *)
+(* DO NOT EDIT (digest: 0f44f77af4e6affac28664096d01ae82) *)
 This is the INSTALL file for the batsh distribution.
 
 This package uses OASIS to generate its build system. See section OASIS for
@@ -14,8 +14,9 @@ In order to compile this package, you will need:
 * core_kernel for library batsh
 * dlist for library batsh
 * sexplib for library batsh
-* core for executable batsh, executable test
+* cmdliner for executable batsh
 * ounit for executable test
+* core for executable test
 
 Installing
 ==========

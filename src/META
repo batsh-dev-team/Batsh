@@ -1,6 +1,6 @@
 # OASIS_START
-# DO NOT EDIT (digest: 788d3aeb60d16c10a5b7037626a3fa73)
-version = "0.0.1"
+# DO NOT EDIT (digest: 6fe921a5e5958ccd76ddde66a9ec233b)
+version = "0.0.3"
 description = "Batsh - A language that compiles to Bash and Windows Batch"
 requires = "threads core_kernel dlist sexplib.syntax"
 archive(byte) = "batsh.cma"

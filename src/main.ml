@@ -1,15 +1,54 @@
 open Core_kernel.Std
+open Cmdliner
 
-module Command = Core.Command
-module Sys = Core.Std.Sys
+(* Options common to all commands *)
 
-let regular_file = Command.Spec.Arg_type.create (fun filename ->
-    match Sys.is_file filename with
-    | `Yes -> filename
-    | `No | `Unknown ->
-      eprintf "%s is not a regular file.\n%!" filename;
-      exit 1
-  )
+type output_type = Code | Ast | Symbols
+
+type copts = {
+  output_type : output_type;
+  output_file : string option
+}
+
+let copts_sect = "COMMON OPTIONS"
+
+let copts_t = 
+  let docs = copts_sect in 
+
+  let output_type =
+    let doc = "Print abstract syntax tree instead." in 
+    let quiet = Ast, Arg.info ["ast"] ~docs ~doc in
+
+    let doc = "Print symbol table instead." in
+    let verbose = Symbols, Arg.info ["symbols"] ~docs ~doc in 
+    Arg.(last & vflag_all [Code] [quiet; verbose]) 
+  in
+
+  let output_file = 
+    let doc = "Write output to $(docv)." in
+    let opts = ["o"; "output"] in
+    Arg.(value & opt (some string) None & info opts ~docs ~doc ~docv:"FILE")
+  in
+  let copts_cons output_type output_file = { output_type; output_file } in
+  Term.(pure copts_cons $ output_type $ output_file)
+
+let get_outx opts =
+  match opts.output_file with
+  | Some filename -> Out_channel.create filename
+  | None -> Out_channel.stdout
+
+let print_common opts ~batsh ~code ~ast =
+  let outx = get_outx opts in
+  match opts.output_type with
+  | Code ->
+    fprintf outx "%s\n" (Lazy.force code)
+  | Ast ->
+    fprintf outx "%a\n" Sexp.output_hum (Lazy.force ast)
+  | Symbols ->
+    let symtable_sexp = Symbol_table.sexp_of_t (Parser.symtable batsh) in
+    fprintf outx "%a\n" Sexp.output_hum symtable_sexp
+
+(* Commands *)
 
 let parse_with_error (filename : string) : Parser.t =
   try
@@ -20,68 +59,55 @@ let parse_with_error (filename : string) : Parser.t =
     exit 1
 
 let bash =
-  Command.basic
-    ~summary: "Compile to Bash"
-    Command.Spec.(
-      empty
-      +> anon ("filename" %: regular_file)
-    ) (fun (filename: string) () ->
-        let batsh = parse_with_error filename in
-        let bash = Bash.compile batsh in
-        let code = Bash.print bash in
-        printf "%s\n" code
-      )
+  let doc = "Compile $(docv) to Bash script." in
+  let t =
+    Arg.(required & pos 0 (some non_dir_file) None & info [] ~doc ~docv:"FILE")
+  in
+  let cmd opts (filename : string) =
+    let batsh = parse_with_error filename in
+    let bash = Bash.compile batsh in
+    let code = lazy (Bash.print bash) in
+    let ast = lazy (Bash.ast bash |> Bash_ast.sexp_of_t) in
+    print_common opts ~code ~ast ~batsh
+  in
+  Term.(pure cmd $ copts_t $ t),
+  Term.info "bash" ~doc:"Compile to Bash script."
 
 let winbat =
-  Command.basic
-    ~summary: "Compile to Microsoft Windows Batch"
-    Command.Spec.(
-      empty
-      +> anon ("filename" %: regular_file)
-      +> flag "-ast" no_arg ~doc:" Print abstract syntax tree"
-    ) (fun (filename : string) (print_ast : bool) () ->
-        let batsh = parse_with_error filename in
-        let winbat = Winbat.compile batsh in
-        if not print_ast then
-          let code = Winbat.print winbat in
-          printf "%s\n" code
-        else
-          let ast = Winbat.ast winbat in
-          printf "%a\n" Sexp.output_hum (Winbat_ast.sexp_of_t ast)
-      )
+  let doc = "Compile $(docv) to Windows Batch script." in
+  let t =
+    Arg.(required & pos 0 (some non_dir_file) None & info [] ~doc ~docv:"FILE")
+  in
+  let cmd opts (filename : string) =
+    let batsh = parse_with_error filename in
+    let winbat = Winbat.compile batsh in
+    let code = lazy (Winbat.print winbat) in
+    let ast = lazy (Winbat.ast winbat |> Winbat_ast.sexp_of_t) in
+    print_common opts ~code ~ast ~batsh
+  in
+  Term.(pure cmd $ copts_t $ t),
+  Term.info "winbat" ~doc:"Compile to Windows Batch script."
 
-let format =
-  Command.basic
-    ~summary: "Print formatted and prettified source code"
-    Command.Spec.(
-      empty
-      +> anon ("filename" %: regular_file)
-    ) (fun (filename: string) () ->
-        let batsh = parse_with_error filename in
-        let code = Parser.prettify batsh in
-        printf "%s\n" code
-      )
+let batsh =
+  let doc = "Format $(docv)." in
+  let t =
+    Arg.(required & pos 0 (some non_dir_file) None & info [] ~doc ~docv:"FILE")
+  in
+  let cmd opts (filename : string) =
+    let batsh = parse_with_error filename in
+    let code = lazy (Parser.prettify batsh) in
+    let ast = lazy (Parser.ast batsh |> Batsh_ast.sexp_of_t) in
+    print_common opts ~code ~ast ~batsh
+  in
+  Term.(pure cmd $ copts_t $ t),
+  Term.info "batsh" ~doc:"Format source file."
 
-let symbols =
-  Command.basic
-    ~summary: "Print symbol table"
-    Command.Spec.(
-      empty
-      +> anon ("filename" %: regular_file)
-    ) (fun (filename : string) () ->
-        let batsh = parse_with_error filename in
-        let symtable_sexp = Symbol_table.sexp_of_t (Parser.symtable batsh) in
-        printf "%a\n" Sexp.output_hum symtable_sexp
-      )
+let default_cmd =
+  let doc = "A language that compiles to Bash and Windows Batch." in
+  Term.(ret (pure (fun _ -> `Help (`Plain, None)) $ (Term.pure ()) )),
+  Term.info "batsh" ~version:"0.0.3" ~doc
 
 let () =
-  Command.group
-    ~summary: "Batsh"
-    ~readme: (fun () -> "Write once and runs with Bash and Batsh")
-    [
-      ("bash", bash);
-      ("bat", winbat);
-      ("symbols", symbols);
-      ("format", format)
-    ]
-  |> Command.run ~version: "0.0" ~build_info: ""
+  match Term.eval_choice default_cmd [bash; winbat; batsh] with
+  | `Error _ -> exit 1
+  | _ -> ()
