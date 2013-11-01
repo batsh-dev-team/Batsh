@@ -2,9 +2,11 @@
 setlocal EnableDelayedExpansion
 setlocal EnableExtensions
 
-echo Println Called
-set cmd=echo
-!cmd! Echo Called
-expr 36 + 6
-set _0=!_!
+set _0=Println Called
 echo !_0!
+set cmd=echo
+set _1=Echo Called
+!cmd! !_1!
+expr 36 + 6
+set _2=!_!
+echo !_2!

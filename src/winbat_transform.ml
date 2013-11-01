@@ -78,22 +78,31 @@ let rec split_expression
     in
     split_when ~cond:true assignments (StrCompare (operator, left, right))
   | Call (ident, exprs) ->
-    let assignments, exprs = split_expressions exprs ~symtable ~scope in
+    let assignments, exprs = split_expressions exprs
+        ~params:true ~symtable ~scope
+    in
     split_when ~cond:split_call assignments (Call (ident, exprs))
   | List exprs ->
-    let assignments, exprs = split_expressions exprs ~symtable ~scope in
+    let assignments, exprs = split_expressions exprs
+        ~params:false ~symtable ~scope
+    in
     split_when ~cond:split_list assignments (List exprs)
 
 and split_expressions
     (exprs : expressions)
+    ~(params : bool)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
   : (statement Dlist.t * expressions) =
   let assignments, exprs = List.fold exprs ~init: (Dlist.empty (), [])
       ~f: (fun (assignments_acc, exprs_acc) expr ->
+          let split_string =
+            match params, expr with
+            | true, String str -> String.exists str ~f:(fun c -> c = ' ')
+            | _ -> false
+          in
           let assignments, expr = split_expression expr
-              ~symtable
-              ~scope
+              ~split_string ~symtable ~scope
           in
           (Dlist.append assignments assignments_acc, expr :: exprs_acc)
         )
