@@ -136,6 +136,7 @@ let rec split_statement
         ~symtable
         ~scope
         ~split_arith:false
+        ~split_call:false
         ~split_list:false
     in
     prepend_assignments assignments (Assignment (lvalue, expr))

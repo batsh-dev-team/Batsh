@@ -3,23 +3,22 @@ setlocal EnableDelayedExpansion
 setlocal EnableExtensions
 
 :: Function call
-call :func1 _1 0 Hello World
-echo | set /p ^=!_1!
+call :func1 _0 0 Hello World
+echo | set /p ^=!_0!
 :: Global and local variables
 set v1=Global V1
 set v2=Global V2
 set v3=Global V3
-call :func2 _2 0 Var
-echo | set /p ^=!_2!
+call :func2 _1 0 Var
+echo | set /p ^=!_1!
 echo !v1!
 echo !v3!
 :: Return value
-call :func3 _3 0 4
-echo | set /p ^=!_3!
+call :func3 _2 0 4
+echo | set /p ^=!_2!
 echo:
-call :func3 _4 0 1
-set _0=!_4!
-set ret=!_0!
+call :func3 _3 0 1
+set ret=!_3!
 echo Returned: !ret!
 
 goto :EOF
