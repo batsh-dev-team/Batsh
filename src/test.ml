@@ -87,7 +87,7 @@ let test_cases = "Batsh Unit Tests" >::: [
     "[Winbat]While"       >:: test "while" test_winbat;
     "[Winbat]Function"    >:: test "function" test_winbat;
     "[Winbat]Recursion"   >:: test "recursion" test_winbat;
-    (* "[Winbat]Command"     >:: test "command" test_winbat; *)
+    "[Winbat]Command"     >:: test "command" test_winbat;
   ]
 
 let _ =

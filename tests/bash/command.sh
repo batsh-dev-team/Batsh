@@ -1,4 +1,5 @@
 "echo" "-e" "Println Called"
 cmd="ec""ho"
 $cmd "Echo Called"
-"echo" "-e" $("expr" $((36)) "+" $((6)))
+retval=$("echo" "Value 100%")
+"echo" "-e" $retval

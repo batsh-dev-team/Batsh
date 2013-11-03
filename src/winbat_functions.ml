@@ -37,6 +37,12 @@ let rec expand_statement (stmt : statement) : statement =
   match stmt with
   | `Call (name, exprs) ->
     expand_command name exprs
+  | `Output (lvalue, name, exprs) ->
+    let expaned = expand_command name exprs in (
+      match expaned with
+      | `Call (name, exprs) -> `Output (lvalue, name, exprs)
+      | _ -> failwith (sprintf "command do not have a return value.")
+    )
   | `If (condition, stmts) ->
     `If (condition, expand_statements stmts)
   | `IfElse (condition, then_stmts, else_stmts) ->

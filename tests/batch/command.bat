@@ -7,6 +7,6 @@ echo !_0!
 set cmd=echo
 set _1=Echo Called
 !cmd! !_1!
-expr 36 + 6
-set _2=!_!
-echo !_2!
+set _2=Value 100%%
+for /f "delims=" %%i in ('echo !_2!') do set retval=%%i
+echo !retval!

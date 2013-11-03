@@ -124,9 +124,10 @@ let compile_expression_to_comparison
 
 let compile_call
     (ident, exprs)
+    ~(return_value : leftvalue option)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
-  : (statements * leftvalue * bool) =
+  : statements =
   let args = compile_expressions_to_arguments exprs ~symtable ~scope in
   if Symbol_table.is_function symtable ident then
     (* function call *)
@@ -160,11 +161,24 @@ let compile_call
     ] @ args in
     let call_stmt = `Call ([`Str ("call :" ^ ident)], prefixed_args) in
     let stmts = frame_pointer_assign @ [call_stmt] in
-    stmts, `Identifier retval, true
+    let stmts =
+      match return_value with
+      | Some lvalue ->
+        stmts @ [`Assignment (lvalue, [`Var (`Identifier retval)])]
+      | None ->
+        stmts @ [`Call ([`Str "print"], [[`Var (`Identifier retval)]])]
+    in
+    stmts
   else
     (* external command *)
-    (* TODO return value*)
-    [`Call ([`Str ident], args)], `Identifier "_", false
+    let stmts =
+      match return_value with
+      | Some lvalue ->
+        [`Output (lvalue, [`Str ident], args)]
+      | None ->
+        [`Call ([`Str ident], args)]
+    in
+    stmts
 
 let rec compile_expression_statement
     (expr : Batsh_ast.expression)
@@ -173,11 +187,8 @@ let rec compile_expression_statement
   : statements =
   match expr with
   | Call call ->
-    let stmts, retval, func_call = compile_call call ~symtable ~scope in
-    if func_call then
-      stmts @ [`Call ([`Str "print"], [[`Var retval]])]
-    else
-      stmts
+    (* Call discarding return value *)
+    compile_call call ~return_value:None ~symtable ~scope
   | Leftvalue _ ->
     [] (* No side effect *)
   | _ ->
@@ -282,9 +293,9 @@ and compile_assignment
         compile_assignment (ListAccess (lvalue, (Int i))) expr ~symtable ~scope
       ))
   | Call call ->
-    let stmts, retval, _func_call = compile_call call ~symtable ~scope in
+    (* Call obtaining return value *)
     let lvalue = compile_leftvalue lvalue ~symtable ~scope in
-    stmts @ [`Assignment (lvalue, [`Var retval])]
+    compile_call call ~return_value:(Some lvalue) ~symtable ~scope
   | StrCompare _ ->
     let comp = compile_expression_to_comparison expr ~symtable ~scope in
     let lvalue = compile_leftvalue lvalue ~symtable ~scope in
@@ -397,6 +408,11 @@ let rec compile_function_statement
   | `Call (name, params) ->
     `Call (compile_function_varstrings name ~symtable ~scope,
            compile_function_parameters params ~symtable ~scope)
+  | `Output (lvalue, name, params) ->
+    `Output (
+      compile_function_leftvalue lvalue ~symtable ~scope,
+      compile_function_varstrings name ~symtable ~scope,
+      compile_function_parameters params ~symtable ~scope)
   | `If (cond, stmts) ->
     `If (compile_function_comparison cond ~symtable ~scope,
          compile_function_statements stmts ~symtable ~scope)

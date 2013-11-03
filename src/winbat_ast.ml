@@ -48,6 +48,7 @@ and statement = [
   | `Assignment of (leftvalue * varstrings)
   | `ArithAssign of (leftvalue * arithmetic)
   | `Call of (varstrings * parameters)
+  | `Output of (leftvalue * varstrings * parameters)
   | `If of (comparison * statements)
   | `IfElse of (comparison * statements * statements)
   | `Empty

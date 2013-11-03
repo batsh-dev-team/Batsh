@@ -158,6 +158,11 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
     bprintf buf "%a%a"
       print_varstrings name
       print_parameters params
+  | `Output (lvalue, name, params) ->
+    bprintf buf "for /f \"delims=\" %%%%i in ('%a%a') do set %a=%%%%i"
+      print_varstrings name
+      print_parameters params
+      (print_leftvalue ~bare: true) lvalue
   | `If (condition, stmts) ->
     bprintf buf "if /i %a (\n%a\n%a)"
       print_comparison condition

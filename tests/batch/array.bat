@@ -17,11 +17,9 @@ echo !a_0! !a_1! !a_2!
 set _0=10!a_0!
 set /a _1=^(!_0! * 2^)
 echo !_1!
-len !a!
-set _2=!_!
+for /f "delims=" %%i in ('len !a!') do set _2=%%i
 echo !_2!
-len !a!
-set _3=!_!
+for /f "delims=" %%i in ('len !a!') do set _3=%%i
 set /a _4=^(!_3! * 8^)
 echo !_4!
 ::println([1, 2, 3]);
