@@ -1,6 +1,7 @@
 authors = ["Carbo Kuo <byvoid@byvoid.com>"]
 license = ["BSD3"]
 version = "0.0.4"
+description = "A language that compiles to Bash and Windows Batch."
 
 begin library "batsh-lib"
   sort = true
@@ -18,6 +19,7 @@ begin library "batsh-lib"
     "parser.ml"
     "parser_yacc.mly"
     "symbol_table.ml" (syntax = "sexplib-syntax")
+    "version.ml" (ocp2ml)
     "winbat.ml"
     "winbat_ast.ml" (syntax = "sexplib-syntax")
     "winbat_compile.ml"
