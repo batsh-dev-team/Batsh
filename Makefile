@@ -1,54 +1,22 @@
-# Generic Makefile for oasis project
+build: ocp-build.root
+	ocp-build build -njobs 16
 
-# Set to setup for the release
-SETUP := setup-dev
+LIBDIR=$(CAML_LD_LIBRARY_PATH)/../batsh
 
-# Default rule
-default: build
+install: build
+	ocp-build install -install-lib "$(LIBDIR)"
 
-# Setup for the development version
-setup-dev: _oasis setup.ml
-	grep -v '^#' setup.ml > setup_dev.ml
-	ocamlfind ocamlopt -o $@ -linkpkg -package ocamlbuild,oasis.dynrun setup_dev.ml || 	  ocamlfind ocamlc -o $@ -linkpkg -package ocamlbuild,oasis.dynrun setup_dev.ml || true
-	rm -f setup_dev.*
+uninstall:
+	ocp-build uninstall -install-lib "$(LIBDIR)"
 
-# Setup for the release
-setup: setup.ml
-	ocamlopt.opt -o $@ $< || ocamlopt -o $@ $< || ocamlc -o $@ $<
-	rm -f setup.cmx setup.cmi setup.o setup.obj setup.cmo
+test:
+	ocp-build test
+	@cd tests && ../_obuild/test/test.asm
 
-build: $(SETUP) setup.data
-	./$(SETUP) -build $(BUILDFLAGS)
+ocp-build.root:
+	ocp-build root
 
-doc: $(SETUP) setup.data build
-	./$(SETUP) -doc $(DOCFLAGS)
+clean:
+	ocp-build clean
 
-test: $(SETUP) setup.data build
-	./$(SETUP) -test $(TESTFLAGS)
-
-all: $(SETUP)
-	./$(SETUP) -all $(ALLFLAGS)
-
-install: $(SETUP) setup.data
-	./$(SETUP) -install $(INSTALLFLAGS)
-
-uninstall: $(SETUP) setup.data
-	./$(SETUP) -uninstall $(UNINSTALLFLAGS)
-
-reinstall: $(SETUP) setup.data
-	./$(SETUP) -reinstall $(REINSTALLFLAGS)
-
-clean: $(SETUP)
-	./$(SETUP) -clean $(CLEANFLAGS)
-
-distclean: $(SETUP)
-	./$(SETUP) -distclean $(DISTCLEANFLAGS)
-	rm -f $(SETUP)
-
-configure: $(SETUP)
-	./$(SETUP) -configure $(CONFIGUREFLAGS)
-
-setup.data: $(SETUP)
-	./$(SETUP) -configure $(CONFIGUREFLAGS)
-
-.PHONY: default build doc test all install uninstall reinstall clean distclean configure
+.PHONY: build

@@ -1,7 +1,4 @@
-_build/
-*.byte
-*.native
-setup.data
-setup.log
-setup-dev
+_obuild/
 *.sublime*
+ocp-build.root*
+tests/oUnit*
