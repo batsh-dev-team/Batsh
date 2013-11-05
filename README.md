@@ -11,11 +11,13 @@ If you happen to be a maintainer of a cross-platform tool which relies on Bash o
 
 ### [Online demo](http://batsh.byvoid.com/)
 
-Batsh is under early-stage development and may change dramatically. No stable version is released. You can check out [prereleases](https://github.com/BYVoid/Batsh/releases) and use it at your risk.
+Batsh is under early-stage development and may change dramatically.
+No stable version is released.
+You can check out [prereleases](https://github.com/BYVoid/Batsh/releases) or try it [online](http://batsh.byvoid.com/).
 
 ### Install from OPAM
 
-Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and managed by [OPAM](http://opam.ocaml.org/pkg/batsh/0.0.4/).
+Batsh is implemented in OCaml and managed by [OPAM](http://opam.ocaml.org/pkg/batsh/0.0.4/).
 
 1. Install OPAM. See [instructions](http://opam.ocaml.org/doc/Quick_Install.html).
 2. Switch to the latest version (or at least 4.00.1) of OCaml by running `opam switch`.
@@ -24,15 +26,19 @@ Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and managed by [OPA
 ### Build from source
 
 1. Check out source code of Batsh.
-2. `./configure`
-3. `make`
-4. Run: `./main.byte`
+2. `make`
+3. `make install`
+4. Run: `batsh`
 
-You can install dependencies by running `opam install core menhir ounit dlist cmdliner`
+You can install dependencies by running `opam install ocp-build core ounit dlist cmdliner`
 
-If you want to run unit tests, configure with `./configure --enable-tests`, and run `make test`.
+#### Dependencies
 
-Build framework is managed by [Oasis](http://oasis.forge.ocamlcore.org/).
+* [ocp-build](http://www.typerex.org/ocp-build.html): Build framework.
+* [core](http://janestreet.github.io/): An industrial strength alternative to OCaml's standard library.
+* [ounit](http://ounit.forge.ocamlcore.org/): Unit test framework.
+* [dlist](https://github.com/BYVoid/Dlist): A purely functional list-like data structure supporting O(1) concatenation.
+* [cmdliner](http://erratique.ch/software/cmdliner): Command line interfaces parser.
 
 ## Syntax
 
