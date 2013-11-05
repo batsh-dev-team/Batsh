@@ -1,7 +1,7 @@
 # Batsh
 
-Batsh is a simple programming language that compiles to Bash, Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx) (and [PowerShell](http://technet.microsoft.com/en-us/scriptcenter/powershell.aspx), in development).
-It enables you to write code once runs on all platforms without any additional dependency.
+Batsh is a simple programming language that compiles to Bash, Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx).
+It enables you to write script once runs on all platforms without any additional dependency.
 
 Both Bash and Batch are messy to read and tricky to write due to historical reasons.
 You have to spend a lot of time learning either of them, and write platform-dependent code for each operating system.
@@ -9,13 +9,13 @@ If you happen to be a maintainer of a cross-platform tool which relies on Bash o
 
 ## How to get it
 
-You can try it [online](http://batsh.byvoid.com/) now!
+### [Online demo](http://batsh.byvoid.com/)
 
 Batsh is under early-stage development and may change dramatically. No stable version is released. You can check out [prereleases](https://github.com/BYVoid/Batsh/releases) and use it at your risk.
 
 ### Install from OPAM
 
-Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and managed by [OPAM](http://opam.ocaml.org/pkg/batsh/0.0.3/).
+Batsh is implemented in [OCaml](http://caml.inria.fr/ocaml/) and managed by [OPAM](http://opam.ocaml.org/pkg/batsh/0.0.4/).
 
 1. Install OPAM. See [instructions](http://opam.ocaml.org/doc/Quick_Install.html).
 2. Switch to the latest version (or at least 4.00.1) of OCaml by running `opam switch`.
@@ -121,6 +121,33 @@ function fibonacci(num) {
   }
 }
 println(fibonacci(8));
+```
+
+## Command Line Usage
+
+```
+NAME
+       batsh - A language that compiles to Bash and Windows Batch.
+
+SYNOPSIS
+       batsh COMMAND ...
+
+COMMANDS
+       bash
+           Compile to Bash script.
+
+       batsh
+           Format source file.
+
+       winbat
+           Compile to Windows Batch script.
+
+OPTIONS
+       --help[=FMT] (default=pager)
+           Show this help in format FMT (pager, plain or groff).
+
+       --version
+           Show version information.
 ```
 
 ## Why not Python/Ruby/Node.js/LUA
