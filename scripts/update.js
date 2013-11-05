@@ -7,8 +7,8 @@ for (var i = 0; i < files.length; i++) {
   var ext = path.extname(file);
   if (ext == '.js') {
     var name = path.basename(file, ext);
-    console.log('./main.byte bash tests/' + name + '.js > tests/bash/' + name + '.sh');
-    console.log('./main.byte winbat tests/' + name + '.js > tests/batch/' + name + '.bat');
+    console.log('./batsh bash tests/' + name + '.js > tests/bash/' + name + '.sh');
+    console.log('./batsh winbat tests/' + name + '.js > tests/batch/' + name + '.bat');
     console.log('bash tests/bash/' + name + '.sh > tests/output/' + name + '.txt');
   }
 }

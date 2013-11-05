@@ -2,3 +2,4 @@ _obuild/
 *.sublime*
 ocp-build.root*
 tests/oUnit*
+batsh
