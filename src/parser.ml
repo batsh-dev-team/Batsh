@@ -22,7 +22,7 @@ let parse (lexbuf : Lexing.lexbuf) : Batsh_ast.t =
   | Lexer.SyntaxError msg ->
     let err = sprintf "%a: %s" print_position () msg in
     raise (ParseError err)
-  | Parser_yacc.Error ->
+  | Parsing.Parse_error ->
     let err = sprintf "%a: syntax error" print_position () in
     raise (ParseError err)
 

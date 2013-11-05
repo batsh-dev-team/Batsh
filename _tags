@@ -58,7 +58,6 @@
 <src/*.ml{,i}>: pkg_dlist
 <src/*.ml{,i}>: pkg_sexplib.syntax
 # OASIS_STOP
-true: use_menhir
 <src/batsh_ast.ml>: syntax_camlp4o
 <src/bash_ast.ml>: syntax_camlp4o
 <src/symbol_table.ml>: syntax_camlp4o

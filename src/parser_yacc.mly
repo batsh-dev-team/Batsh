@@ -47,149 +47,152 @@
 %nonassoc IF
 %nonassoc ELSE
 
-%start <Batsh_ast.t> program
+%start program
+%type <Batsh_ast.t> program
 
 %%
 
 program:
-    toplevels = toplevel_list; EOF;
-      { toplevels }
+    toplevel_list; EOF;
+      { $1 }
   ;
 
 toplevel:
-  | stmt = statement;
-      { Batsh_ast.Statement stmt }
-  | FUNCTION; name = IDENTIFIER; LEFT_PAREN;
-      params = identifier_list; RIGHT_PAREN;
-      LEFT_BRACE; stmts = statement_list; RIGHT_BRACE;
-      { Batsh_ast.Function (name, params, stmts) }
+  | statement;
+      { Batsh_ast.Statement $1 }
+  | FUNCTION; IDENTIFIER; LEFT_PAREN;
+      identifier_list; RIGHT_PAREN;
+      LEFT_BRACE; statement_list; RIGHT_BRACE;
+      { Batsh_ast.Function ($2, $4, $7) }
 
 toplevel_list:
-    toplevels = list(toplevel);
-      { toplevels }
+  |   { [] }
+  | toplevel; toplevel_list; 
+      { $1 :: $2 }
   ;
 
 statement:
   | SEMICOLON;
       { Batsh_ast.Empty }
-  | comment = COMMENT;
-      { Batsh_ast.Comment comment }
-  | expr = expression; SEMICOLON;
-      { Batsh_ast.Expression expr }
-  | LEFT_BRACE; stmts = statement_list; RIGHT_BRACE;
-      { Batsh_ast.Block stmts }
-  | lvalue = leftvalue; EQUAL; expr = expression; SEMICOLON;
-      { Batsh_ast.Assignment (lvalue, expr) }
-  | stmt = if_statement;
-      { stmt }
-  | stmt = loop_statement;
-      { stmt }
-  | GLOBAL ident = IDENTIFIER; SEMICOLON;
-      { Batsh_ast.Global ident }
-  | RETURN expr = expression; SEMICOLON;
-      { Batsh_ast.Return (Some expr)}
+  | COMMENT;
+      { Batsh_ast.Comment $1 }
+  | expression; SEMICOLON;
+      { Batsh_ast.Expression $1 }
+  | LEFT_BRACE; statement_list; RIGHT_BRACE;
+      { Batsh_ast.Block $2 }
+  | leftvalue; EQUAL; expression; SEMICOLON;
+      { Batsh_ast.Assignment ($1, $3) }
+  | if_statement;
+      { $1 }
+  | loop_statement;
+      { $1 }
+  | GLOBAL IDENTIFIER; SEMICOLON;
+      { Batsh_ast.Global $2 }
+  | RETURN expression; SEMICOLON;
+      { Batsh_ast.Return (Some $2)}
   | RETURN SEMICOLON;
       { Batsh_ast.Return None}
   ;
 
 statement_list:
-    stmts = list(statement);
-      { stmts }
+  |   { [] }
+  | statement; statement_list; 
+      { $1 :: $2 }
   ;
 
 if_statement:
-  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
+  | IF; LEFT_PAREN; expression; RIGHT_PAREN; statement;
       %prec IF;
-      { Batsh_ast.If (expr, thenStmt) }
-  | IF; LEFT_PAREN; expr = expression; RIGHT_PAREN; thenStmt = statement;
-      ELSE; elseStmt = statement;
-      { Batsh_ast.IfElse (expr, thenStmt, elseStmt) }
+      { Batsh_ast.If ($3, $5) }
+  | IF; LEFT_PAREN; expression; RIGHT_PAREN; statement; ELSE; statement;
+      { Batsh_ast.IfElse ($3, $5, $7) }
   ;
 
 loop_statement:
-  | WHILE; LEFT_PAREN; expr = expression; RIGHT_PAREN; stmt = statement;
-      { Batsh_ast.While (expr, stmt) }
+  | WHILE; LEFT_PAREN; expression; RIGHT_PAREN; statement;
+      { Batsh_ast.While ($3, $5) }
   ;
 
 expression:
-  | lvalue = leftvalue
-      { Batsh_ast.Leftvalue lvalue }
-  | s = STRING
-      { Batsh_ast.String s }
-  | i = INT
-      { Batsh_ast.Int i }
-  | x = FLOAT
-      { Batsh_ast.Float x }
+  | leftvalue
+      { Batsh_ast.Leftvalue $1 }
+  | STRING
+      { Batsh_ast.String $1 }
+  | INT
+      { Batsh_ast.Int $1 }
+  | FLOAT
+      { Batsh_ast.Float $1 }
   | TRUE
       { Batsh_ast.Bool true }
   | FALSE
       { Batsh_ast.Bool false }
-  | LEFT_BRACK; vl = list_fields; RIGHT_BRACK
-      { Batsh_ast.List vl }
-  | expr = unary_expression;
-      { expr }
-  | expr = binary_expression;
-      { expr }
-  | LEFT_PAREN; expr = expression; RIGHT_PAREN;
-      { expr }
-  | ident = IDENTIFIER; LEFT_PAREN; exprs = expression_list; RIGHT_PAREN;
-      { Batsh_ast.Call (ident, exprs) }
+  | LEFT_BRACK; expression_list; RIGHT_BRACK
+      { Batsh_ast.List $2 }
+  | unary_expression;
+      { $1 }
+  | binary_expression;
+      { $1 }
+  | LEFT_PAREN; expression; RIGHT_PAREN;
+      { $2 }
+  | IDENTIFIER; LEFT_PAREN; expression_list; RIGHT_PAREN;
+      { Batsh_ast.Call ($1, $3) }
   ;
 
 expression_list:
-    exprs = separated_list(COMMA, expression);
-      { exprs }
+  |   { [] }
+  | expression; 
+      { [$1] }
+  | expression; COMMA; expression_list; 
+      { $1 :: $3 }
   ;
 
 identifier_list:
-    idents = separated_list(COMMA, IDENTIFIER);
-      { idents }
+  |   { [] }
+  | IDENTIFIER; 
+      { [$1] }
+  | IDENTIFIER; COMMA; identifier_list; 
+      { $1 :: $3 }
   ;
 
 leftvalue:
-  | ident = IDENTIFIER;
-      { Batsh_ast.Identifier ident }
-  | lvalue = leftvalue; LEFT_BRACK; index = expression; RIGHT_BRACK;
-      { Batsh_ast.ListAccess (lvalue, index) }
+  | IDENTIFIER;
+      { Batsh_ast.Identifier $1 }
+  | leftvalue; LEFT_BRACK; expression; RIGHT_BRACK;
+      { Batsh_ast.ListAccess ($1, $3) }
   ;
 
 unary_expression:
-  | NOT; expr = expression;
-      { Batsh_ast.ArithUnary ("!", expr) }
+  | NOT; expression;
+      { Batsh_ast.ArithUnary ("!", $2) }
   ;
 
 binary_expression:
-  | left = expression; PLUS; right = expression;
-      { Batsh_ast.ArithBinary ("+", left, right) }
-  | left = expression; MINUS; right = expression;
-      { Batsh_ast.ArithBinary ("-", left, right) }
-  | left = expression; MULTIPLY; right = expression;
-      { Batsh_ast.ArithBinary ("*", left, right) }
-  | left = expression; DIVIDE; right = expression;
-      { Batsh_ast.ArithBinary ("/", left, right) }
-  | left = expression; MODULO; right = expression;
-      { Batsh_ast.ArithBinary ("%", left, right) }
-  | left = expression; AEQ; right = expression;
-      { Batsh_ast.ArithBinary ("===", left, right) }
-  | left = expression; ANE; right = expression;
-      { Batsh_ast.ArithBinary ("!==", left, right) }
-  | left = expression; GT; right = expression;
-      { Batsh_ast.ArithBinary (">", left, right) }
-  | left = expression; LT; right = expression;
-      { Batsh_ast.ArithBinary ("<", left, right) }
-  | left = expression; GE; right = expression;
-      { Batsh_ast.ArithBinary (">=", left, right) }
-  | left = expression; LE; right = expression;
-      { Batsh_ast.ArithBinary ("<=", left, right) }
-  | left = expression; CONCAT; right = expression;
-      { Batsh_ast.Concat (left, right) }
-  | left = expression; SEQ; right = expression;
-      { Batsh_ast.StrCompare ("==", left, right) }
-  | left = expression; SNE; right = expression;
-      { Batsh_ast.StrCompare ("!=", left, right) }
-  ;
-
-list_fields:
-    vl = separated_list(COMMA, expression)
-      { vl }
+  | expression; PLUS; expression;
+      { Batsh_ast.ArithBinary ("+", $1, $3) }
+  | expression; MINUS; expression;
+      { Batsh_ast.ArithBinary ("-", $1, $3) }
+  | expression; MULTIPLY; expression;
+      { Batsh_ast.ArithBinary ("*", $1, $3) }
+  | expression; DIVIDE; expression;
+      { Batsh_ast.ArithBinary ("/", $1, $3) }
+  | expression; MODULO; expression;
+      { Batsh_ast.ArithBinary ("%", $1, $3) }
+  | expression; AEQ; expression;
+      { Batsh_ast.ArithBinary ("===", $1, $3) }
+  | expression; ANE; expression;
+      { Batsh_ast.ArithBinary ("!==", $1, $3) }
+  | expression; GT; expression;
+      { Batsh_ast.ArithBinary (">", $1, $3) }
+  | expression; LT; expression;
+      { Batsh_ast.ArithBinary ("<", $1, $3) }
+  | expression; GE; expression;
+      { Batsh_ast.ArithBinary (">=", $1, $3) }
+  | expression; LE; expression;
+      { Batsh_ast.ArithBinary ("<=", $1, $3) }
+  | expression; CONCAT; expression;
+      { Batsh_ast.Concat ($1, $3) }
+  | expression; SEQ; expression;
+      { Batsh_ast.StrCompare ("==", $1, $3) }
+  | expression; SNE; expression;
+      { Batsh_ast.StrCompare ("!=", $1, $3) }
   ;
