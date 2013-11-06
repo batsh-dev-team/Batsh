@@ -27,3 +27,12 @@ func3(4);
 println();
 ret = func3(1);
 println("Returned:", ret);
+
+function g(text) {
+  return text;
+}
+function f(text) {
+  return g(text);
+}
+test = f("Param with space");
+println(test);

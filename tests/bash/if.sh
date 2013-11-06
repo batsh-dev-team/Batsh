@@ -10,7 +10,7 @@ if [ $((1)) == 1 ]; then
 else
 -
 fi
-"echo" "-e" $v
+"echo" "-e" "$v"
 if [ $((2 > 1)) == 1 ]; then
   "echo" "-e" "True"
 fi
@@ -23,7 +23,7 @@ else
   "echo" "-e" "a is not b"
 fi
 num=$((43))
-if [ "43" == $num ]; then
+if [ "43" == "$num" ]; then
   "echo" "-e" "43 == num"
 fi
 _0="43"

@@ -1,7 +1,7 @@
 function loop {
   local num
-  num=$1
-  "echo" "-e" $num
+  num="$1"
+  "echo" "-e" "$num"
   if [ $(($num > 0)) == 1 ]; then
     "loop" $(($num - 1))  
 fi
@@ -10,7 +10,7 @@ fi
 function fact {
   local num
   local _0
-  num=$1
+  num="$1"
   if [ $(($num == 0)) == 1 ]; then
     "echo" "-ne" $((1))
     return
@@ -25,7 +25,7 @@ function fibonacci {
   local _1
   local num
   local _0
-  num=$1
+  num="$1"
   if [ $(($num == 0)) == 1 ]; then
     "echo" "-ne" $((0))
     return
@@ -43,6 +43,6 @@ function fibonacci {
 }
 i=$((0))
 while [ $(($i < 7)) == 1 ]; do
-  "echo" "-e" $("fibonacci" $i)
+  "echo" "-e" $("fibonacci" "$i")
   i=$(($i + 1))
 done

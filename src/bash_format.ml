@@ -1,32 +1,28 @@
 open Core_kernel.Std
 open Bash_ast
 
-let rec print_lvalue buf (lvalue: leftvalue) ~(bare: bool) =
-  let print_lvalue_bare = print_lvalue ~bare: true in
+let rec print_lvalue_partial (buf : Buffer.t) (lvalue : leftvalue) =
   match lvalue with
   | Identifier ident ->
-    if not bare then
-      Buffer.add_string buf "$";
     Buffer.add_string buf ident
   | ListAccess (lvalue, arith) ->
-    if bare then
-      bprintf buf "%a[%a]"
-        print_lvalue_bare lvalue
-        (print_arith ~paren:false) arith
-    else
-      bprintf buf "${%a[%a]}"
-        print_lvalue_bare lvalue
-        (print_arith ~paren:false) arith
+    bprintf buf "%a[%a]"
+      print_lvalue_partial lvalue
+      (print_arith ~paren:false) arith
   | EntireList lvalue ->
-    if bare then
-      bprintf buf "%a[@]" print_lvalue_bare lvalue
-    else
-      bprintf buf "${%a[@]}" print_lvalue_bare lvalue
+    bprintf buf "%a[@]" print_lvalue_partial lvalue
   | Cardinal lvalue ->
-    if bare then
-      bprintf buf "#%a" print_lvalue_bare lvalue
-    else
-      bprintf buf "${#%a}" print_lvalue_bare lvalue
+    bprintf buf "#%a" print_lvalue_partial lvalue
+
+and print_lvalue (buf : Buffer.t) (lvalue : leftvalue) ~(quote : bool) =
+  let quote = if quote then "\"" else "" in
+  match lvalue with
+  | Identifier ident ->
+    bprintf buf "%s$%a%s" quote print_lvalue_partial lvalue quote
+  | ListAccess _
+  | EntireList _
+  | Cardinal _ ->
+    bprintf buf "%s${%a}%s" quote print_lvalue_partial lvalue quote
 
 and print_arith
     ?(paren = true)
@@ -34,7 +30,7 @@ and print_arith
     (expr: arithmetic)
   =
   match expr with
-  | Leftvalue lvalue -> print_lvalue buf lvalue ~bare: false
+  | Leftvalue lvalue -> print_lvalue buf lvalue ~quote:false
   | Int number -> Buffer.add_string buf (string_of_int number)
   | Float number -> Buffer.add_string buf (Float.to_string number)
   | ArithUnary (operator, arith) ->
@@ -65,7 +61,7 @@ and print_arith_binary
 let rec print_expression buf (expr: expression) =
   match expr with
   | Variable lvalue | Result Leftvalue lvalue ->
-    print_lvalue buf lvalue ~bare: false
+    print_lvalue buf lvalue ~quote:true
   | String str ->
     bprintf buf "\"%s\"" (Formatutil.escape str)
   | Result arith ->
@@ -107,7 +103,6 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
     | Block _ -> ()
     | _ ->
       Formatutil.print_indent buf indent in
-  let print_lvalue = print_lvalue ~bare: true in
   match stmt with
   | Comment comment ->
     bprintf buf "#%s" comment
@@ -115,7 +110,7 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
     bprintf buf "local %s" ident
   | Assignment (lvalue, expr) ->
     bprintf buf "%a=%a"
-      print_lvalue lvalue
+      print_lvalue_partial lvalue
       print_expression expr
   | Expression (Command cmd) ->
     print_command buf cmd
