@@ -24,16 +24,13 @@ if /i 1 EQU 12 (
 if /i a EQU b (
   echo No
 ) else (
-  set _0=a is not b
-  echo !_0!
+  echo a is not b
 )
 set /a num=43
 if /i 43 EQU !num! (
-  set _1=43 ^=^= num
-  echo !_1!
+  echo 43 ^=^= num
 )
-set _2=43
-if /i !_2! EQU !num! (
-  set _3=43 ^=^=^= num
-  echo !_3!
+set _0=43
+if /i !_0! EQU !num! (
+  echo 43 ^=^=^= num
 )

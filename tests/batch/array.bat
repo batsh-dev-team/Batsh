@@ -8,8 +8,8 @@ set /a a_2=-1
 set /a a_3=1
 set /a a_0=^(2 * 9^)
 set a_2=abx
-set a_5=5!a_0!
-echo !a_0! !a_1! !a_2! !a_3! !a_4! !a_5!
+set a_4=5!a_0!
+echo !a_0! !a_1! !a_2! !a_3! !a_4!
 set /a a_0=1
 set /a a_1=2
 set /a a_2=3

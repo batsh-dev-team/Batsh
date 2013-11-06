@@ -133,6 +133,7 @@ let compile_call
     (* function call *)
     let frame_pointer_assign, frame_pointer =
       if Symbol_table.Scope.is_function scope then
+        (* add frame pointer as surffix to local variables *)
         (* increase frame pointer %~2 by 1 *)
         let frame_pointer = `Identifier (
             Symbol_table.Scope.add_temporary_variable scope)
@@ -147,25 +148,37 @@ let compile_call
         [], `Str "0"
     in
     let retval = Symbol_table.Scope.add_temporary_variable scope in
-    let surfixed_retval =
+    let surffix =
       if Symbol_table.Scope.is_function scope then
         (* call from function scope *)
-        retval ^ "_%~2"
+        "_%~2"
       else
         (* call from toplevel *)
-        retval
+        ""
+    in
+    let surffixed_retval = `Rawstr (retval ^ surffix) in
+    let stringified_args = List.map args ~f:(fun arg ->
+        match arg with
+        | [`Var (`Identifier ident)] ->
+          [`Rawstr (ident ^ surffix)]
+        | _ ->
+          Sexp.output_hum stderr (Winbat_ast.sexp_of_parameter arg);
+          failwith "Argument should have been converted to variable."
+      )
     in
     let prefixed_args = [
-      [`Rawstr surfixed_retval]; (* return value *)
+      [surffixed_retval]; (* return value *)
       [frame_pointer]; (* frame pointer *)
-    ] @ args in
+    ] @ stringified_args in
     let call_stmt = `Call ([`Str ("call :" ^ ident)], prefixed_args) in
     let stmts = frame_pointer_assign @ [call_stmt] in
     let stmts =
       match return_value with
       | Some lvalue ->
+        (* Assign return value *)
         stmts @ [`Assignment (lvalue, [`Var (`Identifier retval)])]
       | None ->
+        (* Print out return value *)
         stmts @ [`Call ([`Str "print"], [[`Var (`Identifier retval)]])]
     in
     stmts
@@ -438,8 +451,8 @@ let compile_function
   let params_assignments = List.mapi params ~f: (fun i param ->
       (* Add frame pointer surfix to every paramemeter *)
       let lvalue = `ListAccess (`Identifier param, `Var (`Identifier "%~2")) in
-      let param_var = `Identifier (sprintf "%%~%d" (i + 3)) in
-      `Assignment (lvalue, [`Var param_var])
+      let param_var = (sprintf "!%%~%d!" (i + 3)) in
+      `Assignment (lvalue, [`Rawstr param_var])
     )
   in
   (`Empty

@@ -28,6 +28,7 @@ println();
 ret = func3(1);
 println("Returned:", ret);
 
+// Argument containing space
 function g(text) {
   return text;
 }

@@ -7,8 +7,7 @@ echo Hello
 ::Level 1 Start
 echo Lo
 ::Level 2 Start
-set _0=and behold
-echo !_0!
+echo and behold
 ::Level 2 End
 ::Level 1 End
 echo End

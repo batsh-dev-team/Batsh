@@ -7,6 +7,7 @@ let rec split_expression
     ?(split_arith = true)
     ?(split_string = false)
     ?(split_list = true)
+    ?(split_primitive = false)
     (expr : expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
@@ -41,7 +42,9 @@ let rec split_expression
   in
   match expr with
   | Bool _ | Int _ | Float _ | Leftvalue _ ->
-    Dlist.empty (), expr
+    split_when ~cond:split_primitive (Dlist.empty ()) expr
+  | String str ->
+    split_when ~cond:split_string (Dlist.empty ()) expr
   | ArithUnary (operator, expr) ->
     let split = match operator with
       | "!" -> true
@@ -63,8 +66,6 @@ let rec split_expression
     in
     split_when ~cond:split_arith
       assignments (ArithBinary (operator, left, right))
-  | String str ->
-    split_when ~cond:split_string (Dlist.empty ()) (String str)
   | Concat (left, right) ->
     let assignments, (left, right) = split_binary (left, right)
         ~split_arith:true
@@ -78,31 +79,30 @@ let rec split_expression
     in
     split_when ~cond:true assignments (StrCompare (operator, left, right))
   | Call (ident, exprs) ->
+    (* If this is a function call, then split all its arguments *)
+    let split_primitive = Symbol_table.is_function symtable ident in
     let assignments, exprs = split_expressions exprs
-        ~params:true ~symtable ~scope
+        ~split_primitive ~symtable ~scope
     in
     split_when ~cond:split_call assignments (Call (ident, exprs))
   | List exprs ->
     let assignments, exprs = split_expressions exprs
-        ~params:false ~symtable ~scope
+        ~split_primitive:false ~symtable ~scope
     in
     split_when ~cond:split_list assignments (List exprs)
 
 and split_expressions
     (exprs : expressions)
-    ~(params : bool)
+    ~(split_primitive : bool)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
   : (statement Dlist.t * expressions) =
   let assignments, exprs = List.fold exprs ~init: (Dlist.empty (), [])
       ~f: (fun (assignments_acc, exprs_acc) expr ->
-          let split_string =
-            match params, expr with
-            | true, String str -> String.exists str ~f:(fun c -> c = ' ')
-            | _ -> false
-          in
           let assignments, expr = split_expression expr
-              ~split_string ~symtable ~scope
+              ~split_string:split_primitive
+              ~split_primitive
+              ~symtable ~scope
           in
           (Dlist.append assignments assignments_acc, expr :: exprs_acc)
         )

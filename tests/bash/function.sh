@@ -35,6 +35,7 @@ function func3 {
 "echo" "-e"
 ret=$("func3" $((1)))
 "echo" "-e" "Returned:" "$ret"
+# Argument containing space
 function g {
   local text
   text="$1"

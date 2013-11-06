@@ -2,11 +2,8 @@
 setlocal EnableDelayedExpansion
 setlocal EnableExtensions
 
-set _0=Println Called
-echo !_0!
+echo Println Called
 set cmd=echo
-set _1=Echo Called
-!cmd! !_1!
-set _2=Value 100%%
-for /f "delims=" %%i in ('echo !_2!') do set retval=%%i
+!cmd! Echo Called
+for /f "delims=" %%i in ('echo Value 100%%') do set retval=%%i
 echo !retval!
