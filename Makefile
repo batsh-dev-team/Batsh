@@ -10,7 +10,7 @@ install: build
 uninstall:
 	ocp-build uninstall -install-lib "$(LIBDIR)"
 
-test:
+test: build
 	ocp-build test
 	@cd tests && ../_obuild/test/test.asm
 
