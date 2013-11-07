@@ -27,7 +27,7 @@ let escape (str : string) : string =
         | '(' -> "^("
         | ')' -> "^)"
         | '!' -> "^^!"
-        | '\n' -> "^\n"
+        | '\n' -> "^\n\n"
         | _ -> String.of_char ch
       in
       Buffer.add_string buffer escaped
