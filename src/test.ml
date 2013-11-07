@@ -61,7 +61,7 @@ let get_expected name =
 
 let test name func _ =
   let expected = get_expected name in
-  let filename = name ^ ".js" in
+  let filename = name ^ ".batsh" in
   let batsh = Parser.create_from_file filename in
   func name batsh expected
 
