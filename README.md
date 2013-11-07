@@ -11,10 +11,6 @@ If you happen to be a maintainer of a cross-platform tool which relies on Bash o
 
 ### [Online demo](http://batsh.byvoid.com/)
 
-Batsh is under early-stage development and may change dramatically.
-No stable version is released.
-You can check out [prereleases](https://github.com/BYVoid/Batsh/releases) or try it [online](http://batsh.byvoid.com/).
-
 ### Install from OPAM
 
 Batsh is implemented in OCaml and managed by [OPAM](http://opam.ocaml.org/pkg/batsh/0.0.5/).
@@ -25,14 +21,15 @@ Batsh is implemented in OCaml and managed by [OPAM](http://opam.ocaml.org/pkg/ba
 
 ### Build from source
 
-1. Check out source code of Batsh.
-2. `make`
-3. `make install`
-4. Run: `batsh`
-
-You can install dependencies by running `opam install ocp-build core ounit dlist cmdliner`
+1. Download source code of Batsh from [releases](https://github.com/BYVoid/Batsh/releases) or clone with git.
+2. Uncompress source code tarball.
+3. `make`
+4. `make install`
+5. Run: `batsh`
 
 #### Dependencies
+
+If there is any missing dependency, you can install them by running `opam install ocp-build core ounit dlist cmdliner`
 
 * [ocp-build](http://www.typerex.org/ocp-build.html): Build framework.
 * [core](http://janestreet.github.io/): An industrial strength alternative to OCaml's standard library.
@@ -129,6 +126,8 @@ function fibonacci(num) {
 println(fibonacci(8));
 ```
 
+### [More examples](https://github.com/BYVoid/Batsh/tree/master/tests)
+
 ## Command Line Usage
 
 ```
@@ -158,9 +157,21 @@ OPTIONS
 
 ## Why not Python/Ruby/Node.js/LUA
 
-Yes you can use any of them as platform-independent glue code.
-But they are not **preinstalled on all platforms** (including Windows). Also functionalities like piping processes are not convenient to use. You can use Batsh to integrate existing code written in Bash or Batch as well.
+Yes you can use any of them as platform-independent glue code. But there are 3 disadventages:
+
+1. They are not **preinstalled on all platforms** (including Windows).
+2. Functionalities like piping processes are not convenient to use.
+3. Hard to integrate with existing code written in Bash or Batch.
+
+Those reasons are why I developed Batsh.
 
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
+
+## Contributors
+
+* [Carbo Kuo](https://github.com/BYVoid)
+* [Song Zhang](http://www.linkedin.com/pub/song-zhang/76/632/b51)
+* [Anthony Chan](http://www.linkedin.com/pub/anthony-chan/23/986/b15)
+* [jeb-de](https://github.com/jeb-de)
