@@ -173,5 +173,5 @@ Those reasons are why I developed Batsh.
 
 * [Carbo Kuo](https://github.com/BYVoid)
 * [Song Zhang](http://www.linkedin.com/pub/song-zhang/76/632/b51)
-* [Anthony Chan](http://www.linkedin.com/pub/anthony-chan/23/986/b15)
+* [Anthony Chan](https://github.com/anthonyhchan)
 * [jeb-de](https://github.com/jeb-de)
