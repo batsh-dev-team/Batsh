@@ -57,6 +57,9 @@ let parse_with_error (filename : string) : Parser.t =
   | Parser.ParseError msg ->
     eprintf "%s\n" msg;
     exit 1
+  | Parser.SemanticError msg ->
+    eprintf "%s\n" msg;
+    exit 1
 
 let bash =
   let doc = "Compile $(docv) to Bash script." in

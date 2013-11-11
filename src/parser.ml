@@ -7,6 +7,7 @@ type t = {
 }
 
 exception ParseError of string
+exception SemanticError of string
 
 let parse (lexbuf : Lexing.lexbuf) : Batsh_ast.t =
   let print_position () () =
@@ -31,6 +32,13 @@ let create_from_lexbuf (lexbuf : Lexing.lexbuf) (filename: string) : t =
     lexbuf.Lexing.lex_curr_p with Lexing.pos_fname = filename
   };
   let ast = parse lexbuf in
+  let () =
+    try
+      Semantic_checker.check ast
+    with
+    | Semantic_checker.Error msg ->
+      raise (SemanticError (sprintf "Semantic error: %s" msg))
+  in
   let symtable = Symbol_table.create ast in
   { lex = lexbuf; ast; symtable; }
 

@@ -18,6 +18,7 @@ begin library "batsh-lib"
     "lexer.mll"
     "parser.ml"
     "parser_yacc.mly"
+    "semantic_checker.ml"
     "symbol_table.ml" (syntax = "sexplib-syntax")
     "version.ml" (ocp2ml)
     "winbat.ml"
