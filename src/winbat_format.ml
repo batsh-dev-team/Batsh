@@ -139,7 +139,13 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
   Formatutil.print_indent buf indent;
   match stmt with
   | `Comment comment ->
-    bprintf buf "::%s" comment
+    let len = String.length comment in
+    bprintf buf "rem%s%s" (
+      if len = 0 || (len > 0 && (String.get comment 0) = ' ') then
+        ""
+      else
+        " "
+    ) comment
   | `Raw str ->
     Buffer.add_string buf str
   | `Label lbl ->

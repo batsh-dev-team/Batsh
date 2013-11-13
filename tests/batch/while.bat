@@ -10,7 +10,7 @@ if /i !i! LSS 5 (
   goto WHILE_0
 )
 echo:
-:: Fibonacci
+rem Fibonacci
 set /a n=0
 set /a i=0
 set /a j=1

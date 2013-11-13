@@ -22,4 +22,4 @@ echo !_2!
 for /f "delims=" %%i in ('len !a!') do set _3=%%i
 set /a _4=^(!_3! * 8^)
 echo !_4!
-::println([1, 2, 3]);
+rem println([1, 2, 3]);
