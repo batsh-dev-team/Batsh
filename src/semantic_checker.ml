@@ -7,6 +7,8 @@ let check_toplevel (topl: toplevel) =
   match topl with
   | Statement (Global _) ->
     raise (Error "qualifier 'global' must be used in a function")
+  | Statement (Return _) ->
+    raise (Error "statement 'return' must be used in a function")
   | Statement _
   | Function _ ->
     ()
