@@ -1,15 +1,19 @@
 # Batsh
 
-Batsh is a simple programming language that compiles to Bash, Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx).
-It enables you to write script once runs on all platforms without any additional dependency.
+Batsh is a simple programming language that compiles to Bash and Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx).
+It enables you to write your script once runs on all platforms without **any** additional dependency.
 
 Both Bash and Batch are messy to read and tricky to write due to historical reasons.
 You have to spend a lot of time learning either of them, and write platform-dependent code for each operating system.
-If you happen to be a maintainer of a cross-platform tool which relies on Bash on Linux/Mac and Batch on Windows as "glue code", and found it painful to "synchronize" between them, you would like to try Batsh.
+I have wasted lots time of my life strugling with bezare syntaxes and unreasonal behavoirs of them, and do not want to waste any more.
+
+If you happen to be a maintainer of a cross-platform tool which relies on Bash on Linux/Mac and Batch on Windows as "glue code", and found it painful to "synchronize" between them, you would definitely like to try Batsh.
 
 ## How to get it
 
-### [Online demo](http://batsh.byvoid.com/)
+### The easiest way
+
+[Try it online](http://batsh.byvoid.com/)
 
 ### Install from OPAM
 
@@ -20,6 +24,8 @@ Batsh is implemented in OCaml and managed by [OPAM](http://opam.ocaml.org/pkg/ba
 3. Install Batsh: `opam install batsh`
 
 ### Build from source
+
+You have to install OCaml (version 4.00.1 or higher) development environment before compiling Batsh from source code, and follow steps below:
 
 1. Download source code of Batsh from [releases](https://github.com/BYVoid/Batsh/releases) or clone with git.
 2. Uncompress source code tarball.
@@ -128,6 +134,34 @@ println(fibonacci(8));
 
 ### [More examples](https://github.com/BYVoid/Batsh/tree/master/tests)
 
+## Built-in functions
+
+In order to make script cross-platform, Batsh provided some "built-in" functions that will compile to platform-dependent code. It is assumed that Bash script runs on Linux or Mac OS and Batch script runs on Windows (XP or higher), which means Cygwin or wine are not supported.
+
+### `print(text, ...)`
+
+Prints a text string to console without a newline.
+
+### `println(text, ...)`
+
+Prints a text string to console with a new line (LF for bash, CRLF for batch).
+
+### `call(path, arg, ...)`
+
+Runs command from path through shell.
+
+### `bash(rawStatement)`
+
+Put `rawStatement` into compiled code for Bash. Ignore for Windows Batch.
+
+### `batch(rawStatement)`
+
+Put `rawStatement` into compiled code for Windows Batch. Ignore for Bash.
+
+### `readdir(path)`
+
+Equals to `ls` and `dir /w`.
+
 ## Command Line Usage
 
 ```
@@ -157,10 +191,10 @@ OPTIONS
 
 ## Why not Python/Ruby/Node.js/LUA
 
-Yes you can use any of them as platform-independent glue code. But there are 3 disadventages:
+Yes you can use any of them as platform-independent glue code. But there are several disadventages:
 
-1. They are not **preinstalled on all platforms** (including Windows).
-2. Functionalities like piping processes are not convenient to use.
+1. None of them is **preinstalled on all platforms** (including Windows).
+2. Functionalities like process piping are not convenient to use.
 3. Hard to integrate with existing code written in Bash or Batch.
 
 Those reasons are why I developed Batsh.
