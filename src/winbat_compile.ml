@@ -26,6 +26,7 @@ and compile_expression_to_varint
   | Int num ->
     `Int num
   | _ ->
+    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
     failwith "Index should be either var or int"
 
 let rec compile_expression_to_arith
@@ -54,6 +55,7 @@ let rec compile_expression_to_arith
   | Concat _
   | StrCompare _
   | Call _ ->
+    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
     failwith "Can not be here"
 
 let compile_expression
@@ -120,6 +122,7 @@ let compile_expression_to_comparison
   | Bool false | Int _ ->
     `UniCompare ("!", [`Str "1"])
   | _ ->
+    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
     failwith "Expression can not compile to comparison"
 
 let compile_call
