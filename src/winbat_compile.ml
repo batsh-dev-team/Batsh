@@ -26,8 +26,11 @@ and compile_expression_to_varint
   | Int num ->
     `Int num
   | _ ->
-    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
-    failwith "Index should be either var or int"
+    raise (Errors.SemanticError
+             ("Index should be either var or int",
+              expr |> Batsh_ast.sexp_of_expression |> Sexp.to_string
+             )
+          )
 
 let rec compile_expression_to_arith
     (expr : Batsh_ast.expression)
@@ -122,8 +125,11 @@ let compile_expression_to_comparison
   | Bool false | Int _ ->
     `UniCompare ("!", [`Str "1"])
   | _ ->
-    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
-    failwith "Expression can not compile to comparison"
+    raise (Errors.SemanticError
+             ("Expression can not compile to comparison",
+              expr |> Batsh_ast.sexp_of_expression |> Sexp.to_string
+             )
+          )
 
 let compile_call
     (ident, exprs)

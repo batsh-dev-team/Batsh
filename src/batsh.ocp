@@ -14,6 +14,7 @@ begin library "batsh-lib"
     "bash_transform.ml"
     "batsh_ast.ml" (syntax = "sexplib-syntax")
     "batsh_format.ml"
+    "errors.ml"
     "formatutil.ml"
     "lexer.mll"
     "parser.ml"
