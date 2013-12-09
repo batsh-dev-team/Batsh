@@ -13,7 +13,7 @@ If you happen to be a maintainer of a cross-platform tool which relies on Bash o
 
 ### The easiest way
 
-[Try it online](http://batsh.byvoid.com/)
+[Try it online: http://batsh.org](http://batsh.org/)
 
 ### Install from OPAM
 
