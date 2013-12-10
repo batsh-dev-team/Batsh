@@ -4,8 +4,8 @@ Batsh is a simple programming language that compiles to Bash and Windows [Batch]
 It enables you to write your script once runs on all platforms without **any** additional dependency.
 
 Both Bash and Batch are messy to read and tricky to write due to historical reasons.
-You have to spend a lot of time learning either of them, and write platform-dependent code for each operating system.
-I have wasted lots time of my life strugling with bezare syntaxes and unreasonal behavoirs of them, and do not want to waste any more.
+You have to spend a lot of time learning either of them and write platform-dependent code for each operating system.
+I have wasted lots of time in my life struggling with bizare syntaxes and unreasonable behaviors of them, and do not want to waste any more.
 
 If you happen to be a maintainer of a cross-platform tool which relies on Bash on Linux/Mac and Batch on Windows as "glue code", and found it painful to "synchronize" between them, you would definitely like to try Batsh.
 
@@ -191,7 +191,7 @@ OPTIONS
 
 ## Why not Python/Ruby/Node.js/LUA
 
-Yes you can use any of them as platform-independent glue code. But there are several disadventages:
+Yes you can use any of them as platform-independent glue code. But there are several disadvantages:
 
 1. None of them is **preinstalled on all platforms** (including Windows).
 2. Functionalities like process piping are not convenient to use.
