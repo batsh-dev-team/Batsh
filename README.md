@@ -189,7 +189,7 @@ OPTIONS
            Show version information.
 ```
 
-## Why not Python/Ruby/Node.js/LUA
+## Why not Python/Ruby/Node.js/Lua
 
 Yes you can use any of them as platform-independent glue code. But there are several disadvantages:
 
