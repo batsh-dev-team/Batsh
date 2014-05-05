@@ -22,6 +22,7 @@ and expression =
   | String of string
   | Result of arithmetic
   | StrBinary of (string * expression * expression)
+  | TestUnary of (string * expression)
   | Command of (expression * expressions)
   | List of expressions
   | Raw of string

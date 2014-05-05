@@ -43,7 +43,7 @@ let rec compile_expr_to_arith
     ArithBinary (operator,
                  compile_expr_to_arith left,
                  compile_expr_to_arith right)
-  | BAST.String _ 
+  | BAST.String _
   | BAST.List _
   | BAST.StrCompare _
   | BAST.Concat _
@@ -133,9 +133,7 @@ and compile_assignment
   : statement =
   let lvalue = compile_leftvalue lvalue ~symtable ~scope in
   let expr_compiled = compile_expr expr ~symtable ~scope in
-  match expr with
-  | BAST.StrCompare _ ->
-    let test_stmt = Expression expr_compiled in
+  let split_test (test_stmt : statement) : statement =
     let assignment = Assignment
         (lvalue,
          Result (
@@ -143,6 +141,20 @@ and compile_assignment
                        Leftvalue (Identifier "?"))))
     in
     Block [test_stmt; assignment]
+  in
+  match expr with
+  | BAST.StrCompare _ ->
+    let test_stmt = Expression expr_compiled in
+    split_test test_stmt
+  | BAST.Call ("exists", exprs) ->
+    let params_1 params =
+      match params with
+      | param :: _ -> param
+      | _ -> failwith ("exists must have only 1 parameter.")
+    in
+    let param = compile_expr (params_1 exprs) ~symtable ~scope in
+    let test_stmt = Expression (TestUnary ("-f", param)) in
+    split_test test_stmt
   | _ ->
     Assignment (lvalue, expr_compiled)
 

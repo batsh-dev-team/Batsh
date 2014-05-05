@@ -68,6 +68,8 @@ let rec print_expression buf (expr: expression) =
     bprintf buf "$((%a))" (print_arith ~paren:false) arith
   | StrBinary binary ->
     print_str_binary buf binary
+  | TestUnary test ->
+    print_test_unary buf test
   | Command cmd ->
     bprintf buf "$(%a)" print_command cmd
   | List exprs ->
@@ -90,6 +92,13 @@ and print_str_binary (buf: Buffer.t) (operator, left, right) =
     bprintf buf "[ %a == %a ]" print_expression left print_expression right
   | "!=" ->
     bprintf buf "[ %a != %a ]" print_expression left print_expression right
+  | _ ->
+    failwith ("Unknown operator: " ^ operator)
+
+and print_test_unary (buf: Buffer.t) (operator, expr) =
+  match operator with
+  | "-f" ->
+    bprintf buf "[ %s %a ]" operator print_expression expr
   | _ ->
     failwith ("Unknown operator: " ^ operator)
 

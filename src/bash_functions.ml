@@ -18,7 +18,7 @@ let rec expand_expression (expr : expression) : expression =
     expand_command name exprs
   | List (exprs) ->
     List (expand_expressions exprs)
-  | String _ | Result _ | Raw _ -> expr
+  | String _ | Result _ | Raw _ | TestUnary _ -> expr
 
 and expand_expressions (exprs : expressions) : expressions =
   List.map exprs ~f: expand_expression
