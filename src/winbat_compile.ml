@@ -214,7 +214,7 @@ let rec compile_expression_statement
   | Leftvalue _ ->
     [] (* No side effect *)
   | _ ->
-    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr); 
+    Sexp.output_hum stderr (Batsh_ast.sexp_of_expression expr);
     assert false (* TODO *)
 
 let compile_arith_assignment

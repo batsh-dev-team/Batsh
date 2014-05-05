@@ -84,9 +84,9 @@ and compile_expr
       assert false
 
 and compile_call
-  (ident, exprs)
-  ~(symtable: Symbol_table.t)
-  ~(scope: Symbol_table.Scope.t)
+    (ident, exprs)
+    ~(symtable: Symbol_table.t)
+    ~(scope: Symbol_table.Scope.t)
   : expression =
   match ident with
   | "exists" ->

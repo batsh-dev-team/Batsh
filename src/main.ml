@@ -12,19 +12,19 @@ type copts = {
 
 let copts_sect = "COMMON OPTIONS"
 
-let copts_t = 
-  let docs = copts_sect in 
+let copts_t =
+  let docs = copts_sect in
 
   let output_type =
-    let doc = "Print abstract syntax tree instead." in 
+    let doc = "Print abstract syntax tree instead." in
     let quiet = Ast, Arg.info ["ast"] ~docs ~doc in
 
     let doc = "Print symbol table instead." in
-    let verbose = Symbols, Arg.info ["symbols"] ~docs ~doc in 
-    Arg.(last & vflag_all [Code] [quiet; verbose]) 
+    let verbose = Symbols, Arg.info ["symbols"] ~docs ~doc in
+    Arg.(last & vflag_all [Code] [quiet; verbose])
   in
 
-  let output_file = 
+  let output_file =
     let doc = "Write output to $(docv)." in
     let opts = ["o"; "output"] in
     Arg.(value & opt (some string) None & info opts ~docs ~doc ~docv:"FILE")
@@ -68,7 +68,14 @@ let bash =
   in
   let cmd opts (filename : string) =
     let batsh = parse_with_error filename in
-    let bash = Bash.compile batsh in
+    let bash =
+      try
+        Bash.compile batsh
+      with
+      | Errors.SemanticError (msg, context) ->
+        eprintf "%s\n%s\n" msg context;
+        exit 1
+    in
     let code = lazy (Bash.print bash) in
     let ast = lazy (Bash.ast bash |> Bash_ast.sexp_of_t) in
     print_common opts ~code ~ast ~batsh
@@ -83,7 +90,14 @@ let winbat =
   in
   let cmd opts (filename : string) =
     let batsh = parse_with_error filename in
-    let winbat = Winbat.compile batsh in
+    let winbat =
+      try
+        Winbat.compile batsh
+      with
+      | Errors.SemanticError (msg, context) ->
+        eprintf "%s\n%s\n" msg context;
+        exit 1
+    in
     let code = lazy (Winbat.print winbat) in
     let ast = lazy (Winbat.ast winbat |> Winbat_ast.sexp_of_t) in
     print_common opts ~code ~ast ~batsh
