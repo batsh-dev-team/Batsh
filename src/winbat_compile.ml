@@ -124,6 +124,9 @@ let compile_expression_to_comparison
     `UniCompare ("", [`Str "1"])
   | Bool false | Int _ ->
     `UniCompare ("!", [`Str "1"])
+  | Call ("exists", (sub_expr :: _)) ->
+    let clause = compile_expression sub_expr ~symtable ~scope in
+    `TestCompare ("exist", clause)
   | _ ->
     raise (Errors.SemanticError
              ("Expression can not compile to comparison",
@@ -192,15 +195,35 @@ let compile_call
     in
     stmts
   else
-    (* external command *)
-    let stmts =
-      match return_value with
-      | Some lvalue ->
-        [`Output (lvalue, [`Str ident], args)]
-      | None ->
-        [`Call ([`Str ident], args)]
-    in
-    stmts
+    match ident with
+    | "exists" ->
+      let params_1 params =
+        match params with
+        | param :: _ -> param
+        | _ -> failwith ("exists must have only 1 parameter.")
+      in
+      let arg = compile_expression (params_1 exprs) ~symtable ~scope in
+      let cond = `TestCompare ("exist", arg) in
+      let stmts =
+        match return_value with
+        | Some lvalue ->
+          let true_stmt = [`ArithAssign (lvalue, `Int 1)] in
+          let false_stmt = [`ArithAssign (lvalue, `Int 0)] in
+          [`IfElse (cond, true_stmt, false_stmt)]
+        | None ->
+          [`IfElse (cond, [], [])]
+      in
+      stmts
+    | _ ->
+      (* external command *)
+      let stmts =
+        match return_value with
+        | Some lvalue ->
+          [`Output (lvalue, [`Str ident], args)]
+        | None ->
+          [`Call ([`Str ident], args)]
+      in
+      stmts
 
 let rec compile_expression_statement
     (expr : Batsh_ast.expression)
@@ -405,6 +428,9 @@ let compile_function_comparison
     ~(scope : Symbol_table.Scope.t)
   : comparison =
   match cond with
+  | `TestCompare (operator, expr) ->
+    `TestCompare (operator,
+                  compile_function_varstrings expr ~symtable ~scope)
   | `UniCompare (operator, expr) ->
     `UniCompare (operator,
                  compile_function_varstrings expr ~symtable ~scope)

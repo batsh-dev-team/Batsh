@@ -19,7 +19,7 @@ let test_bash name batsh expected =
   let bash = Bash.compile batsh in
   let code = (Bash.print bash) ^ "\n" in
   (* Code *)
-  let inx = In_channel.create ("bash/" ^ name ^ ".sh") in
+  let inx = In_channel.create ("tests/bash/" ^ name ^ ".sh") in
   let code_expected = In_channel.input_all inx in
   In_channel.close inx;
   assert_equal code_expected code ~printer: Fn.id;
@@ -35,7 +35,7 @@ let test_winbat name batsh expected =
   let winbat = Winbat.compile batsh in
   let code = (Winbat.print winbat) ^ "\n" in
   (* Code *)
-  let inx = In_channel.create ("batch/" ^ name ^ ".bat") in
+  let inx = In_channel.create ("tests/batch/" ^ name ^ ".bat") in
   let code_expected = In_channel.input_all inx in
   In_channel.close inx;
   assert_equal code_expected code ~printer: Fn.id;
@@ -53,7 +53,7 @@ let test_winbat name batsh expected =
   test_result expected output exit_status
 
 let get_expected name =
-  let answer_filename = "output/" ^ name ^ ".txt" in
+  let answer_filename = "tests/output/" ^ name ^ ".txt" in
   let inx = In_channel.create answer_filename in
   let expected = In_channel.input_all inx in
   In_channel.close inx;
@@ -61,7 +61,7 @@ let get_expected name =
 
 let test name func _ =
   let expected = get_expected name in
-  let filename = name ^ ".batsh" in
+  let filename = "tests/" ^ name ^ ".batsh" in
   let batsh = Parser.create_from_file filename in
   func name batsh expected
 
@@ -77,6 +77,7 @@ let test_cases = "Batsh Unit Tests" >::: [
     "[Bash]Function"      >:: test "function" test_bash;
     "[Bash]Recursion"     >:: test "recursion" test_bash;
     "[Bash]Command"       >:: test "command" test_bash;
+    "[Bash]Exists"        >:: test "exists" test_bash;
     "[Winbat]Comment"     >:: test "comment" test_winbat;
     "[Winbat]Block"       >:: test "block" test_winbat;
     "[Winbat]Arith"       >:: test "arith" test_winbat;
@@ -88,6 +89,7 @@ let test_cases = "Batsh Unit Tests" >::: [
     "[Winbat]Function"    >:: test "function" test_winbat;
     "[Winbat]Recursion"   >:: test "recursion" test_winbat;
     "[Winbat]Command"     >:: test "command" test_winbat;
+    "[Winbat]Exists"      >:: test "exists" test_winbat;
   ]
 
 let _ =

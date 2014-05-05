@@ -1,0 +1,11 @@
+ex = exists("Makefile");
+println(ex);
+exists("Makefile");
+if (exists("Makefile")) {
+  println("Yes");
+}
+if (exists("none")) {
+  println("Impossible");
+} else {
+  println("No");
+}

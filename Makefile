@@ -12,7 +12,7 @@ uninstall:
 
 test: build
 	ocp-build test
-	@cd tests && ../_obuild/test/test.asm
+	@./_obuild/test/test.asm
 
 update: build
 	node scripts/update.js | bash
