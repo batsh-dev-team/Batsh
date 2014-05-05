@@ -68,13 +68,15 @@ d = c ++ b;
 ### Command
 
 ```javascript
-echo("Hello");
 // On UNIX
 output = ls();
 // On Windows
-Output = dir();
+output = dir();
 // Platform independent
 output = readdir();
+
+// Test existence
+ex = exists("file.txt");
 ```
 
 ### If condition
@@ -161,6 +163,10 @@ Put `rawStatement` into compiled code for Windows Batch. Ignore for Bash.
 ### `readdir(path)`
 
 Equals to `ls` and `dir /w`.
+
+### `exists(path)`
+
+Test existence of given path. 
 
 ## Command Line Usage
 
