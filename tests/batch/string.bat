@@ -22,7 +22,7 @@ echo !_5!2
 set _6=32
 set /a _7=^(3 + !_6!^)
 echo !_7!
-if /i BYVoid EQU BYVoid (
+if BYVoid EQU BYVoid (
   set /a _8=1
 ) else (
   set /a _8=0

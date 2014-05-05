@@ -4,7 +4,7 @@ setlocal EnableExtensions
 
 set /a i=0
 :WHILE_0
-if /i !i! LSS 5 (
+if !i! LSS 5 (
   echo | set /p ^=!i! 
   set /a i=^(!i! + 1^)
   goto WHILE_0
@@ -15,7 +15,7 @@ set /a n=0
 set /a i=0
 set /a j=1
 :WHILE_1
-if /i !n! LSS 40 (
+if !n! LSS 40 (
   set /a k=^(!i! + !j!^)
   set i=!j!
   set j=!k!

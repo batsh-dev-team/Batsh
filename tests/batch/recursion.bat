@@ -11,7 +11,7 @@ set _2=!_6!
 echo !_2!
 set /a i=0
 :WHILE_8
-if /i !i! LSS 7 (
+if !i! LSS 7 (
   set _3=!i!
   call :fibonacci _7 0 _3
   set _4=!_7!
@@ -24,7 +24,7 @@ goto :EOF
 :loop
 set num_%~2=!%~3!
 echo !num_%~2!
-if /i !num_%~2! GTR 0 (
+if !num_%~2! GTR 0 (
   set /a _0_%~2=^(!num_%~2! - 1^)
   set /a _1_%~2=^(1 + %~2^)
   call :loop _2_%~2 !_1_%~2! _0_%~2
@@ -34,7 +34,7 @@ if /i !num_%~2! GTR 0 (
 goto :EOF
 :fact
 set num_%~2=!%~3!
-if /i !num_%~2! EQU 0 (
+if !num_%~2! EQU 0 (
   set %~1=1
   goto :EOF
 ) else (
@@ -50,11 +50,11 @@ if /i !num_%~2! EQU 0 (
 goto :EOF
 :fibonacci
 set num_%~2=!%~3!
-if /i !num_%~2! EQU 0 (
+if !num_%~2! EQU 0 (
   set %~1=0
   goto :EOF
 ) else (
-  if /i !num_%~2! EQU 1 (
+  if !num_%~2! EQU 1 (
     set %~1=1
     goto :EOF
   ) else (

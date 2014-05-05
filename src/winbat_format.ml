@@ -51,7 +51,7 @@ let rec print_leftvalue
         (print_leftvalue ~bare: true) lvalue
         (print_varint ~bare: true) index
     else
-      bprintf buf "!%a_%a!" 
+      bprintf buf "!%a_%a!"
         (print_leftvalue ~bare: true) lvalue
         (print_varint ~bare: true) index
 
@@ -109,6 +109,10 @@ let print_parameters buf (params : parameters) =
 
 let print_comparison buf (condition : comparison) =
   match condition with
+  | `TestCompare (operator, expr) ->
+    bprintf buf "%s %a"
+      operator
+      print_varstrings expr
   | `UniCompare (operator, expr) -> (
       let sign = match operator with
         | "" -> "EQU"
@@ -170,12 +174,12 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
       print_parameters params
       (print_leftvalue ~bare: true) lvalue
   | `If (condition, stmts) ->
-    bprintf buf "if /i %a (\n%a\n%a)"
+    bprintf buf "if %a (\n%a\n%a)"
       print_comparison condition
       (print_statements ~indent: (indent + 2)) stmts
       Formatutil.print_indent indent
   | `IfElse (condition, then_stmts, else_stmts) ->
-    bprintf buf "if /i %a (\n%a\n%a) else (\n%a\n%a)"
+    bprintf buf "if %a (\n%a\n%a) else (\n%a\n%a)"
       print_comparison condition
       (print_statements ~indent: (indent + 2)) then_stmts
       Formatutil.print_indent indent
