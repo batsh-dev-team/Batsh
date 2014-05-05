@@ -209,3 +209,5 @@ Those reasons are why I developed Batsh.
 * [Song Zhang](http://www.linkedin.com/pub/song-zhang/76/632/b51)
 * [Anthony Chan](https://github.com/anthonyhchan)
 * [jeb-de](https://github.com/jeb-de)
+* [Al Ramirez](https://github.com/mirez)
+* [Nixola](https://github.com/Nixola)
