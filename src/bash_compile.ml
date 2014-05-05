@@ -76,13 +76,30 @@ and compile_expr
                  compile_expr left,
                  compile_expr right)
     | BAST.Call (ident, exprs) ->
-      let params = List.map exprs ~f: compile_expr in
-      Command (String ident, params)
+      compile_call (ident, exprs) ~symtable ~scope
     | BAST.List exprs ->
       List (List.map exprs ~f: compile_expr)
     | BAST.ArithUnary _
     | BAST.ArithBinary _ ->
       assert false
+
+and compile_call
+  (ident, exprs)
+  ~(symtable: Symbol_table.t)
+  ~(scope: Symbol_table.Scope.t)
+  : expression =
+  match ident with
+  | "exists" ->
+    let params_1 params =
+      match params with
+      | param :: _ -> param
+      | _ -> failwith ("exists must have only 1 parameter.")
+    in
+    let param = compile_expr (params_1 exprs) ~symtable ~scope in
+    TestUnary ("-e", param)
+  | _ ->
+    let params = List.map exprs ~f: (compile_expr ~symtable ~scope) in
+    Command (String ident, params)
 
 and compile_leftvalue
     (lvalue: BAST.leftvalue)
@@ -146,15 +163,9 @@ and compile_assignment
   | BAST.StrCompare _ ->
     let test_stmt = Expression expr_compiled in
     split_test test_stmt
-  | BAST.Call ("exists", exprs) ->
-    let params_1 params =
-      match params with
-      | param :: _ -> param
-      | _ -> failwith ("exists must have only 1 parameter.")
-    in
-    let param = compile_expr (params_1 exprs) ~symtable ~scope in
-    let test_stmt = Expression (TestUnary ("-f", param)) in
-    split_test test_stmt
+  | BAST.Call (("exists", _) as call) ->
+    let test_expr = compile_call call ~symtable ~scope in
+    split_test (Expression test_expr)
   | _ ->
     Assignment (lvalue, expr_compiled)
 

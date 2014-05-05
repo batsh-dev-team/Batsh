@@ -96,11 +96,7 @@ and print_str_binary (buf: Buffer.t) (operator, left, right) =
     failwith ("Unknown operator: " ^ operator)
 
 and print_test_unary (buf: Buffer.t) (operator, expr) =
-  match operator with
-  | "-f" ->
-    bprintf buf "[ %s %a ]" operator print_expression expr
-  | _ ->
-    failwith ("Unknown operator: " ^ operator)
+  bprintf buf "[ %s %a ]" operator print_expression expr
 
 and print_command (buf: Buffer.t) (name, params) =
   bprintf buf "%a %a"
@@ -144,6 +140,8 @@ and print_condition (buf : Buffer.t) (expr : expression) =
   | StrBinary (("==", _, _) as bin)
   | StrBinary (("!=", _, _) as bin) ->
     print_str_binary buf bin
+  | TestUnary test ->
+    print_test_unary buf test
   | _ ->
     bprintf buf "[ %a == 1 ]" print_expression expr
 
