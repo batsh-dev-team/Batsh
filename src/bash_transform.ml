@@ -96,7 +96,7 @@ let rec split_statement
     prepend_assignments assignments (Expression expr)
   | Assignment (lvalue, expr) ->
     let assignments, expr = split_expression expr
-        ~split_list:false ~symtable ~scope
+        ~split_list:false ~split_strcmp:false ~symtable ~scope
     in
     prepend_assignments assignments (Assignment (lvalue, expr))
   | If (expr, stmt) ->
