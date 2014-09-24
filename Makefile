@@ -1,5 +1,5 @@
-build: ocp-build.root
-	ocp-build build -njobs 16
+build: _obuild
+	ocp-build build batsh
 	ln -sf _obuild/batsh/batsh.asm batsh
 
 LIBDIR=$(CAML_LD_LIBRARY_PATH)/../batsh
@@ -11,16 +11,19 @@ uninstall:
 	ocp-build uninstall -install-lib "$(LIBDIR)"
 
 test: build
-	ocp-build test
+	ocp-build build test
 	@./_obuild/test/test.asm
 
 update: build
 	node scripts/update.js | bash
 
-ocp-build.root:
-	ocp-build root
+_obuild:
+	ocp-build init
 
 clean:
 	ocp-build clean
+
+distclean:
+	rm -rf _obuild
 
 .PHONY: build

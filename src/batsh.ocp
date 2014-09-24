@@ -39,7 +39,7 @@ begin program "batsh"
   requires = ["batsh-lib" "cmdliner"]
 end
 
-begin test "test"
+begin program "test"
   files = ["test.ml"]
   test_dir = "tests"
   test_asm = false
