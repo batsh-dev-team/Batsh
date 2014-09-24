@@ -45,6 +45,7 @@ begin program "test"
   test_asm = false
   test_byte = false
   requires = ["batsh-lib" "core" "oUnit" "threads"]
+  install = false
 end
 
 begin syntax "sexplib-syntax"
