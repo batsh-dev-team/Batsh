@@ -30,6 +30,7 @@ begin library "batsh-lib"
     "winbat_transform.ml"
   ]
   requires = ["core_kernel" "dlist" "sexplib-syntax"]
+  bundle = [ "batsh" ]
 end
 
 begin program "batsh"
@@ -73,7 +74,7 @@ begin
     dirname = ["%{type_conv_DST_DIR}%"]
     begin library "pa_type_conv"
       is_before = ["pa_macro"]
-      requires = ["camlp4lib" "camlp4-pa-o" "camlp4-pa-op"]
+      requires = ["camlp4-pa-o" "camlp4-pa-op"]
       files = ["pa_type_conv.ml"]
     end
     begin syntax "pa_type_conv.syntax"

@@ -2,13 +2,17 @@ build: _obuild
 	ocp-build build batsh
 	ln -sf _obuild/batsh/batsh.asm batsh
 
-LIBDIR=$(CAML_LD_LIBRARY_PATH)/../batsh
+LIBDIR=$(CAML_LD_LIBRARY_PATH)/..
+BATSHDIR=$(LIBDIR)/batsh
 
 install: build
-	ocp-build install -install-lib "$(LIBDIR)"
+	ocp-build install batsh-lib batsh -install-lib "$(LIBDIR)"
+	# This is an unly wordaround for fixing the generated META file
+	sed -i 's/ camlp4lib//g' "$(LIBDIR)/META.batsh"
+	sed -i 's/ camlp4lib//g' "$(LIBDIR)/META.batsh-lib"
 
 uninstall:
-	ocp-build uninstall -install-lib "$(LIBDIR)"
+	ocp-build uninstall
 
 test: build
 	ocp-build build test
