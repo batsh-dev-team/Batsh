@@ -1,3 +1,0 @@
-Println Called
-Echo Called
-Value 100%

@@ -1,6 +1,0 @@
-Yes
-2
-True
-a is not b
-43 == num
-43 === num

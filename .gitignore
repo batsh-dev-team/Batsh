@@ -1,6 +1,0 @@
-_obuild/
-*.sublime*
-ocp-build.root*
-tests/oUnit*
-batsh
-oUnit-anon.cache
