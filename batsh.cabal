@@ -1,0 +1,19 @@
+Name:		  			Batsh
+Version:	   			0.1.0
+Cabal-Version:  		>= 1.2
+License:				MIT
+Author:					Carbo Kuo
+Homepage:				https://github.com/BYVoid/Batsh
+Bug-Reports:			https://github.com/BYVoid/Batsh/issues
+Category:				Compiler
+Synopsis:				A language that compiles to Bash and Windows Batch
+Build-Type:     		Simple
+
+Library
+  Build-Depends:		base
+  Exposed-Modules:  	BatshAst
+  Hs-Source-Dirs:  		src
+
+Executable main
+  Main-Is:         		Main.hs
+  Hs-Source-Dirs:  		src
