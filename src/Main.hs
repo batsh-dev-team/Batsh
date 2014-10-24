@@ -1,4 +1,4 @@
-import BatshLex
+import qualified BatshLex
 
 main = do
   s <- getContents

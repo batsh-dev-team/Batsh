@@ -13,16 +13,16 @@ $newline =    [\r\n]
 $digit =      [0-9]
 $oct_digit =  [0-7]
 $hex_digit =  [0-9A-Fa-f]
-$large     =  [A-Z \xc0-\xd6 \xd8-\xde]
-$small     =  [a-z \xdf-\xf6 \xf8-\xff \_]
-$alpha     =  [$small $large]
+$large =      [A-Z \xc0-\xd6 \xd8-\xde]
+$small =      [a-z \xdf-\xf6 \xf8-\xff \_]
+$alpha =      [$small $large]
 
 @identifier = [$alpha $underscore] [$alpha $digit $underscore]*
 
 -- Integers
 @decimal =    $digit+
 @hexadecimal = 0x $hex_digit+
-@octal       = 0 $oct_digit+
+@octal =      0 $oct_digit+
 
 -- Float
 @frac =       \. $digit*
@@ -44,6 +44,7 @@ $charesc = [abfnrtv\\\"\'\&]
 tokens :-
   $white+     ;
   @decimal    { \s -> Int (read s) }
+  @hexadecimal{ \s -> Int (read s) }
   @float      { \s -> Float (read s) }
   @string     { \s -> String (tail $ init s) }
   "true"      { \s -> BatshLex.True }
