@@ -9,13 +9,8 @@ Category:               Compiler
 Synopsis:               A language that compiles to Bash and Windows Batch
 Build-Type:             Simple
 
-Library
-  Build-Depends:        array, base
-  Exposed-Modules:      BatshAst
-  Other-Modules:		BatshLex
-  Hs-Source-Dirs:       src
-
 Executable batsh
   Main-Is:              Main.hs
-  Other-Modules:		BatshAst, BatshLex
+  Other-Modules:        BatshAst, BatshLex
   Hs-Source-Dirs:       src
+  Build-Depends:        array, base
