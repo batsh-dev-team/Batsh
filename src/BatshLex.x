@@ -121,4 +121,7 @@ data Token = Identifier String
   | LBrace
   | RBrace
   deriving (Eq,Show)
+
+scanTokens = alexScanTokens
+
 }
