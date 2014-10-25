@@ -3,10 +3,12 @@ import Data.Monoid
 import Test.HUnit
 import Test.Framework
 import Test.Framework.Providers.HUnit
+import qualified BatshAst
 import qualified BatshLex
+import qualified BatshParser
 
-lexerTest :: Assertion
-lexerTest = do
+testLexer :: Assertion
+testLexer = do
   let testSingle str expected = do
       let tokens = BatshLex.alexScanTokens str
       let token = head tokens
@@ -52,7 +54,14 @@ lexerTest = do
   testSingle "{" BatshLex.LBrace
   testSingle "}" BatshLex.RBrace
 
+testParser :: Assertion
+testParser = do
+  let ast = BatshParser.parse "3"
+  assertEqual (show ast)
+    (BatshAst.Expression $ BatshAst.Literal $ BatshAst.Int 3) ast
+
 main :: IO ()
 main = defaultMainWithOpts
-  [testCase "Lexer" lexerTest]
+  [testCase "Lexer" testLexer,
+   testCase "Parser" testParser]
   mempty
