@@ -13,6 +13,7 @@ data UnaryOperator = Not | Negative
   deriving (Eq,Show)
 
 data BinaryOperator = Equal | Plus | Minus | Multiply | Divide
+  | Modulo | Concat
   deriving (Eq,Show)
 
 data LeftValue = Identifier Identifier
@@ -40,7 +41,7 @@ data Statement = Comment String
   deriving (Eq,Show)
 
 data TopLevel = Statement Statement
-  | Function (Identifier, [Statement])
+  | Function (Identifier, [Identifier], [Statement])
   deriving (Eq,Show)
 
 type Program = [TopLevel]
