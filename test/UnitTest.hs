@@ -56,9 +56,8 @@ testLexer = do
 
 testParser :: Assertion
 testParser = do
-  let ast = BatshParser.parse "3"
-  assertEqual (show ast)
-    (BatshAst.Expression $ BatshAst.Literal $ BatshAst.Int 3) ast
+  let ast = BatshParser.parseExpression "3"
+  assertEqual (show ast) (BatshAst.Literal $ BatshAst.Int 3) ast
 
 main :: IO ()
 main = defaultMainWithOpts

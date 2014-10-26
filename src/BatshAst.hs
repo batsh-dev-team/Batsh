@@ -39,4 +39,8 @@ data Statement = Comment String
   | Return (Maybe Expression)
   deriving (Eq,Show)
 
-type TopLevel = [Statement]
+data TopLevel = Statement Statement
+  | Function (Identifier, [Statement])
+  deriving (Eq,Show)
+
+type Program = [TopLevel]
