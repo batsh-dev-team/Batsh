@@ -20,36 +20,56 @@ import qualified BatshLex
 %error      { parseError }
 
 %token
-   ident    { BatshLex.Identifier $$ }
-   comment  { BatshLex.Comment $$ }
    int      { BatshLex.Int $$ }
    float    { BatshLex.Float $$ }
    string   { BatshLex.String $$ }
    true     { BatshLex.True }
    false    { BatshLex.False }
+   if       { BatshLex.If }
+   else     { BatshLex.Else }
+   while    { BatshLex.While }
    function { BatshLex.Function }
    global   { BatshLex.Global }
    return   { BatshLex.Return }
    '!'      { BatshLex.Not }
    ';'      { BatshLex.Semicolon }
+   ','      { BatshLex.Comma }
    '+'      { BatshLex.Plus }
    '-'      { BatshLex.Minus }
    '*'      { BatshLex.Multiply }
    '/'      { BatshLex.Divide }
    '%'      { BatshLex.Modulo }
    '++'     { BatshLex.Concat }
-   ','      { BatshLex.Comma }
+   '='      { BatshLex.Assign }
+   '=='     { BatshLex.Equal }
+   '!='     { BatshLex.NotEqual }
+   '==='    { BatshLex.ArithEqual }
+   '!=='    { BatshLex.ArithNotEqual }
+   '>'      { BatshLex.Greater }
+   '<'      { BatshLex.Less }
+   '>='     { BatshLex.GreaterEqual }
+   '<='     { BatshLex.LessEqual }
+   '&&'     { BatshLex.And }
+   '||'     { BatshLex.Or }
    '('      { BatshLex.LParen }
    ')'      { BatshLex.RParen }
    '['      { BatshLex.LBrack }
    ']'      { BatshLex.RBrack }
    '{'      { BatshLex.LBrace }
    '}'      { BatshLex.RBrace }
+   comment  { BatshLex.Comment $$ }
+   ident    { BatshLex.Identifier $$ }
 
+%right if else
+%right '='
+%left '||'
+%left '&&'
+%nonassoc '==' '!=' '===' '!=='
+%nonassoc '>' '<' '>=' '<='
 %left '++'
-%nonassoc '!'
 %left '+' '-'
 %left '*' '/' '%'
+%nonassoc '!' '-'
 
 %%
 
@@ -65,6 +85,16 @@ statement     : comment                       { BatshAst.Comment $1 }
               | global ident ';'              { BatshAst.Global $2 }
               | return expression ';'         { BatshAst.Return $ Just $2 }
               | return ';'                    { BatshAst.Return $ Nothing }
+              | if_statement                  { $1 }
+              | loop_statement                { $1 }
+
+if_statement  : if '(' expression ')'
+                statement  %prec if           { BatshAst.If ($3, $5) }
+              | if '(' expression ')'
+                statement else statement      { BatshAst.If ($3, $5) }
+
+loop_statement: while '(' expression ')'
+                statement                     { BatshAst.While ($3, $5) }
 
 expression    : leftvalue                     { BatshAst.LeftValue $1 }
               | literal                       { BatshAst.Literal $1 }
@@ -72,9 +102,10 @@ expression    : leftvalue                     { BatshAst.LeftValue $1 }
               | '(' expression ')'            { $2 }
               | unary                         { BatshAst.Unary $1 }
               | binary                        { BatshAst.Binary $1 }
+              | leftvalue '=' expression      { BatshAst.Assign ($1, $3) }
 
 unary         : '!' expression                { BatshAst.Not, $2 }
-              | '-' expression                { BatshAst.Negative, $2 }
+              | '-' expression %prec '-'      { BatshAst.Negate, $2 }
 
 binary        : expression '+' expression     { BatshAst.Plus, $1, $3 }
               | expression '-' expression     { BatshAst.Minus, $1, $3 }
@@ -82,6 +113,16 @@ binary        : expression '+' expression     { BatshAst.Plus, $1, $3 }
               | expression '/' expression     { BatshAst.Divide, $1, $3 }
               | expression '%' expression     { BatshAst.Modulo, $1, $3 }
               | expression '++' expression    { BatshAst.Concat, $1, $3 }
+              | expression '==' expression    { BatshAst.Equal, $1, $3 }
+              | expression '!=' expression    { BatshAst.NotEqual, $1, $3 }
+              | expression '===' expression   { BatshAst.ArithEqual, $1, $3 }
+              | expression '!==' expression   { BatshAst.ArithNotEqual, $1, $3 }
+              | expression '>' expression     { BatshAst.Greater, $1, $3 }
+              | expression '<' expression     { BatshAst.Less, $1, $3 }
+              | expression '>=' expression    { BatshAst.GreaterEqual, $1, $3 }
+              | expression '<=' expression    { BatshAst.LessEqual, $1, $3 }
+              | expression '&&' expression    { BatshAst.And, $1, $3 }
+              | expression '||' expression    { BatshAst.Or, $1, $3 }
 
 literal       : true                          { BatshAst.Bool True }
               | false                         { BatshAst.Bool False }

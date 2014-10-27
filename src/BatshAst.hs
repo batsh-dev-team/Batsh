@@ -9,11 +9,12 @@ data Literal = Bool Bool
 
 type Identifier = String
 
-data UnaryOperator = Not | Negative
+data UnaryOperator = Not | Negate
   deriving (Eq,Show)
 
-data BinaryOperator = Equal | Plus | Minus | Multiply | Divide
-  | Modulo | Concat
+data BinaryOperator = Plus | Minus | Multiply | Divide | Modulo | Concat
+  | Equal | NotEqual | ArithEqual | ArithNotEqual | Greater | Less
+  | GreaterEqual | LessEqual | And | Or
   deriving (Eq,Show)
 
 data LeftValue = Identifier Identifier

@@ -73,6 +73,8 @@ tokens :-
   "<"         { \s -> Less }
   ">="        { \s -> GreaterEqual }
   "<="        { \s -> LessEqual }
+  "&&"        { \s -> And }
+  "||"        { \s -> Or }
   "("         { \s -> LParen }
   ")"         { \s -> RParen }
   "["         { \s -> LBrack }
@@ -114,6 +116,8 @@ data Token = Identifier String
   | Less
   | GreaterEqual
   | LessEqual
+  | And
+  | Or
   | LParen
   | RParen
   | LBrack
