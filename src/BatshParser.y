@@ -91,7 +91,7 @@ statement     : comment                       { BatshAst.Comment $1 }
 if_statement  : if '(' expression ')'
                 statement  %prec if           { BatshAst.If ($3, $5) }
               | if '(' expression ')'
-                statement else statement      { BatshAst.If ($3, $5) }
+                statement else statement      { BatshAst.IfElse ($3, $5, $7) }
 
 loop_statement: while '(' expression ')'
                 statement                     { BatshAst.While ($3, $5) }
