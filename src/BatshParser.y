@@ -94,11 +94,9 @@ leftvalue     : ident                         { BatshAst.Identifier $1 }
               | leftvalue '[' expression ']'  { BatshAst.ListAccess ($1, $3) }
 
 toplevels     :                               { [] }
-              | toplevel                      { [$1] }
               | toplevel toplevels            { $1 : $2 }
 
 statements    :                               { [] }
-              | statement                     { [$1] }
               | statement statements          { $1 : $2 }
 
 expressions   :                               { [] }
