@@ -1,0 +1,16 @@
+println(false);
+println(true);
+println(42);
+println(1 + (4 + 6) * 3);
+println(8 - 3 % 2);
+println(-9 - 9);
+println((2 + 8) / 3);
+println(2 === 2);
+println(6 !== 8);
+println(3 > 2);
+println(4 < 5);
+println(6 >= 2);
+println(19 <= 30);
+println(!true);
+println(!false);
+println(!(2 - 1));

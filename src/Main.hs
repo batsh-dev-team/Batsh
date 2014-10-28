@@ -1,5 +1,6 @@
-import qualified BatshLex
+import qualified BatshParser
+import Text.Show.Pretty(ppShow)
 
 main = do
   s <- getContents
-  print (BatshLex.scanTokens s)
+  putStrLn (ppShow $ BatshParser.parse s)

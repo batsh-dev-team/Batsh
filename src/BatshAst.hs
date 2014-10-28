@@ -5,21 +5,21 @@ data Literal = Bool Bool
   | Float Float
   | String String
   | List [Expression]
-  deriving (Eq,Show)
+  deriving (Eq,Read,Show)
 
 type Identifier = String
 
 data UnaryOperator = Not | Negate
-  deriving (Eq,Show)
+  deriving (Eq,Read,Show)
 
 data BinaryOperator = Plus | Minus | Multiply | Divide | Modulo | Concat
   | Equal | NotEqual | ArithEqual | ArithNotEqual | Greater | Less
   | GreaterEqual | LessEqual | And | Or
-  deriving (Eq,Show)
+  deriving (Eq,Read,Show)
 
 data LeftValue = Identifier Identifier
   | ListAccess (LeftValue, Expression)
-  deriving (Eq,Show)
+  deriving (Eq,Read,Show)
 
 data Expression = LeftValue LeftValue
   | Literal Literal
@@ -27,7 +27,7 @@ data Expression = LeftValue LeftValue
   | Binary (BinaryOperator, Expression, Expression)
   | Assign (LeftValue, Expression)
   | Call (Identifier, [Parameter])
-  deriving (Eq,Show)
+  deriving (Eq,Read,Show)
 
 type Parameter = Expression
 
@@ -39,10 +39,10 @@ data Statement = Comment String
   | While (Expression, Statement)
   | Global Identifier
   | Return (Maybe Expression)
-  deriving (Eq,Show)
+  deriving (Eq,Read,Show)
 
 data TopLevel = Statement Statement
   | Function (Identifier, [Identifier], [Statement])
-  deriving (Eq,Show)
+  deriving (Eq,Read,Show)
 
 type Program = [TopLevel]

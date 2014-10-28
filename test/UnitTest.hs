@@ -3,6 +3,8 @@ import Data.Monoid
 import Test.HUnit
 import Test.Framework
 import Test.Framework.Providers.HUnit
+
+import Batsh
 import BatshAst
 import qualified BatshLex
 import qualified BatshParser
@@ -81,8 +83,21 @@ testParser = do
   testStatement "if (1) if (2) {true;} else {}" (If (Literal (Int 1), IfElse (
     Literal (Int 2), Block [Expression (Literal (Bool True))], Block [])))
 
+testParseFile :: Assertion
+testParseFile = do
+  let testParseFile codeFile astFile = do
+      expected <- parseFromAstFile astFile
+      ast <- parseFromFile codeFile
+      assertEqual (show ast) expected ast
+  let testCaseDir = "test/testcase"
+  let testCases = ["arith"]
+  forM_ testCases $ \testcase ->
+    testParseFile (testCaseDir ++ "/Batsh/" ++ testcase ++ ".batsh")
+                  (testCaseDir ++ "/BatshAst/" ++ testcase ++ ".parsed")
+
 main :: IO ()
 main = defaultMainWithOpts
   [testCase "Lexer" testLexer,
-   testCase "Parser" testParser]
+   testCase "Parser" testParser,
+   testCase "ParseFile" testParseFile]
   mempty
