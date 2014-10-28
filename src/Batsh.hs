@@ -1,12 +1,12 @@
 module Batsh where
 
-import BatshAst
-import qualified BatshParser
+import Batsh.Ast
+import qualified Batsh.Parser
 
 parseFromFile :: FilePath -> IO Program
 parseFromFile path = do
   code <- readFile path
-  return (BatshParser.parse code)
+  return (Batsh.Parser.parse code)
 
 parseFromAstFile :: FilePath -> IO Program
 parseFromAstFile path = do

@@ -12,9 +12,9 @@ Build-Type:             Simple
 Library
   Build-Depends:        array, base
   Exposed-Modules:      Batsh,
-                        BatshAst,
-                        BatshLex,
-                        BatshParser
+                        Batsh.Ast,
+                        Batsh.Lexer,
+                        Batsh.Parser
   Hs-Source-Dirs:       src
 
 Executable batsh

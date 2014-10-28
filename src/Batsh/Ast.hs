@@ -1,4 +1,4 @@
-module BatshAst where
+module Batsh.Ast where
 
 data Literal = Bool Bool
   | Int Int

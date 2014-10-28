@@ -5,58 +5,58 @@ import Test.Framework
 import Test.Framework.Providers.HUnit
 
 import Batsh
-import BatshAst
-import qualified BatshLex
-import qualified BatshParser
+import Batsh.Ast
+import qualified Batsh.Lexer as Lexer
+import qualified Batsh.Parser
 
 testLexer :: Assertion
 testLexer = do
   let testSingle str expected = do
-      let tokens = BatshLex.alexScanTokens str
+      let tokens = Lexer.scanTokens str
       let token = head tokens
       assertEqual "Number of tokens" 1 (length tokens)
       assertEqual (show token) expected token
-  testSingle "variable" $ BatshLex.Identifier "variable"
-  testSingle "//a line comment" $ BatshLex.Comment "a line comment"
-  testSingle "42" $ BatshLex.Int 42
-  testSingle "0xFF" $ BatshLex.Int 255
-  testSingle "3.14" $ BatshLex.Float 3.14
-  testSingle "1E-8" $ BatshLex.Float 1e-8
-  testSingle "\"string\\n\"" $ BatshLex.String "string\\n"
-  testSingle "true" BatshLex.True
-  testSingle "false" BatshLex.False
-  testSingle "if" BatshLex.If
-  testSingle "else" BatshLex.Else
-  testSingle "while" BatshLex.While
-  testSingle "function" BatshLex.Function
-  testSingle "global" BatshLex.Global
-  testSingle "return" BatshLex.Return
-  testSingle "!" BatshLex.Not
-  testSingle ";" BatshLex.Semicolon
-  testSingle "," BatshLex.Comma
-  testSingle "+" BatshLex.Plus
-  testSingle "-" BatshLex.Minus
-  testSingle "*" BatshLex.Multiply
-  testSingle "/" BatshLex.Divide
-  testSingle "%" BatshLex.Modulo
-  testSingle "++" BatshLex.Concat
-  testSingle "=" BatshLex.Assign
-  testSingle "==" BatshLex.Equal
-  testSingle "!=" BatshLex.NotEqual
-  testSingle "===" BatshLex.ArithEqual
-  testSingle "!==" BatshLex.ArithNotEqual
-  testSingle ">" BatshLex.Greater
-  testSingle "<" BatshLex.Less
-  testSingle ">=" BatshLex.GreaterEqual
-  testSingle "<=" BatshLex.LessEqual
-  testSingle "&&" BatshLex.And
-  testSingle "||" BatshLex.Or
-  testSingle "(" BatshLex.LParen
-  testSingle ")" BatshLex.RParen
-  testSingle "[" BatshLex.LBrack
-  testSingle "]" BatshLex.RBrack
-  testSingle "{" BatshLex.LBrace
-  testSingle "}" BatshLex.RBrace
+  testSingle "variable" $ Lexer.Identifier "variable"
+  testSingle "//a line comment" $ Lexer.Comment "a line comment"
+  testSingle "42" $ Lexer.Int 42
+  testSingle "0xFF" $ Lexer.Int 255
+  testSingle "3.14" $ Lexer.Float 3.14
+  testSingle "1E-8" $ Lexer.Float 1e-8
+  testSingle "\"string\\n\"" $ Lexer.String "string\\n"
+  testSingle "true" Lexer.True
+  testSingle "false" Lexer.False
+  testSingle "if" Lexer.If
+  testSingle "else" Lexer.Else
+  testSingle "while" Lexer.While
+  testSingle "function" Lexer.Function
+  testSingle "global" Lexer.Global
+  testSingle "return" Lexer.Return
+  testSingle "!" Lexer.Not
+  testSingle ";" Lexer.Semicolon
+  testSingle "," Lexer.Comma
+  testSingle "+" Lexer.Plus
+  testSingle "-" Lexer.Minus
+  testSingle "*" Lexer.Multiply
+  testSingle "/" Lexer.Divide
+  testSingle "%" Lexer.Modulo
+  testSingle "++" Lexer.Concat
+  testSingle "=" Lexer.Assign
+  testSingle "==" Lexer.Equal
+  testSingle "!=" Lexer.NotEqual
+  testSingle "===" Lexer.ArithEqual
+  testSingle "!==" Lexer.ArithNotEqual
+  testSingle ">" Lexer.Greater
+  testSingle "<" Lexer.Less
+  testSingle ">=" Lexer.GreaterEqual
+  testSingle "<=" Lexer.LessEqual
+  testSingle "&&" Lexer.And
+  testSingle "||" Lexer.Or
+  testSingle "(" Lexer.LParen
+  testSingle ")" Lexer.RParen
+  testSingle "[" Lexer.LBrack
+  testSingle "]" Lexer.RBrack
+  testSingle "{" Lexer.LBrace
+  testSingle "}" Lexer.RBrace
 
 testParser :: Assertion
 testParser = do
@@ -64,10 +64,10 @@ testParser = do
       testAst parser code expected =
        assertEqual (show ast) expected ast
        where ast = parser code
-  let testProgram = testAst BatshParser.parse
-  let testTopLevel = testAst BatshParser.parseTopLevel
-  let testStatement = testAst BatshParser.parseStatement
-  let testExpression = testAst BatshParser.parseExpression
+  let testProgram = testAst Batsh.Parser.parse
+  let testTopLevel = testAst Batsh.Parser.parseTopLevel
+  let testStatement = testAst Batsh.Parser.parseStatement
+  let testExpression = testAst Batsh.Parser.parseExpression
   -- Expression
   testExpression "3" (Literal $ Int 3)
   testExpression "[4.2 + 3, \"str\", []]" (Literal $ List [Binary (Plus,

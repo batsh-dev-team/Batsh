@@ -2,7 +2,7 @@
 -- Rules are inspired by Haskell alex examples/haskell.x
 
 {
-module BatshLex where
+module Batsh.Lexer where
 }
 
 %wrapper "basic"
@@ -47,8 +47,8 @@ tokens :-
   @hexadecimal{ \s -> Int (read s) }
   @float      { \s -> Float (read s) }
   @string     { \s -> String (tail $ init s) }
-  "true"      { \s -> BatshLex.True }
-  "false"     { \s -> BatshLex.False }
+  "true"      { \s -> Batsh.Lexer.True }
+  "false"     { \s -> Batsh.Lexer.False }
   "if"        { \s -> If }
   "else"      { \s -> Else }
   "while"     { \s -> While }
