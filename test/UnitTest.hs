@@ -6,6 +6,7 @@ import Test.Framework.Providers.HUnit
 
 import Batsh
 import Batsh.Ast
+import qualified Batsh.Generator
 import qualified Batsh.Lexer as Lexer
 import qualified Batsh.Parser
 
@@ -95,9 +96,17 @@ testParseFile = do
     testParseFile (testCaseDir ++ "/Batsh/" ++ testcase ++ ".batsh")
                   (testCaseDir ++ "/BatshAst/" ++ testcase ++ ".parsed")
 
+testGenerator :: Assertion
+testGenerator = do
+  --let bs = Batsh.Generator.print $ List [Literal $ Int 3, LeftValue $ ListAccess (Identifier "a", Literal $ Int 3)]
+  --show bs
+  --assertEqual (show bs) True False
+  return ()
+
 main :: IO ()
 main = defaultMainWithOpts
   [testCase "Lexer" testLexer,
    testCase "Parser" testParser,
-   testCase "ParseFile" testParseFile]
+   testCase "ParseFile" testParseFile,
+   testCase "Generator" testGenerator]
   mempty

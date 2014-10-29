@@ -9,16 +9,16 @@ data Literal = Bool Bool
 
 type Identifier = String
 
+data LeftValue = Identifier Identifier
+  | ListAccess (LeftValue, Expression)
+  deriving (Eq,Read,Show)
+
 data UnaryOperator = Not | Negate
   deriving (Eq,Read,Show)
 
 data BinaryOperator = Plus | Minus | Multiply | Divide | Modulo | Concat
   | Equal | NotEqual | ArithEqual | ArithNotEqual | Greater | Less
   | GreaterEqual | LessEqual | And | Or
-  deriving (Eq,Read,Show)
-
-data LeftValue = Identifier Identifier
-  | ListAccess (LeftValue, Expression)
   deriving (Eq,Read,Show)
 
 data Expression = LeftValue LeftValue
