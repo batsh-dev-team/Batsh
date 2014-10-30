@@ -21,9 +21,9 @@ data Command
   deriving Show
 
 data BatshOpts = BatshOpts
-  { ast :: Bool,
-    tokens :: Bool,
-    symbols :: Bool }
+  { batshOptsAst :: Bool,
+    batshOptsTokens :: Bool,
+    batshOptsSymbols :: Bool }
   deriving Show
 
 version :: Parser (a -> a)
@@ -74,9 +74,9 @@ batshOpts = runA $ proc () -> do
   symbols <- asA (switch (long "symbols"
       <> help "Output symbol table")) -< ()
   returnA -< BatshOpts {
-    ast = ast,
-    tokens = tokens,
-    symbols = symbols}
+    batshOptsAst = ast,
+    batshOptsTokens = tokens,
+    batshOptsSymbols = symbols}
 
 bashParser :: Parser Command
 bashParser = pure Bash
@@ -91,13 +91,16 @@ dispatch (Args opts cmd) = case cmd of
 batsh :: FilePath -> FilePath -> BatshOpts -> IO ()
 batsh input target opts = do
   code <- readFile input
+  let program = Batsh.parse code
+  let tokens = Batsh.lex code
   let outputWithSuffix :: String -> String -> IO ();
       outputWithSuffix suffix contents = do
         let fileName = target ++ suffix
         writeFile fileName contents
-  when (tokens opts) (outputWithSuffix ".tokens" (ppShow $ Batsh.lex code))
-  when (ast opts) (outputWithSuffix ".ast" (ppShow $ Batsh.parse code))
+  when (batshOptsTokens opts) (outputWithSuffix ".tokens" (ppShow tokens))
+  when (batshOptsAst opts) (outputWithSuffix ".ast" (ppShow program))
   -- TODO symbols
+  Batsh.generateCodeToFile program target
   return ()
 
 pinfo :: ParserInfo Args

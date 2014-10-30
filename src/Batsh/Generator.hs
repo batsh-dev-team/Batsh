@@ -1,7 +1,7 @@
 module Batsh.Generator where
 
 import qualified Data.ByteString
-import Data.ByteString.Lazy(ByteString, putStr)
+import Data.ByteString.Lazy(ByteString, putStr, writeFile)
 import Data.Monoid
 import Data.ByteString.Builder(Builder,
                                charUtf8,
@@ -135,9 +135,17 @@ renderTopLevel toplevel = case toplevel of
 renderProgram :: Program -> Builder
 renderProgram program = renderSeparateList program ", " renderTopLevel
 
-printToByteString :: Program -> ByteString
-printToByteString program = toLazyByteString $ renderProgram program
+generateByteString :: Program -> ByteString
+generateByteString program = toLazyByteString $ renderProgram program
 
-print :: Program -> IO ()
-print program =
-  Data.ByteString.Lazy.putStr $ printToByteString program
+generateString :: Program -> String
+generateString = show . generateByteString
+
+printToStdout :: Program -> IO ()
+printToStdout program = do
+  Data.ByteString.Lazy.putStr $ generateByteString program
+  putChar '\n'
+
+printToFile :: Program -> FilePath -> IO ()
+printToFile program filename = Data.ByteString.Lazy.writeFile filename code
+  where code = generateByteString program

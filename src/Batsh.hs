@@ -1,6 +1,7 @@
 module Batsh where
 
 import qualified Batsh.Ast
+import qualified Batsh.Generator
 import qualified Batsh.Lexer
 import qualified Batsh.Parser
 
@@ -19,3 +20,6 @@ parseFromAstFile :: FilePath -> IO Batsh.Ast.Program
 parseFromAstFile path = do
   code <- readFile path
   return (read code :: Batsh.Ast.Program)
+
+generateCodeToFile :: Batsh.Ast.Program -> FilePath -> IO ()
+generateCodeToFile = Batsh.Generator.printToFile
