@@ -35,9 +35,23 @@ renderLeftValue lvalue = case lvalue of
                                         renderExpression expr,
                                         stringUtf8 "]"]
 
+-- Render a subexpression. Add parenthesis if and only if necessary.
+renderSubExpression :: (Operator a) => a -> Expression -> Builder
+renderSubExpression operator subExpr =
+  let rendered = renderExpression subExpr in
+  let renderedWithParen = mconcat [charUtf8 '(', rendered, charUtf8 ')'] in
+  case subExpr of
+    -- if subexpression is a binary expression and the precedence of operator is
+    -- lower, then add (). E.g. + is less precedent than *.
+    Binary (subOperator, _, _) | precedence subOperator < precedence operator ->
+         renderedWithParen
+    Unary (subOperator, _) | precedence subOperator < precedence operator ->
+         renderedWithParen
+    _ -> rendered
+
 renderUnary :: (UnaryOperator, Expression) -> Builder
 renderUnary (operator, expr) =
-  mconcat [charUtf8 operatorString, renderExpression expr]
+  mconcat [charUtf8 operatorString, renderSubExpression operator expr]
   where operatorString =
           case operator of
             Not -> '!'
@@ -45,9 +59,11 @@ renderUnary (operator, expr) =
 
 renderBinary :: (BinaryOperator, Expression, Expression) -> Builder
 renderBinary (operator, left, right) =
-  mconcat [renderExpression left,
+  mconcat [renderSubExpression operator left,
+           charUtf8 ' ',
            stringUtf8 operatorString,
-           renderExpression right]
+           charUtf8 ' ',
+           renderSubExpression operator right]
   where operatorString =
           case operator of
             Plus -> "+"
@@ -133,7 +149,8 @@ renderTopLevel toplevel = case toplevel of
   Statement stmt -> renderStatement stmt
 
 renderProgram :: Program -> Builder
-renderProgram program = renderSeparateList program ", " renderTopLevel
+renderProgram program = mconcat [renderSeparateList program "\n" renderTopLevel,
+                                 charUtf8 '\n']
 
 generateByteString :: Program -> ByteString
 generateByteString program = toLazyByteString $ renderProgram program
@@ -142,9 +159,8 @@ generateString :: Program -> String
 generateString = show . generateByteString
 
 printToStdout :: Program -> IO ()
-printToStdout program = do
+printToStdout program =
   Data.ByteString.Lazy.putStr $ generateByteString program
-  putChar '\n'
 
 printToFile :: Program -> FilePath -> IO ()
 printToFile program filename = Data.ByteString.Lazy.writeFile filename code
