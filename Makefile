@@ -8,7 +8,7 @@ test:
 dist:
 	cabal configure --enable-tests
 
-dist/build/batsh/batsh: dist src/*.hs src/BatshLex.x
+dist/build/batsh/batsh: dist
 	cabal build
 
 .PHONY: clean test

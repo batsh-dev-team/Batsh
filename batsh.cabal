@@ -21,7 +21,12 @@ Library
 Executable batsh
   Main-Is:              Main.hs
   Hs-Source-Dirs:       src
-  Build-Depends:        array, base, bytestring, Batsh, pretty-show
+  Other-Modules:        Batsh,
+                        Batsh.Ast,
+                        Batsh.Generator,
+                        Batsh.Lexer,
+                        Batsh.Parser
+  Build-Depends:        array, base, bytestring, optparse-applicative >= 0.11.0.1, pretty-show
 
 Test-Suite unit-test
   Type:                 exitcode-stdio-1.0
