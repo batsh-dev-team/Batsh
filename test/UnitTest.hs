@@ -84,24 +84,27 @@ testParser = do
   testStatement "if (1) if (2) {true;} else {}" (If (Literal (Int 1), IfElse (
     Literal (Int 2), Block [Expression (Literal (Bool True))], Block [])))
 
+testCaseDir = "test/testcase"
+testCases = ["arith"]
+
 testParseFile :: Assertion
 testParseFile = do
   let testParseFile codeFile astFile = do
       expected <- parseFromAstFile astFile
       ast <- parseFromFile codeFile
       assertEqual (show ast) expected ast
-  let testCaseDir = "test/testcase"
-  let testCases = ["arith"]
   forM_ testCases $ \testcase ->
     testParseFile (testCaseDir ++ "/Batsh/" ++ testcase ++ ".batsh")
                   (testCaseDir ++ "/BatshAst/" ++ testcase ++ ".parsed")
 
 testGenerator :: Assertion
 testGenerator = do
-  --let bs = Batsh.Generator.print $ List [Literal $ Int 3, LeftValue $ ListAccess (Identifier "a", Literal $ Int 3)]
-  --show bs
-  --assertEqual (show bs) True False
-  return ()
+  forM_ testCases $ \testcase -> do
+    let fileName = testCaseDir ++ "/Batsh/" ++ testcase ++ ".batsh"
+    code <- readFile fileName
+    let program = parse code
+    let formattedCode = Batsh.generateCode program
+    assertEqual testcase code formattedCode
 
 main :: IO ()
 main = defaultMainWithOpts

@@ -21,5 +21,8 @@ parseFromAstFile path = do
   code <- readFile path
   return (read code :: Batsh.Ast.Program)
 
+generateCode :: Batsh.Ast.Program -> String
+generateCode = Batsh.Generator.generateString
+
 generateCodeToFile :: Batsh.Ast.Program -> FilePath -> IO ()
 generateCodeToFile = Batsh.Generator.printToFile

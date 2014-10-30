@@ -2,6 +2,7 @@ module Batsh.Generator where
 
 import qualified Data.ByteString
 import Data.ByteString.Lazy(ByteString, putStr, writeFile)
+import Data.ByteString.Lazy.Char8(unpack)
 import Data.Monoid
 import Data.ByteString.Builder(Builder,
                                charUtf8,
@@ -156,7 +157,7 @@ generateByteString :: Program -> ByteString
 generateByteString program = toLazyByteString $ renderProgram program
 
 generateString :: Program -> String
-generateString = show . generateByteString
+generateString program = unpack $ generateByteString program
 
 printToStdout :: Program -> IO ()
 printToStdout program =
