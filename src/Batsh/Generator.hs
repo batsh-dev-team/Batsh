@@ -51,37 +51,16 @@ renderSubExpression operator subExpr =
 
 renderUnary :: (UnaryOperator, Expression) -> Builder
 renderUnary (operator, expr) =
-  mconcat [charUtf8 operatorString, renderSubExpression operator expr]
-  where operatorString =
-          case operator of
-            Not -> '!'
-            Negate -> '-'
+  mconcat [stringUtf8 $ operatorStr operator,
+           renderSubExpression operator expr]
 
 renderBinary :: (BinaryOperator, Expression, Expression) -> Builder
 renderBinary (operator, left, right) =
   mconcat [renderSubExpression operator left,
            charUtf8 ' ',
-           stringUtf8 operatorString,
+           stringUtf8 $ operatorStr operator,
            charUtf8 ' ',
            renderSubExpression operator right]
-  where operatorString =
-          case operator of
-            Plus -> "+"
-            Minus -> "-"
-            Multiply -> "*"
-            Divide -> "/"
-            Modulo -> "%"
-            Concat -> "++"
-            Equal -> "=="
-            NotEqual -> "!="
-            ArithEqual -> "==="
-            ArithNotEqual -> "!=="
-            Greater -> ">"
-            Less -> "<"
-            GreaterEqual -> ">="
-            LessEqual -> "<="
-            And -> "&&"
-            Or -> "||"
 
 renderExpression :: Expression -> Builder
 renderExpression expr = case expr of
