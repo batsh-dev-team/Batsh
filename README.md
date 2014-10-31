@@ -136,6 +136,10 @@ println(fibonacci(8));
 
 ### [More examples](https://github.com/BYVoid/Batsh/tree/master/tests)
 
+### Syntax Highlighting
+
+* [vim-Batsh](https://github.com/vuryleo/vim-Batsh)
+
 ## Built-in functions
 
 In order to make script cross-platform, Batsh provided some "built-in" functions that will compile to platform-dependent code. It is assumed that Bash script runs on Linux or Mac OS and Batch script runs on Windows (XP or higher), which means Cygwin or wine are not supported.
