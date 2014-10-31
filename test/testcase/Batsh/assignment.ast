@@ -1,0 +1,46 @@
+[ Statement
+    (Expression
+       (Assign
+          ( Identifier "a"
+          , Binary
+              ( Concat
+              , Literal (String "Value: ")
+              , Binary
+                  ( Plus
+                  , Literal (Int 1)
+                  , Binary
+                      ( Multiply
+                      , Binary ( Plus , Literal (Int 4) , Literal (Int 6) )
+                      , Literal (Int 3)
+                      )
+                  )
+              )
+          )))
+, Statement
+    (Expression (Call ( "println" , [ LeftValue (Identifier "a") ] )))
+, Statement
+    (Expression
+       (Assign
+          ( Identifier "b"
+          , Binary ( Plus , Literal (Int 3) , Literal (Int 4) )
+          )))
+, Statement
+    (Expression (Call ( "println" , [ LeftValue (Identifier "b") ] )))
+, Statement
+    (Expression
+       (Assign ( Identifier "c" , LeftValue (Identifier "a") )))
+, Statement
+    (Expression (Call ( "println" , [ LeftValue (Identifier "c") ] )))
+, Statement
+    (Expression
+       (Assign
+          ( Identifier "d"
+          , Binary
+              ( Concat
+              , LeftValue (Identifier "b")
+              , LeftValue (Identifier "c")
+              )
+          )))
+, Statement
+    (Expression (Call ( "println" , [ LeftValue (Identifier "d") ] )))
+]

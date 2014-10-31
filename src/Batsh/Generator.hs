@@ -118,7 +118,7 @@ renderBlock stmts level = mconcat
 
 renderStatementIndent :: Statement -> Word -> Builder
 renderStatementIndent stmt level = case stmt of
-  Comment comment -> mconcat [stringUtf8 "// ",
+  Comment comment -> mconcat [stringUtf8 "//",
                               stringUtf8 comment]
   Block stmts -> renderBlock stmts level
   Expression expr -> withSemicolon $ renderExpression expr

@@ -85,7 +85,7 @@ testParser = do
     Literal (Int 2), Block [Expression (Literal (Bool True))], Block [])))
 
 testCaseDir = "test/testcase"
-testCases = ["arith"]
+testCases = ["arith", "array", "assignment"]
 
 testParseFile :: Assertion
 testParseFile = do
@@ -95,7 +95,7 @@ testParseFile = do
       assertEqual (show ast) expected ast
   forM_ testCases $ \testcase ->
     testParseFile (testCaseDir ++ "/Batsh/" ++ testcase ++ ".batsh")
-                  (testCaseDir ++ "/BatshAst/" ++ testcase ++ ".parsed")
+                  (testCaseDir ++ "/Batsh/" ++ testcase ++ ".ast")
 
 testGenerator :: Assertion
 testGenerator = do

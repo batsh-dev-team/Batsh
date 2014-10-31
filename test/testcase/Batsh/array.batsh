@@ -1,0 +1,11 @@
+a = ["", "y", -1, 1];
+a[0] = 2 * 9;
+a[2] = "abx";
+a[4] = "5" ++ a[0];
+println(a[0], a[1], a[2], a[3], a[4]);
+a = [1, 2, 3];
+println(a[0], a[1], a[2]);
+println(("10" ++ a[0]) * 2);
+println(len(a));
+println(len(a) * 8);
+//println([1, 2, 3]);
