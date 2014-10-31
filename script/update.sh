@@ -7,5 +7,9 @@ for filename in ${inputDir}/*.batsh; do
   output=${inputDir}/${caseName}
   ./batsh batsh $input $output --ast
   diff $input $output
-  rm $output
+  if [ "$?" == $((0)) ]; then
+    rm $output
+  else
+    break
+  fi
 done

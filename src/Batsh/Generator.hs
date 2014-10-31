@@ -10,7 +10,6 @@ import Data.ByteString.Builder(Builder,
                                intDec,
                                stringUtf8,
                                toLazyByteString)
-import Data.Word
 
 import Batsh.Ast
 
@@ -109,41 +108,55 @@ renderSeparateList list separator renderer = case list of
 renderExpressions :: [Expression] -> Builder
 renderExpressions exprs = renderSeparateList exprs ", " renderExpression
 
-renderBlock :: [Statement] -> Word -> Builder
+renderIndention :: Int -> Builder
+renderIndention level = stringUtf8 (take level $ repeat ' ')
+
+renderBlock :: [Statement] -> Int -> Builder
 renderBlock stmts level = mconcat
-  [stringUtf8 "{",
-   mconcat $ map (\stmt-> renderStatementIndent stmt $ level + 2) stmts,
+  [stringUtf8 "{\n",
+   renderSeparateList stmts "\n" $
+    \stmt -> renderStatementIndent stmt (level + 2),
+   stringUtf8 "\n",
+   renderIndention level,
    stringUtf8 "}"
   ]
 
-renderStatementIndent :: Statement -> Word -> Builder
-renderStatementIndent stmt level = case stmt of
-  Comment comment -> mconcat [stringUtf8 "//",
-                              stringUtf8 comment]
-  Block stmts -> renderBlock stmts level
-  Expression expr -> withSemicolon $ renderExpression expr
-  If (expr, stmt) -> mconcat [stringUtf8 "if (",
-                              renderExpression expr,
-                              stringUtf8 ") ",
-                              renderStatement stmt]
-  IfElse (expr, thenStmt, elseStmt) -> mconcat [stringUtf8 "if (",
-                                                renderExpression expr,
-                                                stringUtf8 ") ",
-                                                renderStatement thenStmt,
-                                                stringUtf8 " else ",
-                                                renderStatement elseStmt]
-  While (expr, stmt) -> mconcat [stringUtf8 "while (",
-                                 renderExpression expr,
-                                 stringUtf8 ") ",
-                                 renderStatement stmt]
-  Global ident -> withSemicolon $ stringUtf8 ident
-  Return (Just expr) -> withSemicolon $ mconcat [stringUtf8 "return ",
-                                                 renderExpression expr]
-  Return Nothing -> withSemicolon $ stringUtf8 "return"
-  where withSemicolon builder = mconcat [builder, charUtf8 ';']
+renderStatementIndent :: Statement -> Int -> Builder
+renderStatementIndent stmt level =
+  mconcat [renderIndention level, renderedStmt]
+  where
+    renderedStmt = case stmt of
+      Comment comment ->
+        mconcat [stringUtf8 "//",
+                 stringUtf8 comment]
+      Block stmts -> renderBlock stmts level
+      Expression expr -> withSemicolon $ renderExpression expr
+      If (expr, stmt) ->
+        mconcat [stringUtf8 "if (",
+                 renderExpression expr,
+                 stringUtf8 ") ",
+                 renderStatement stmt]
+      IfElse (expr, thenStmt, elseStmt) ->
+        mconcat [stringUtf8 "if (",
+                 renderExpression expr,
+                 stringUtf8 ") ",
+                 renderStatement thenStmt,
+                 stringUtf8 " else ",
+                 renderStatement elseStmt]
+      While (expr, stmt) ->
+        mconcat [stringUtf8 "while (",
+                 renderExpression expr,
+                 stringUtf8 ") ",
+                 renderStatement stmt]
+      Global ident -> withSemicolon $ stringUtf8 ident
+      Return (Just expr) -> withSemicolon $
+        mconcat [stringUtf8 "return ", renderExpression expr]
+      Return Nothing -> withSemicolon $ stringUtf8 "return"
+      where
+        withSemicolon builder = mconcat [builder, charUtf8 ';']
 
 renderStatement :: Statement -> Builder
-renderStatement stmt = renderStatementIndent stmt (0 :: Word)
+renderStatement stmt = renderStatementIndent stmt 0
 
 renderTopLevel :: TopLevel -> Builder
 renderTopLevel toplevel = case toplevel of
