@@ -10,23 +10,18 @@ Synopsis:               A language that compiles to Bash and Windows Batch
 Build-Type:             Simple
 
 Library
+  Hs-Source-Dirs:       library
   Build-Depends:        array, base, bytestring
   Exposed-Modules:      Batsh,
                         Batsh.Ast,
                         Batsh.Generator,
                         Batsh.Lexer,
                         Batsh.Parser
-  Hs-Source-Dirs:       src
 
 Executable batsh
   Main-Is:              Main.hs
-  Hs-Source-Dirs:       src
-  Other-Modules:        Batsh,
-                        Batsh.Ast,
-                        Batsh.Generator,
-                        Batsh.Lexer,
-                        Batsh.Parser
-  Build-Depends:        array, base, bytestring, optparse-applicative >= 0.11.0.1, pretty-show
+  Hs-Source-Dirs:       executable
+  Build-Depends:        array, base, Batsh, bytestring, optparse-applicative >= 0.11.0.1, pretty-show
 
 Test-Suite unit-test
   Type:                 exitcode-stdio-1.0
