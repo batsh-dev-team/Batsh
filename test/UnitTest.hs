@@ -3,9 +3,11 @@ import Data.Monoid
 import Test.HUnit
 import Test.Framework
 import Test.Framework.Providers.HUnit
+import qualified Data.Map.Strict as SMap
 
 import Batsh
 import Batsh.Ast
+import Batsh.SymbolTable
 import qualified Batsh.Generator
 import qualified Batsh.Lexer as Lexer
 import qualified Batsh.Parser
@@ -107,10 +109,18 @@ testGenerator = do
     let formattedCode = Batsh.generateCode program
     assertEqual testcase code formattedCode
 
+testSymbolTable :: Assertion
+testSymbolTable = do
+  let ast = Batsh.parse "a = 1;"
+  let symbolTable = Batsh.createSymbolTable ast
+  let expected = SymbolTable (SMap.fromList [("a",("a",SGlobal))])
+  assertEqual (show symbolTable) expected symbolTable
+
 main :: IO ()
 main = defaultMainWithOpts
   [testCase "Lexer" testLexer,
    testCase "Parser" testParser,
    testCase "ParseFile" testParseFile,
-   testCase "Generator" testGenerator]
+   testCase "Generator" testGenerator,
+   testCase "SymbolTable" testSymbolTable]
   mempty

@@ -4,6 +4,7 @@ import qualified Batsh.Ast
 import qualified Batsh.Generator
 import qualified Batsh.Lexer
 import qualified Batsh.Parser
+import qualified Batsh.SymbolTable as SymbolTable
 
 lex :: String -> [Batsh.Lexer.Token]
 lex code = Batsh.Lexer.scanTokens code
@@ -26,3 +27,6 @@ generateCode = Batsh.Generator.generateString
 
 generateCodeToFile :: Batsh.Ast.Program -> FilePath -> IO ()
 generateCodeToFile = Batsh.Generator.printToFile
+
+createSymbolTable :: Batsh.Ast.Program -> SymbolTable.SymbolTable
+createSymbolTable = SymbolTable.create

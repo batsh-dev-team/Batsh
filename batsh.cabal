@@ -11,17 +11,18 @@ Build-Type:             Simple
 
 Library
   Hs-Source-Dirs:       library
-  Build-Depends:        array, base, bytestring == 0.10.4.0
+  Build-Depends:        array, base, bytestring == 0.10.4.0, containers >= 0.5
   Exposed-Modules:      Batsh,
                         Batsh.Ast,
                         Batsh.Generator,
                         Batsh.Lexer,
                         Batsh.Parser
+                        Batsh.SymbolTable
 
 Executable batsh
   Main-Is:              Main.hs
   Hs-Source-Dirs:       executable
-  Build-Depends:        array, base, batsh,
+  Build-Depends:        base, batsh,
                         optparse-applicative == 0.11.0.1,
                         pretty-show == 1.6.8
 
@@ -31,6 +32,7 @@ Test-Suite unit-test
   Hs-Source-Dirs:       test
   Build-Depends:        base,
                         batsh,
+                        containers >= 0.5,
                         test-framework == 0.8.0.3,
                         test-framework-hunit == 0.3.0.1,
                         HUnit == 1.2.5.2
