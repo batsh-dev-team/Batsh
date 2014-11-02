@@ -47,8 +47,8 @@ tokens :-
   @hexadecimal{ \s -> Int (read s) }
   @float      { \s -> Float (read s) }
   @string     { \s -> String (tail $ init s) }
-  "true"      { \s -> Batsh.Lexer.True }
-  "false"     { \s -> Batsh.Lexer.False }
+  "true"      { \s -> TTrue }
+  "false"     { \s -> TFalse }
   "if"        { \s -> If }
   "else"      { \s -> Else }
   "while"     { \s -> While }
@@ -90,8 +90,8 @@ data Token = Identifier String
   | Int Int
   | Float Float
   | String String
-  | True
-  | False
+  | TTrue
+  | TFalse
   | If
   | Else
   | While

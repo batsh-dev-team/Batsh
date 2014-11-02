@@ -24,8 +24,8 @@ testLexer = do
   testSingle "3.14" $ Lexer.Float 3.14
   testSingle "1E-8" $ Lexer.Float 1e-8
   testSingle "\"string\\n\"" $ Lexer.String "string\\n"
-  testSingle "true" Lexer.True
-  testSingle "false" Lexer.False
+  testSingle "true" Lexer.TTrue
+  testSingle "false" Lexer.TFalse
   testSingle "if" Lexer.If
   testSingle "else" Lexer.Else
   testSingle "while" Lexer.While

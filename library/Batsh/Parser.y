@@ -23,8 +23,8 @@ import qualified Batsh.Lexer as Lexer
    int      { Lexer.Int $$ }
    float    { Lexer.Float $$ }
    string   { Lexer.String $$ }
-   true     { Lexer.True }
-   false    { Lexer.False }
+   true     { Lexer.TTrue }
+   false    { Lexer.TFalse }
    if       { Lexer.If }
    else     { Lexer.Else }
    while    { Lexer.While }
