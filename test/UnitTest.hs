@@ -85,7 +85,8 @@ testParser = do
     Literal (Int 2), Block [Expression (Literal (Bool True))], Block [])))
 
 testCaseDir = "test/testcase"
-testCases = ["arith", "array", "assignment", "block"]
+testCases = ["arith", "array", "assignment", "block", "command", "comment",
+  "exists", "function", "if"]
 
 testParseFile :: Assertion
 testParseFile = do

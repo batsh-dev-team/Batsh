@@ -1,0 +1,30 @@
+[ Statement
+    (Expression
+       (Call
+          ( "call"
+          , [ Literal (String "println")
+            , Literal (String "Println Called")
+            ]
+          )))
+, Statement
+    (Expression
+       (Assign
+          ( Identifier "cmd"
+          , Binary ( Concat , Literal (String "ec") , Literal (String "ho") )
+          )))
+, Statement
+    (Expression
+       (Call
+          ( "call"
+          , [ LeftValue (Identifier "cmd") , Literal (String "Echo Called") ]
+          )))
+, Statement
+    (Expression
+       (Assign
+          ( Identifier "retval"
+          , Call ( "echo" , [ Literal (String "Value 100%") ] )
+          )))
+, Statement
+    (Expression
+       (Call ( "println" , [ LeftValue (Identifier "retval") ] )))
+]

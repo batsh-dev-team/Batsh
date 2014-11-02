@@ -1,0 +1,27 @@
+[ Statement
+    (Expression
+       (Assign
+          ( Identifier "ex"
+          , Call ( "exists" , [ Literal (String "Makefile") ] )
+          )))
+, Statement
+    (Expression (Call ( "println" , [ LeftValue (Identifier "ex") ] )))
+, Statement
+    (Expression (Call ( "exists" , [ Literal (String "Makefile") ] )))
+, Statement
+    (If
+       ( Call ( "exists" , [ Literal (String "Makefile") ] )
+       , Block
+           [ Expression (Call ( "println" , [ Literal (String "Yes") ] )) ]
+       ))
+, Statement
+    (IfElse
+       ( Call ( "exists" , [ Literal (String "none") ] )
+       , Block
+           [ Expression
+               (Call ( "println" , [ Literal (String "Impossible") ] ))
+           ]
+       , Block
+           [ Expression (Call ( "println" , [ Literal (String "No") ] )) ]
+       ))
+]

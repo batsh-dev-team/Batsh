@@ -94,15 +94,18 @@ renderBlock :: [Statement] -> Int -> Builder
 renderBlock stmts level = mconcat
   [stringUtf8 "{\n",
    renderSeparateList stmts "\n" $
-    \stmt -> renderStatementIndent stmt (level + 2),
+    \stmt -> renderStatementIndent stmt (level + 2) False,
    stringUtf8 "\n",
    renderIndention level,
    stringUtf8 "}"
   ]
 
-renderStatementIndent :: Statement -> Int -> Builder
-renderStatementIndent stmt level =
-  mconcat [renderIndention level, renderedStmt]
+renderStatementIndent :: Statement -> Int -> Bool -> Builder
+renderStatementIndent stmt level isClause =
+  if isClause then
+    renderedStmt
+  else
+    mconcat [renderIndention level, renderedStmt]
   where
     renderedStmt = case stmt of
       Comment comment ->
@@ -114,32 +117,41 @@ renderStatementIndent stmt level =
         mconcat [stringUtf8 "if (",
                  renderExpression expr,
                  stringUtf8 ") ",
-                 renderStatement stmt]
+                 renderClause stmt]
       IfElse (expr, thenStmt, elseStmt) ->
         mconcat [stringUtf8 "if (",
                  renderExpression expr,
                  stringUtf8 ") ",
-                 renderStatement thenStmt,
+                 renderClause thenStmt,
                  stringUtf8 " else ",
-                 renderStatement elseStmt]
+                 renderClause elseStmt]
       While (expr, stmt) ->
         mconcat [stringUtf8 "while (",
                  renderExpression expr,
                  stringUtf8 ") ",
-                 renderStatement stmt]
-      Global ident -> withSemicolon $ stringUtf8 ident
+                 renderClause stmt]
+      Global ident -> withSemicolon $
+        mconcat [stringUtf8 "global ", stringUtf8 ident]
       Return (Just expr) -> withSemicolon $
         mconcat [stringUtf8 "return ", renderExpression expr]
       Return Nothing -> withSemicolon $ stringUtf8 "return"
       where
-        withSemicolon builder = mconcat [builder, charUtf8 ';']
+        withSemicolon builder = mconcat [builder, charUtf8 ';'];
+        renderClause stmt = renderStatementIndent stmt level True
 
 renderStatement :: Statement -> Builder
-renderStatement stmt = renderStatementIndent stmt 0
+renderStatement stmt = renderStatementIndent stmt 0 False
 
 renderTopLevel :: TopLevel -> Builder
 renderTopLevel toplevel = case toplevel of
   Statement stmt -> renderStatement stmt
+  Function (name, params, stmts) ->
+    mconcat [stringUtf8 "function ",
+             stringUtf8 name,
+             charUtf8 '(',
+             renderSeparateList params ", " stringUtf8,
+             stringUtf8 ") ",
+             renderBlock stmts 0]
 
 renderProgram :: Program -> Builder
 renderProgram program = mconcat [renderSeparateList program "\n" renderTopLevel,

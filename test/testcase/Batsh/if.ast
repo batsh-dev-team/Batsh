@@ -1,0 +1,76 @@
+[ Statement
+    (If
+       ( Binary ( Less , Literal (Int 2) , Literal (Int 10) )
+       , Block
+           [ Expression (Call ( "println" , [ Literal (String "Yes") ] )) ]
+       ))
+, Statement
+    (IfElse
+       ( Literal (Bool True)
+       , Block
+           [ IfElse
+               ( Literal (Bool False)
+               , Block
+                   [ Expression
+                       (Assign
+                          ( Identifier "v"
+                          , Binary ( Plus , Literal (Int 4) , Literal (Int 1) )
+                          ))
+                   ]
+               , Block
+                   [ Expression (Assign ( Identifier "v" , Literal (Int 2) )) ]
+               )
+           , If
+               ( Literal (Bool False)
+               , Expression (Call ( "println" , [ Literal (String "no") ] ))
+               )
+           ]
+       , Block []
+       ))
+, Statement
+    (Expression (Call ( "println" , [ LeftValue (Identifier "v") ] )))
+, Statement
+    (If
+       ( Binary ( Greater , Literal (Int 2) , Literal (Int 1) )
+       , Expression (Call ( "println" , [ Literal (String "True") ] ))
+       ))
+, Statement
+    (If
+       ( Binary ( ArithEqual , Literal (Int 1) , Literal (Int 12) )
+       , Block
+           [ Expression (Call ( "println" , [ Literal (String "No") ] )) ]
+       ))
+, Statement
+    (IfElse
+       ( Binary ( Equal , Literal (String "a") , Literal (String "b") )
+       , Block
+           [ Expression (Call ( "println" , [ Literal (String "No") ] )) ]
+       , Block
+           [ Expression
+               (Call ( "println" , [ Literal (String "a is not b") ] ))
+           ]
+       ))
+, Statement
+    (Expression (Assign ( Identifier "num" , Literal (Int 43) )))
+, Statement
+    (If
+       ( Binary
+           ( Equal , Literal (String "43") , LeftValue (Identifier "num") )
+       , Block
+           [ Expression
+               (Call ( "println" , [ Literal (String "43 == num") ] ))
+           ]
+       ))
+, Statement
+    (If
+       ( Binary
+           ( ArithEqual
+           , Literal (String "43")
+           , LeftValue (Identifier "num")
+           )
+       , Block
+           [ Expression
+               (Call ( "println" , [ Literal (String "43 === num") ] ))
+           ]
+       ))
+]
