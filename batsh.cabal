@@ -1,4 +1,4 @@
-Name:                   Batsh
+Name:                   batsh
 Version:                0.1.0
 Cabal-Version:          >= 1.8
 License:                MIT
@@ -11,7 +11,7 @@ Build-Type:             Simple
 
 Library
   Hs-Source-Dirs:       library
-  Build-Depends:        array, base, bytestring
+  Build-Depends:        array, base, bytestring == 0.10.4.0
   Exposed-Modules:      Batsh,
                         Batsh.Ast,
                         Batsh.Generator,
@@ -21,14 +21,16 @@ Library
 Executable batsh
   Main-Is:              Main.hs
   Hs-Source-Dirs:       executable
-  Build-Depends:        array, base, Batsh, bytestring, optparse-applicative >= 0.11.0.1, pretty-show
+  Build-Depends:        array, base, batsh,
+                        optparse-applicative == 0.11.0.1,
+                        pretty-show == 1.6.8
 
 Test-Suite unit-test
   Type:                 exitcode-stdio-1.0
   Main-Is:              UnitTest.hs
   Hs-Source-Dirs:       test
   Build-Depends:        base,
-                        Batsh,
-                        test-framework,
-                        test-framework-hunit,
-                        HUnit
+                        batsh,
+                        test-framework == 0.8.0.3,
+                        test-framework-hunit == 0.3.0.1,
+                        HUnit == 1.2.5.2
