@@ -86,7 +86,7 @@ testParser = do
 
 testCaseDir = "test/testcase"
 testCases = ["arith", "array", "assignment", "block", "command", "comment",
-  "exists", "function", "if"]
+  "exists", "function", "if", "recursion", "string", "while"]
 
 testParseFile :: Assertion
 testParseFile = do
