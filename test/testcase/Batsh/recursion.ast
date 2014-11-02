@@ -1,104 +1,105 @@
-[ Statement (Comment " Loop")
-, Function
-    ( "loop"
-    , [ "num" ]
-    , [ Expression
-          (Call ( "println" , [ LeftValue (Identifier "num") ] ))
-      , If
-          ( Binary
-              ( Greater , LeftValue (Identifier "num") , Literal (Int 0) )
-          , Block
-              [ Expression
-                  (Call
-                     ( "loop"
-                     , [ Binary
-                           ( Minus , LeftValue (Identifier "num") , Literal (Int 1) )
-                       ]
-                     ))
-              ]
-          )
-      ]
-    )
-, Statement (Expression (Call ( "loop" , [ Literal (Int 10) ] )))
-, Statement (Comment " Factorial")
-, Function
-    ( "fact"
-    , [ "num" ]
-    , [ IfElse
-          ( Binary
-              ( ArithEqual , LeftValue (Identifier "num") , Literal (Int 0) )
-          , Block [ Return (Just (Literal (Int 1))) ]
-          , Block
-              [ Return
-                  (Just
-                     (Binary
-                        ( Multiply
-                        , Call
-                            ( "fact"
-                            , [ Binary
-                                  ( Minus , LeftValue (Identifier "num") , Literal (Int 1) )
-                              ]
-                            )
-                        , LeftValue (Identifier "num")
-                        )))
-              ]
-          )
-      ]
-    )
-, Statement
-    (Expression
-       (Call ( "println" , [ Call ( "fact" , [ Literal (Int 5) ] ) ] )))
-, Statement (Comment " Fibonacci")
-, Function
-    ( "fibonacci"
-    , [ "num" ]
-    , [ IfElse
-          ( Binary
-              ( ArithEqual , LeftValue (Identifier "num") , Literal (Int 0) )
-          , Block [ Return (Just (Literal (Int 0))) ]
-          , IfElse
-              ( Binary
-                  ( ArithEqual , LeftValue (Identifier "num") , Literal (Int 1) )
-              , Block [ Return (Just (Literal (Int 1))) ]
-              , Block
-                  [ Return
-                      (Just
-                         (Binary
-                            ( Plus
-                            , Call
-                                ( "fibonacci"
-                                , [ Binary
-                                      ( Minus , LeftValue (Identifier "num") , Literal (Int 2) )
-                                  ]
-                                )
-                            , Call
-                                ( "fibonacci"
-                                , [ Binary
-                                      ( Minus , LeftValue (Identifier "num") , Literal (Int 1) )
-                                  ]
-                                )
-                            )))
-                  ]
-              )
-          )
-      ]
-    )
-, Statement
-    (Expression (Assign ( Identifier "i" , Literal (Int 0) )))
-, Statement
-    (While
-       ( Binary ( Less , LeftValue (Identifier "i") , Literal (Int 7) )
-       , Block
-           [ Expression
-               (Call
-                  ( "println"
-                  , [ Call ( "fibonacci" , [ LeftValue (Identifier "i") ] ) ]
-                  ))
-           , Expression
-               (Assign
-                  ( Identifier "i"
-                  , Binary ( Plus , LeftValue (Identifier "i") , Literal (Int 1) )
-                  ))
-           ]
-       ))
-]
+Program
+  [ Statement (Comment " Loop")
+  , Function
+      ( "loop"
+      , [ "num" ]
+      , [ Expression
+            (Call ( "println" , [ LeftValue (Identifier "num") ] ))
+        , If
+            ( Binary
+                ( Greater , LeftValue (Identifier "num") , Literal (Int 0) )
+            , Block
+                [ Expression
+                    (Call
+                       ( "loop"
+                       , [ Binary
+                             ( Minus , LeftValue (Identifier "num") , Literal (Int 1) )
+                         ]
+                       ))
+                ]
+            )
+        ]
+      )
+  , Statement (Expression (Call ( "loop" , [ Literal (Int 10) ] )))
+  , Statement (Comment " Factorial")
+  , Function
+      ( "fact"
+      , [ "num" ]
+      , [ IfElse
+            ( Binary
+                ( ArithEqual , LeftValue (Identifier "num") , Literal (Int 0) )
+            , Block [ Return (Just (Literal (Int 1))) ]
+            , Block
+                [ Return
+                    (Just
+                       (Binary
+                          ( Multiply
+                          , Call
+                              ( "fact"
+                              , [ Binary
+                                    ( Minus , LeftValue (Identifier "num") , Literal (Int 1) )
+                                ]
+                              )
+                          , LeftValue (Identifier "num")
+                          )))
+                ]
+            )
+        ]
+      )
+  , Statement
+      (Expression
+         (Call ( "println" , [ Call ( "fact" , [ Literal (Int 5) ] ) ] )))
+  , Statement (Comment " Fibonacci")
+  , Function
+      ( "fibonacci"
+      , [ "num" ]
+      , [ IfElse
+            ( Binary
+                ( ArithEqual , LeftValue (Identifier "num") , Literal (Int 0) )
+            , Block [ Return (Just (Literal (Int 0))) ]
+            , IfElse
+                ( Binary
+                    ( ArithEqual , LeftValue (Identifier "num") , Literal (Int 1) )
+                , Block [ Return (Just (Literal (Int 1))) ]
+                , Block
+                    [ Return
+                        (Just
+                           (Binary
+                              ( Plus
+                              , Call
+                                  ( "fibonacci"
+                                  , [ Binary
+                                        ( Minus , LeftValue (Identifier "num") , Literal (Int 2) )
+                                    ]
+                                  )
+                              , Call
+                                  ( "fibonacci"
+                                  , [ Binary
+                                        ( Minus , LeftValue (Identifier "num") , Literal (Int 1) )
+                                    ]
+                                  )
+                              )))
+                    ]
+                )
+            )
+        ]
+      )
+  , Statement
+      (Expression (Assign ( Identifier "i" , Literal (Int 0) )))
+  , Statement
+      (While
+         ( Binary ( Less , LeftValue (Identifier "i") , Literal (Int 7) )
+         , Block
+             [ Expression
+                 (Call
+                    ( "println"
+                    , [ Call ( "fibonacci" , [ LeftValue (Identifier "i") ] ) ]
+                    ))
+             , Expression
+                 (Assign
+                    ( Identifier "i"
+                    , Binary ( Plus , LeftValue (Identifier "i") , Literal (Int 1) )
+                    ))
+             ]
+         ))
+  ]

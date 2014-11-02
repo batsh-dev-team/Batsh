@@ -1,94 +1,95 @@
-[ Statement (Comment " Function call")
-, Function
-    ( "func1"
-    , [ "p1" , "p2" ]
-    , [ Expression
-          (Call
-             ( "println"
-             , [ LeftValue (Identifier "p1") , LeftValue (Identifier "p2") ]
-             ))
-      ]
-    )
-, Statement
-    (Expression
-       (Call
-          ( "func1"
-          , [ Literal (String "Hello") , Literal (String "World") ]
-          )))
-, Statement (Comment " Global and local variables")
-, Statement
-    (Expression
-       (Assign ( Identifier "v1" , Literal (String "Global V1") )))
-, Statement
-    (Expression
-       (Assign ( Identifier "v2" , Literal (String "Global V2") )))
-, Statement
-    (Expression
-       (Assign ( Identifier "v3" , Literal (String "Global V3") )))
-, Function
-    ( "func2"
-    , [ "p" ]
-    , [ Expression
-          (Assign
-             ( Identifier "v1"
-             , Binary
-                 ( Concat , Literal (String "Local ") , LeftValue (Identifier "p") )
-             ))
-      , Expression (Call ( "println" , [ LeftValue (Identifier "v1") ] ))
-      , Expression (Call ( "println" , [ LeftValue (Identifier "v2") ] ))
-      , Global "v3"
-      , Expression
-          (Assign ( Identifier "v3" , Literal (String "V3 Modified.") ))
-      ]
-    )
-, Statement
-    (Expression (Call ( "func2" , [ Literal (String "Var") ] )))
-, Statement
-    (Expression (Call ( "println" , [ LeftValue (Identifier "v1") ] )))
-, Statement
-    (Expression (Call ( "println" , [ LeftValue (Identifier "v3") ] )))
-, Statement (Comment " Return value")
-, Function
-    ( "func3"
-    , [ "num" ]
-    , [ Return
-          (Just
-             (Binary
-                ( Plus , LeftValue (Identifier "num") , Literal (Int 41) )))
-      ]
-    )
-, Statement (Expression (Call ( "func3" , [ Literal (Int 4) ] )))
-, Statement (Expression (Call ( "println" , [] )))
-, Statement
-    (Expression
-       (Assign
-          ( Identifier "ret" , Call ( "func3" , [ Literal (Int 1) ] ) )))
-, Statement
-    (Expression
-       (Call
-          ( "println"
-          , [ Literal (String "Returned:") , LeftValue (Identifier "ret") ]
-          )))
-, Statement (Comment " Argument containing space")
-, Function
-    ( "g"
-    , [ "text" ]
-    , [ Return (Just (LeftValue (Identifier "text"))) ]
-    )
-, Function
-    ( "f"
-    , [ "text" ]
-    , [ Return
-          (Just (Call ( "g" , [ LeftValue (Identifier "text") ] )))
-      ]
-    )
-, Statement
-    (Expression
-       (Assign
-          ( Identifier "test"
-          , Call ( "f" , [ Literal (String "Param with space") ] )
-          )))
-, Statement
-    (Expression
-       (Call ( "println" , [ LeftValue (Identifier "test") ] )))
-]
+Program
+  [ Statement (Comment " Function call")
+  , Function
+      ( "func1"
+      , [ "p1" , "p2" ]
+      , [ Expression
+            (Call
+               ( "println"
+               , [ LeftValue (Identifier "p1") , LeftValue (Identifier "p2") ]
+               ))
+        ]
+      )
+  , Statement
+      (Expression
+         (Call
+            ( "func1"
+            , [ Literal (String "Hello") , Literal (String "World") ]
+            )))
+  , Statement (Comment " Global and local variables")
+  , Statement
+      (Expression
+         (Assign ( Identifier "v1" , Literal (String "Global V1") )))
+  , Statement
+      (Expression
+         (Assign ( Identifier "v2" , Literal (String "Global V2") )))
+  , Statement
+      (Expression
+         (Assign ( Identifier "v3" , Literal (String "Global V3") )))
+  , Function
+      ( "func2"
+      , [ "p" ]
+      , [ Expression
+            (Assign
+               ( Identifier "v1"
+               , Binary
+                   ( Concat , Literal (String "Local ") , LeftValue (Identifier "p") )
+               ))
+        , Expression (Call ( "println" , [ LeftValue (Identifier "v1") ] ))
+        , Expression (Call ( "println" , [ LeftValue (Identifier "v2") ] ))
+        , Global "v3"
+        , Expression
+            (Assign ( Identifier "v3" , Literal (String "V3 Modified.") ))
+        ]
+      )
+  , Statement
+      (Expression (Call ( "func2" , [ Literal (String "Var") ] )))
+  , Statement
+      (Expression (Call ( "println" , [ LeftValue (Identifier "v1") ] )))
+  , Statement
+      (Expression (Call ( "println" , [ LeftValue (Identifier "v3") ] )))
+  , Statement (Comment " Return value")
+  , Function
+      ( "func3"
+      , [ "num" ]
+      , [ Return
+            (Just
+               (Binary
+                  ( Plus , LeftValue (Identifier "num") , Literal (Int 41) )))
+        ]
+      )
+  , Statement (Expression (Call ( "func3" , [ Literal (Int 4) ] )))
+  , Statement (Expression (Call ( "println" , [] )))
+  , Statement
+      (Expression
+         (Assign
+            ( Identifier "ret" , Call ( "func3" , [ Literal (Int 1) ] ) )))
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Literal (String "Returned:") , LeftValue (Identifier "ret") ]
+            )))
+  , Statement (Comment " Argument containing space")
+  , Function
+      ( "g"
+      , [ "text" ]
+      , [ Return (Just (LeftValue (Identifier "text"))) ]
+      )
+  , Function
+      ( "f"
+      , [ "text" ]
+      , [ Return
+            (Just (Call ( "g" , [ LeftValue (Identifier "text") ] )))
+        ]
+      )
+  , Statement
+      (Expression
+         (Assign
+            ( Identifier "test"
+            , Call ( "f" , [ Literal (String "Param with space") ] )
+            )))
+  , Statement
+      (Expression
+         (Call ( "println" , [ LeftValue (Identifier "test") ] )))
+  ]

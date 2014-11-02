@@ -9,6 +9,8 @@ data Literal = Bool Bool
 
 type Identifier = String
 
+type FunctionName = Identifier
+
 data LeftValue = Identifier Identifier
   | ListAccess (LeftValue, Expression)
   deriving (Eq,Read,Show)
@@ -26,7 +28,7 @@ data Expression = LeftValue LeftValue
   | Unary (UnaryOperator, Expression)
   | Binary (BinaryOperator, Expression, Expression)
   | Assign (LeftValue, Expression)
-  | Call (Identifier, [Parameter])
+  | Call (FunctionName, [Parameter])
   deriving (Eq,Read,Show)
 
 type Parameter = Expression
@@ -42,10 +44,10 @@ data Statement = Comment String
   deriving (Eq,Read,Show)
 
 data TopLevel = Statement Statement
-  | Function (Identifier, [Identifier], [Statement])
+  | Function (FunctionName, [Identifier], [Statement])
   deriving (Eq,Read,Show)
 
-type Program = [TopLevel]
+newtype Program = Program [TopLevel] deriving (Eq,Read,Show)
 
 class Operator a where
   precedence :: a -> Int

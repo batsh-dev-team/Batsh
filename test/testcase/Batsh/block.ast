@@ -1,19 +1,20 @@
-[ Statement (Comment "Level 0 Start")
-, Statement
-    (Expression (Call ( "println" , [ Literal (String "Hello") ] )))
-, Statement
-    (Block
-       [ Comment "Level 1 Start"
-       , Expression (Call ( "println" , [ Literal (String "Lo") ] ))
-       , Block
-           [ Comment "Level 2 Start"
-           , Expression
-               (Call ( "println" , [ Literal (String "and behold") ] ))
-           , Comment "Level 2 End"
-           ]
-       , Comment "Level 1 End"
-       ])
-, Statement
-    (Expression (Call ( "println" , [ Literal (String "End") ] )))
-, Statement (Comment "Level 0 End")
-]
+Program
+  [ Statement (Comment "Level 0 Start")
+  , Statement
+      (Expression (Call ( "println" , [ Literal (String "Hello") ] )))
+  , Statement
+      (Block
+         [ Comment "Level 1 Start"
+         , Expression (Call ( "println" , [ Literal (String "Lo") ] ))
+         , Block
+             [ Comment "Level 2 Start"
+             , Expression
+                 (Call ( "println" , [ Literal (String "and behold") ] ))
+             , Comment "Level 2 End"
+             ]
+         , Comment "Level 1 End"
+         ])
+  , Statement
+      (Expression (Call ( "println" , [ Literal (String "End") ] )))
+  , Statement (Comment "Level 0 End")
+  ]

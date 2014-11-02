@@ -153,7 +153,7 @@ parseError :: [Lexer.Token] -> a
 parseError _ = error "Parse error"
 
 parse :: String -> Ast.Program
-parse = program . Lexer.scanTokens
+parse code = Ast.Program $ program $ Lexer.scanTokens code
 
 parseTopLevel :: String -> Ast.TopLevel
 parseTopLevel = toplevel . Lexer.scanTokens

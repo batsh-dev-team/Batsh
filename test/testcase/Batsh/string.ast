@@ -1,83 +1,84 @@
-[ Statement
-    (Expression (Call ( "println" , [ Literal (String "BYVoid") ] )))
-, Statement
-    (Expression (Call ( "println" , [ Literal (String "Slash/") ] )))
-, Statement
-    (Expression
-       (Call ( "println" , [ Literal (String "Backslash\\\\") ] )))
-, Statement
-    (Expression
-       (Call ( "println" , [ Literal (String "Quote\\\"'") ] )))
-, Statement
-    (Expression
-       (Call ( "println" , [ Literal (String "Tab\\tTab") ] )))
-, Statement (Comment "println(\"Newline\\nLine2\");")
-, Statement (Comment "println(\"!\");")
-, Statement
-    (Expression
-       (Call
-          ( "println"
-          , [ Binary
-                ( Concat
-                , Binary
-                    ( Concat
-                    , Binary
-                        ( Concat , Literal (String "http://") , Literal (String "www.") )
-                    , Literal (String "byvoid")
-                    )
-                , Literal (String ".com")
-                )
-            ]
-          )))
-, Statement
-    (Expression
-       (Call
-          ( "println"
-          , [ Binary
-                ( Concat
-                , Binary
-                    ( Concat
-                    , Binary ( Divide , Literal (Int 6) , Literal (Int 2) )
-                    , Literal (String "BYVoid")
-                    )
-                , Binary ( Plus , Literal (Int 3) , Literal (Int 5) )
-                )
-            ]
-          )))
-, Statement
-    (Expression
-       (Call
-          ( "println"
-          , [ Binary ( Plus , Literal (Int 3) , Literal (String "3") ) ]
-          )))
-, Statement
-    (Expression
-       (Call
-          ( "println"
-          , [ Binary
-                ( Concat
-                , Binary ( Plus , Literal (Int 3) , Literal (String "3") )
-                , Literal (String "2")
-                )
-            ]
-          )))
-, Statement
-    (Expression
-       (Call
-          ( "println"
-          , [ Binary
-                ( Plus
-                , Literal (Int 3)
-                , Binary ( Concat , Literal (String "3") , Literal (String "2") )
-                )
-            ]
-          )))
-, Statement
-    (Expression
-       (Call
-          ( "println"
-          , [ Binary
-                ( Equal , Literal (String "BYVoid") , Literal (String "BYVoid") )
-            ]
-          )))
-]
+Program
+  [ Statement
+      (Expression (Call ( "println" , [ Literal (String "BYVoid") ] )))
+  , Statement
+      (Expression (Call ( "println" , [ Literal (String "Slash/") ] )))
+  , Statement
+      (Expression
+         (Call ( "println" , [ Literal (String "Backslash\\\\") ] )))
+  , Statement
+      (Expression
+         (Call ( "println" , [ Literal (String "Quote\\\"'") ] )))
+  , Statement
+      (Expression
+         (Call ( "println" , [ Literal (String "Tab\\tTab") ] )))
+  , Statement (Comment "println(\"Newline\\nLine2\");")
+  , Statement (Comment "println(\"!\");")
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary
+                  ( Concat
+                  , Binary
+                      ( Concat
+                      , Binary
+                          ( Concat , Literal (String "http://") , Literal (String "www.") )
+                      , Literal (String "byvoid")
+                      )
+                  , Literal (String ".com")
+                  )
+              ]
+            )))
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary
+                  ( Concat
+                  , Binary
+                      ( Concat
+                      , Binary ( Divide , Literal (Int 6) , Literal (Int 2) )
+                      , Literal (String "BYVoid")
+                      )
+                  , Binary ( Plus , Literal (Int 3) , Literal (Int 5) )
+                  )
+              ]
+            )))
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary ( Plus , Literal (Int 3) , Literal (String "3") ) ]
+            )))
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary
+                  ( Concat
+                  , Binary ( Plus , Literal (Int 3) , Literal (String "3") )
+                  , Literal (String "2")
+                  )
+              ]
+            )))
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary
+                  ( Plus
+                  , Literal (Int 3)
+                  , Binary ( Concat , Literal (String "3") , Literal (String "2") )
+                  )
+              ]
+            )))
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary
+                  ( Equal , Literal (String "BYVoid") , Literal (String "BYVoid") )
+              ]
+            )))
+  ]

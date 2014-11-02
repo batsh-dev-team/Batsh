@@ -154,8 +154,9 @@ renderTopLevel toplevel = case toplevel of
              renderBlock stmts 0]
 
 renderProgram :: Program -> Builder
-renderProgram program = mconcat [renderSeparateList program "\n" renderTopLevel,
-                                 charUtf8 '\n']
+renderProgram (Program program) =
+  mconcat [renderSeparateList program "\n" renderTopLevel,
+           charUtf8 '\n']
 
 generateByteString :: Program -> ByteString
 generateByteString program = toLazyByteString $ renderProgram program

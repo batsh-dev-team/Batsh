@@ -1,15 +1,16 @@
-[ Statement
-    (Expression (Assign ( Identifier "a" , Literal (Int 3) )))
-, Statement (Comment " This is comment 1")
-, Statement
-    (Expression
-       (Assign
-          ( Identifier "a"
-          , Binary
-              ( Multiply , LeftValue (Identifier "a") , Literal (Int 5) )
-          )))
-, Statement (Comment " This is comment 2")
-, Statement
-    (Expression (Call ( "println" , [ LeftValue (Identifier "a") ] )))
-, Statement (Comment "This is comment 3")
-]
+Program
+  [ Statement
+      (Expression (Assign ( Identifier "a" , Literal (Int 3) )))
+  , Statement (Comment " This is comment 1")
+  , Statement
+      (Expression
+         (Assign
+            ( Identifier "a"
+            , Binary
+                ( Multiply , LeftValue (Identifier "a") , Literal (Int 5) )
+            )))
+  , Statement (Comment " This is comment 2")
+  , Statement
+      (Expression (Call ( "println" , [ LeftValue (Identifier "a") ] )))
+  , Statement (Comment "This is comment 3")
+  ]
