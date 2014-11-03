@@ -93,15 +93,15 @@ batsh input target opts = do
   code <- readFile input
   let program = Batsh.parse code
   let tokens = Batsh.lex code
+  let symbols = Batsh.createSymbolTable program
   let outputWithSuffix :: String -> String -> IO ();
       outputWithSuffix suffix contents = do
         let fileName = target ++ suffix
         writeFile fileName (contents ++ "\n")
   when (batshOptsTokens opts) (outputWithSuffix ".tokens" (ppShow tokens))
   when (batshOptsAst opts) (outputWithSuffix ".ast" (ppShow program))
-  -- TODO symbols
+  when (batshOptsSymbols opts) (outputWithSuffix ".symbols" (ppShow symbols))
   Batsh.generateCodeToFile program target
-  return ()
 
 pinfo :: ParserInfo Args
 pinfo = info parser $
