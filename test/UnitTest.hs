@@ -9,9 +9,10 @@ import qualified SymbolTableTest
 
 main :: IO ()
 main = defaultMainWithOpts
-  [testCase "Lexer"       LexerTest.testLexer,
-   testCase "Parser"      ParserTest.testParser,
-   testCase "ParseFile"   ParserTest.testParseFile,
-   testCase "Generator"   GeneratorTest.testGenerator,
-   testCase "SymbolTable" SymbolTableTest.testSymbolTable]
+  [testCase "Lexer"           LexerTest.testLexer,
+   testCase "Parser"          ParserTest.testParser,
+   testCase "ParseFile"       ParserTest.testParseFile,
+   testCase "Generator"       GeneratorTest.testGenerator,
+   testCase "SymbolTable"     SymbolTableTest.testSymbolTable,
+   testCase "SymbolTableFile" SymbolTableTest.testSymbolTableFile]
   mempty
