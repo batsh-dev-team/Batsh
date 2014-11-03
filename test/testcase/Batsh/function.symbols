@@ -1,0 +1,62 @@
+SymbolTable
+  (fromList
+     [ ( SGlobal
+       , Table
+           ( fromList
+               [ ( "f" , ( "f" , STFunction , SGlobal ) )
+               , ( "func1" , ( "func1" , STFunction , SGlobal ) )
+               , ( "func2" , ( "func2" , STFunction , SGlobal ) )
+               , ( "func3" , ( "func3" , STFunction , SGlobal ) )
+               , ( "g" , ( "g" , STFunction , SGlobal ) )
+               , ( "ret" , ( "ret" , STVariable , SGlobal ) )
+               , ( "test" , ( "test" , STVariable , SGlobal ) )
+               , ( "v1" , ( "v1" , STVariable , SGlobal ) )
+               , ( "v2" , ( "v2" , STVariable , SGlobal ) )
+               , ( "v3" , ( "v3" , STVariable , SGlobal ) )
+               , ( "v4" , ( "v4" , STVariable , SGlobal ) )
+               ]
+           , Nothing
+           )
+       )
+     , ( SFunction "f"
+       , Table
+           ( fromList
+               [ ( "text" , ( "text" , STParameter , SFunction "f" ) ) ]
+           , Just SGlobal
+           )
+       )
+     , ( SFunction "func1"
+       , Table
+           ( fromList
+               [ ( "p1" , ( "p1" , STParameter , SFunction "func1" ) )
+               , ( "p2" , ( "p2" , STParameter , SFunction "func1" ) )
+               ]
+           , Just SGlobal
+           )
+       )
+     , ( SFunction "func2"
+       , Table
+           ( fromList
+               [ ( "p" , ( "p" , STParameter , SFunction "func2" ) )
+               , ( "v1" , ( "v1" , STVariable , SFunction "func2" ) )
+               , ( "v3" , ( "v3" , STVariable , SGlobal ) )
+               , ( "v4" , ( "v4" , STVariable , SGlobal ) )
+               ]
+           , Just SGlobal
+           )
+       )
+     , ( SFunction "func3"
+       , Table
+           ( fromList
+               [ ( "num" , ( "num" , STParameter , SFunction "func3" ) ) ]
+           , Just SGlobal
+           )
+       )
+     , ( SFunction "g"
+       , Table
+           ( fromList
+               [ ( "text" , ( "text" , STParameter , SFunction "g" ) ) ]
+           , Just SGlobal
+           )
+       )
+     ])

@@ -12,6 +12,7 @@ function func2(p) {
   println(v1);
   println(v2);
   global v3;
+  global v4;
   v3 = "V3 Modified.";
 }
 func2("Var");

@@ -1,0 +1,12 @@
+SymbolTable
+  (fromList
+     [ ( SGlobal
+       , Table
+           ( fromList
+               [ ( "cmd" , ( "cmd" , STVariable , SGlobal ) )
+               , ( "retval" , ( "retval" , STVariable , SGlobal ) )
+               ]
+           , Nothing
+           )
+       )
+     ])

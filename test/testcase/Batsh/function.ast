@@ -38,6 +38,7 @@ Program
         , Expression (Call ( "println" , [ LeftValue (Identifier "v1") ] ))
         , Expression (Call ( "println" , [ LeftValue (Identifier "v2") ] ))
         , Global "v3"
+        , Global "v4"
         , Expression
             (Assign ( Identifier "v3" , Literal (String "V3 Modified.") ))
         ]

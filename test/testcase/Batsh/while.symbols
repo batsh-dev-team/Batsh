@@ -1,0 +1,14 @@
+SymbolTable
+  (fromList
+     [ ( SGlobal
+       , Table
+           ( fromList
+               [ ( "i" , ( "i" , STVariable , SGlobal ) )
+               , ( "j" , ( "j" , STVariable , SGlobal ) )
+               , ( "k" , ( "k" , STVariable , SGlobal ) )
+               , ( "n" , ( "n" , STVariable , SGlobal ) )
+               ]
+           , Nothing
+           )
+       )
+     ])

@@ -28,10 +28,8 @@ data Expression = LeftValue LeftValue
   | Unary (UnaryOperator, Expression)
   | Binary (BinaryOperator, Expression, Expression)
   | Assign (LeftValue, Expression)
-  | Call (FunctionName, [Parameter])
+  | Call (FunctionName, [Expression])
   deriving (Eq,Read,Show)
-
-type Parameter = Expression
 
 data Statement = Comment String
   | Block [Statement]
@@ -44,8 +42,10 @@ data Statement = Comment String
   deriving (Eq,Read,Show)
 
 data TopLevel = Statement Statement
-  | Function (FunctionName, [Identifier], [Statement])
+  | Function (FunctionName, [Parameter], [Statement])
   deriving (Eq,Read,Show)
+
+type Parameter = Identifier
 
 newtype Program = Program [TopLevel] deriving (Eq,Read,Show)
 

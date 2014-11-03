@@ -1,0 +1,35 @@
+SymbolTable
+  (fromList
+     [ ( SGlobal
+       , Table
+           ( fromList
+               [ ( "fact" , ( "fact" , STFunction , SGlobal ) )
+               , ( "fibonacci" , ( "fibonacci" , STFunction , SGlobal ) )
+               , ( "i" , ( "i" , STVariable , SGlobal ) )
+               , ( "loop" , ( "loop" , STFunction , SGlobal ) )
+               ]
+           , Nothing
+           )
+       )
+     , ( SFunction "fact"
+       , Table
+           ( fromList
+               [ ( "num" , ( "num" , STParameter , SFunction "fact" ) ) ]
+           , Just SGlobal
+           )
+       )
+     , ( SFunction "fibonacci"
+       , Table
+           ( fromList
+               [ ( "num" , ( "num" , STParameter , SFunction "fibonacci" ) ) ]
+           , Just SGlobal
+           )
+       )
+     , ( SFunction "loop"
+       , Table
+           ( fromList
+               [ ( "num" , ( "num" , STParameter , SFunction "loop" ) ) ]
+           , Just SGlobal
+           )
+       )
+     ])

@@ -1,0 +1,9 @@
+SymbolTable
+  (fromList
+     [ ( SGlobal
+       , Table
+           ( fromList [ ( "ex" , ( "ex" , STVariable , SGlobal ) ) ]
+           , Nothing
+           )
+       )
+     ])
