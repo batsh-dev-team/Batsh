@@ -56,19 +56,10 @@ create (Program program) =
   -- Add function definitions to global table
   functionDefTable = Table (foldl addFuncDef SMap.empty functions, Nothing)
   -- Add global statements to global table
-  globalTable0 = processStatements functionDefTable SGlobal stmts
-  globalTable = addSymbols globalTable0 globalSymbols
+  globalTable = processStatements functionDefTable SGlobal stmts
   -- Create symbol tables for every function
   functionTables :: [(Scope, Table)]
   functionTables = map processFunction functions
-  globalSymbols :: [Symbol]
-  globalSymbols = concat $ map getGlobalSymbols tables
-    where
-    tables = map snd functionTables;
-    getGlobalSymbols :: Table -> [Symbol];
-    getGlobalSymbols (Table (table, _)) =
-      filter (\(_, _, scope) -> scope == SGlobal) symbols
-      where symbols = map snd $ SMap.toList table
   addFuncDef :: MapIdentifierSymbol -> TopLevel -> MapIdentifierSymbol
   addFuncDef table (Function (func, _, _)) =
     let scope = SGlobal in -- functions can be defined only in the global scope
@@ -77,14 +68,6 @@ create (Program program) =
       SMap.insert func symbol table
     else
       error $ "Redefinition of function " ++ func
-  addSymbols :: Table -> [Symbol] -> Table
-  addSymbols (Table (table, parentScope)) symbols =
-    Table (foldl addSymbol table symbols, parentScope)
-    where
-    addSymbol table symbol =
-      SMap.insert ident symbol table
-      where (ident, _, _) = symbol
-
 
 processFunction :: TopLevel -> (Scope, Table)
 processFunction (Function (func, params, stmts)) =

@@ -13,7 +13,6 @@ SymbolTable
                , ( "v1" , ( "v1" , STVariable , SGlobal ) )
                , ( "v2" , ( "v2" , STVariable , SGlobal ) )
                , ( "v3" , ( "v3" , STVariable , SGlobal ) )
-               , ( "v4" , ( "v4" , STVariable , SGlobal ) )
                ]
            , Nothing
            )
