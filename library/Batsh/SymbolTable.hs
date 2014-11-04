@@ -67,7 +67,7 @@ create (Program program) =
     if not (SMap.member func table) then
       SMap.insert func symbol table
     else
-      error $ "Redefinition of function " ++ func
+      symbolTableError $ "Redefinition of function '" ++ func ++ "'"
 
 processFunction :: TopLevel -> (Scope, Table)
 processFunction (Function (func, params, stmts)) =
@@ -83,8 +83,8 @@ processFunction (Function (func, params, stmts)) =
     where
     addParam original = case original of
       Nothing -> Just (param, STParameter, scope)
-      Just _ ->
-        error $ "Duplicated parameter " ++ param ++ " in function " ++ func
+      Just _ -> symbolTableError $
+        "Duplicated parameter '" ++ param ++ "' in function '" ++ func ++ "'"
   -- Add statements
   table = processStatements paramTable scope stmts;
 
@@ -139,5 +139,7 @@ processIdentifier (Table (table, parentScope)) scope ident =
       Just (_, STVariable, _) -> original
       -- Treat as conflict if there is a function having the same name.
       Just (_, STFunction, _) ->
-        error $ "Symbol conflict: " ++ ident ++ " is already a function"
+        symbolTableError $ "Symbol conflict: '" ++ ident ++ "' is a function"
       where newSymbol = Just (ident, STVariable, scope)
+
+symbolTableError message = error $  message ++ " when creating symbol table"
