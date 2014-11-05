@@ -1,103 +1,187 @@
 Program
   [ Statement
-      (Expression (Call ( "println" , [ Literal (Bool False) ] )))
+      (Expression
+         (Call ( "println" , [ Literal (Bool False ()) () ] ) ()) ())
+      ()
   , Statement
-      (Expression (Call ( "println" , [ Literal (Bool True) ] )))
+      (Expression
+         (Call ( "println" , [ Literal (Bool True ()) () ] ) ()) ())
+      ()
   , Statement
-      (Expression (Call ( "println" , [ Literal (Int 42) ] )))
+      (Expression
+         (Call ( "println" , [ Literal (Int 42 ()) () ] ) ()) ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Plus
-                  , Literal (Int 1)
+                  ( Plus ()
+                  , Literal (Int 1 ()) ()
                   , Binary
-                      ( Multiply
-                      , Binary ( Plus , Literal (Int 4) , Literal (Int 6) )
-                      , Literal (Int 3)
+                      ( Multiply ()
+                      , Binary
+                          ( Plus () , Literal (Int 4 ()) () , Literal (Int 6 ()) () ) ()
+                      , Literal (Int 3 ()) ()
                       )
+                      ()
                   )
+                  ()
               ]
-            )))
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Minus
-                  , Literal (Int 8)
-                  , Binary ( Modulo , Literal (Int 3) , Literal (Int 2) )
+                  ( Minus ()
+                  , Literal (Int 8 ()) ()
+                  , Binary
+                      ( Modulo () , Literal (Int 3 ()) () , Literal (Int 2 ()) () ) ()
                   )
+                  ()
               ]
-            )))
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Minus , Unary ( Negate , Literal (Int 9) ) , Literal (Int 9) )
+                  ( Minus ()
+                  , Unary ( Negate () , Literal (Int 9 ()) () ) ()
+                  , Literal (Int 9 ()) ()
+                  )
+                  ()
               ]
-            )))
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Divide
-                  , Binary ( Plus , Literal (Int 2) , Literal (Int 8) )
-                  , Literal (Int 3)
+                  ( Divide ()
+                  , Binary
+                      ( Plus () , Literal (Int 2 ()) () , Literal (Int 8 ()) () ) ()
+                  , Literal (Int 3 ()) ()
                   )
+                  ()
               ]
-            )))
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ Binary ( ArithEqual , Literal (Int 2) , Literal (Int 2) ) ]
-            )))
+            , [ Binary
+                  ( ArithEqual () , Literal (Int 2 ()) () , Literal (Int 2 ()) () )
+                  ()
+              ]
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ Binary ( ArithNotEqual , Literal (Int 6) , Literal (Int 8) ) ]
-            )))
+            , [ Binary
+                  ( ArithNotEqual ()
+                  , Literal (Int 6 ()) ()
+                  , Literal (Int 8 ()) ()
+                  )
+                  ()
+              ]
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ Binary ( Greater , Literal (Int 3) , Literal (Int 2) ) ]
-            )))
+            , [ Binary
+                  ( Greater () , Literal (Int 3 ()) () , Literal (Int 2 ()) () ) ()
+              ]
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ Binary ( Less , Literal (Int 4) , Literal (Int 5) ) ]
-            )))
+            , [ Binary
+                  ( Less () , Literal (Int 4 ()) () , Literal (Int 5 ()) () ) ()
+              ]
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ Binary ( GreaterEqual , Literal (Int 6) , Literal (Int 2) ) ]
-            )))
+            , [ Binary
+                  ( GreaterEqual () , Literal (Int 6 ()) () , Literal (Int 2 ()) () )
+                  ()
+              ]
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ Binary ( LessEqual , Literal (Int 19) , Literal (Int 30) ) ]
-            )))
+            , [ Binary
+                  ( LessEqual () , Literal (Int 19 ()) () , Literal (Int 30 ()) () )
+                  ()
+              ]
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
-         (Call ( "println" , [ Unary ( Not , Literal (Bool True) ) ] )))
+         (Call
+            ( "println" , [ Unary ( Not () , Literal (Bool True ()) () ) () ] )
+            ())
+         ())
+      ()
   , Statement
       (Expression
-         (Call ( "println" , [ Unary ( Not , Literal (Bool False) ) ] )))
+         (Call
+            ( "println"
+            , [ Unary ( Not () , Literal (Bool False ()) () ) () ]
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Unary
-                  ( Not , Binary ( Minus , Literal (Int 2) , Literal (Int 1) ) )
+                  ( Not ()
+                  , Binary
+                      ( Minus () , Literal (Int 2 ()) () , Literal (Int 1 ()) () ) ()
+                  )
+                  ()
               ]
-            )))
+            )
+            ())
+         ())
+      ()
   ]
+  ()

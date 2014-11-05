@@ -45,14 +45,14 @@ lookup symbolTable scope ident =
     Nothing -> Nothing -- scope does not exist
 
 create :: Program -> SymbolTable
-create (Program program) =
+create (Program program _) =
   SymbolTable $ SMap.fromList $ (SGlobal, globalTable) : functionTables
   where
   (functions, topLevelStmts) = List.partition (\topl -> case topl of
-    Function _ -> True
-    Statement _ -> False
+    Function _ _ -> True
+    Statement _ _ -> False
     ) program;
-  stmts = map (\(Statement stmt) -> stmt) topLevelStmts
+  stmts = map (\(Statement stmt _) -> stmt) topLevelStmts
   -- Add function definitions to global table
   functionDefTable = Table (foldl addFuncDef SMap.empty functions, Nothing)
   -- Add global statements to global table
@@ -61,7 +61,7 @@ create (Program program) =
   functionTables :: [(Scope, Table)]
   functionTables = map processFunction functions
   addFuncDef :: MapIdentifierSymbol -> TopLevel -> MapIdentifierSymbol
-  addFuncDef table (Function (func, _, _)) =
+  addFuncDef table (Function (func, _, _) _) =
     let scope = SGlobal in -- functions can be defined only in the global scope
     let symbol = (func, STFunction, scope) in
     if not (SMap.member func table) then
@@ -70,7 +70,7 @@ create (Program program) =
       symbolTableError $ "Redefinition of function '" ++ func ++ "'"
 
 processFunction :: TopLevel -> (Scope, Table)
-processFunction (Function (func, params, stmts)) =
+processFunction (Function (func, params, stmts) _) =
   (scope, table)
   where
   scope = SFunction func;
@@ -90,20 +90,20 @@ processFunction (Function (func, params, stmts)) =
 
 processStatement :: Table -> Scope -> Statement -> Table
 processStatement table scope stmt = case stmt of
-  Block stmts -> processStatements table scope stmts -- TODO block scope
-  Expression expr -> processExpression table scope expr
-  If (expr, subStmt) ->
+  Block stmts _ -> processStatements table scope stmts -- TODO block scope
+  Expression expr _ -> processExpression table scope expr
+  If (expr, subStmt) _ ->
     let exprTable = processExpression table scope expr in
     processStatement exprTable scope subStmt
-  IfElse (expr, thenStmt, elseStmt) ->
+  IfElse (expr, thenStmt, elseStmt) _ ->
     let exprTable = processExpression table scope expr in
     let thenTable = processStatement exprTable scope thenStmt in
     processStatement thenTable scope elseStmt
-  While (expr, subStmt) ->
+  While (expr, subStmt) _ ->
     let exprTable = processExpression table scope expr in
     processStatement exprTable scope subStmt
-  Global ident -> processIdentifier table SGlobal ident
-  Return (Just expr) -> processExpression table scope expr
+  Global ident _ -> processIdentifier table SGlobal ident
+  Return (Just expr) _ -> processExpression table scope expr
   _ -> table
 
 processStatements :: Table -> Scope -> [Statement] -> Table
@@ -112,17 +112,17 @@ processStatements table scope stmts =
 
 processExpression :: Table -> Scope -> Expression -> Table
 processExpression table scope expr = case expr of
-  Assign (lvalue, subExpr) -> processLeftValue table scope lvalue
-  Unary (_, subExpr) -> processExpression table scope subExpr
-  Binary (_, left, right) ->
+  Assign (lvalue, subExpr) _ -> processLeftValue table scope lvalue
+  Unary (_, subExpr) _ -> processExpression table scope subExpr
+  Binary (_, left, right) _ ->
     let exprTable = processExpression table scope left in
     processExpression exprTable scope right
   _ -> table
 
 processLeftValue :: Table -> Scope -> LeftValue -> Table
 processLeftValue table scope lvalue = case lvalue of
-  Identifier ident -> processIdentifier table scope ident
-  ListAccess (lvalue, subExpr) ->
+  Identifier ident _ -> processIdentifier table scope ident
+  ListAccess (lvalue, subExpr) _ ->
     let lvalueTable = processLeftValue table scope lvalue in
     processExpression lvalueTable scope subExpr
 

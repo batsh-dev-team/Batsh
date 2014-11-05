@@ -15,25 +15,25 @@ import Batsh.Ast
 
 renderLiteral :: Literal -> Builder
 renderLiteral literal = case literal of
-  Int num -> intDec num
-  Float num -> floatDec num
-  String str -> mconcat [charUtf8 '"',
-                         stringUtf8 str,
-                         charUtf8 '"']
-  Bool bool -> case bool of
+  Int num _ -> intDec num
+  Float num _ -> floatDec num
+  String str _ -> mconcat [charUtf8 '"',
+                           stringUtf8 str,
+                           charUtf8 '"']
+  Bool bool _ -> case bool of
     True -> stringUtf8 "true"
     False -> stringUtf8 "false"
-  List list -> mconcat [stringUtf8 "[",
-                        renderExpressions list,
-                        stringUtf8 "]"]
+  List list _ -> mconcat [stringUtf8 "[",
+                          renderExpressions list,
+                          stringUtf8 "]"]
 
 renderLeftValue :: LeftValue -> Builder
 renderLeftValue lvalue = case lvalue of
-  Identifier ident -> stringUtf8 ident
-  ListAccess (lvalue, expr) -> mconcat [renderLeftValue lvalue,
-                                        stringUtf8 "[",
-                                        renderExpression expr,
-                                        stringUtf8 "]"]
+  Identifier ident _ -> stringUtf8 ident
+  ListAccess (lvalue, expr) _ -> mconcat [renderLeftValue lvalue,
+                                          stringUtf8 "[",
+                                          renderExpression expr,
+                                          stringUtf8 "]"]
 
 -- Render a subexpression. Add parenthesis if and only if necessary.
 renderSubExpression :: (Operator a) => a -> Expression -> Builder
@@ -43,9 +43,11 @@ renderSubExpression operator subExpr =
   case subExpr of
     -- if subexpression is a binary expression and the precedence of operator is
     -- lower, then add (). E.g. + is less precedent than *.
-    Binary (subOperator, _, _) | precedence subOperator < precedence operator ->
+    Binary (subOperator, _, _) _
+      | precedence subOperator < precedence operator ->
          renderedWithParen
-    Unary (subOperator, _) | precedence subOperator < precedence operator ->
+    Unary (subOperator, _) _
+      | precedence subOperator < precedence operator ->
          renderedWithParen
     _ -> rendered
 
@@ -64,17 +66,17 @@ renderBinary (operator, left, right) =
 
 renderExpression :: Expression -> Builder
 renderExpression expr = case expr of
-  LeftValue lvalue -> renderLeftValue lvalue
-  Literal literal -> renderLiteral literal
-  Unary unary -> renderUnary unary
-  Binary binary -> renderBinary binary
-  Assign (lvalue, expr) -> mconcat [renderLeftValue lvalue,
-                                    stringUtf8 " = ",
-                                    renderExpression expr]
-  Call (ident, exprs) -> mconcat [stringUtf8 ident,
-                                  charUtf8 '(',
-                                  renderExpressions exprs,
-                                  charUtf8 ')']
+  LeftValue lvalue _ -> renderLeftValue lvalue
+  Literal literal _ -> renderLiteral literal
+  Unary unary _ -> renderUnary unary
+  Binary binary _ -> renderBinary binary
+  Assign (lvalue, expr) _ -> mconcat [renderLeftValue lvalue,
+                                      stringUtf8 " = ",
+                                      renderExpression expr]
+  Call (ident, exprs) _ -> mconcat [stringUtf8 ident,
+                                    charUtf8 '(',
+                                    renderExpressions exprs,
+                                    charUtf8 ')']
 
 renderSeparateList :: [a] -> String -> (a -> Builder) -> Builder
 renderSeparateList list separator renderer = case list of
@@ -108,33 +110,33 @@ renderStatementIndent stmt level isClause =
     mconcat [renderIndention level, renderedStmt]
   where
     renderedStmt = case stmt of
-      Comment comment ->
+      Comment comment _ ->
         mconcat [stringUtf8 "//",
                  stringUtf8 comment]
-      Block stmts -> renderBlock stmts level
-      Expression expr -> withSemicolon $ renderExpression expr
-      If (expr, stmt) ->
+      Block stmts _ -> renderBlock stmts level
+      Expression expr _ -> withSemicolon $ renderExpression expr
+      If (expr, stmt) _ ->
         mconcat [stringUtf8 "if (",
                  renderExpression expr,
                  stringUtf8 ") ",
                  renderClause stmt]
-      IfElse (expr, thenStmt, elseStmt) ->
+      IfElse (expr, thenStmt, elseStmt) _ ->
         mconcat [stringUtf8 "if (",
                  renderExpression expr,
                  stringUtf8 ") ",
                  renderClause thenStmt,
                  stringUtf8 " else ",
                  renderClause elseStmt]
-      While (expr, stmt) ->
+      While (expr, stmt) _ ->
         mconcat [stringUtf8 "while (",
                  renderExpression expr,
                  stringUtf8 ") ",
                  renderClause stmt]
-      Global ident -> withSemicolon $
+      Global ident _ -> withSemicolon $
         mconcat [stringUtf8 "global ", stringUtf8 ident]
-      Return (Just expr) -> withSemicolon $
+      Return (Just expr) _ -> withSemicolon $
         mconcat [stringUtf8 "return ", renderExpression expr]
-      Return Nothing -> withSemicolon $ stringUtf8 "return"
+      Return Nothing _ -> withSemicolon $ stringUtf8 "return"
       where
         withSemicolon builder = mconcat [builder, charUtf8 ';'];
         renderClause stmt = renderStatementIndent stmt level True
@@ -144,8 +146,8 @@ renderStatement stmt = renderStatementIndent stmt 0 False
 
 renderTopLevel :: TopLevel -> Builder
 renderTopLevel toplevel = case toplevel of
-  Statement stmt -> renderStatement stmt
-  Function (name, params, stmts) ->
+  Statement stmt _ -> renderStatement stmt
+  Function (name, params, stmts) _ ->
     mconcat [stringUtf8 "function ",
              stringUtf8 name,
              charUtf8 '(',
@@ -154,7 +156,7 @@ renderTopLevel toplevel = case toplevel of
              renderBlock stmts 0]
 
 renderProgram :: Program -> Builder
-renderProgram (Program program) =
+renderProgram (Program program _) =
   mconcat [renderSeparateList program "\n" renderTopLevel,
            charUtf8 '\n']
 

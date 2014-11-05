@@ -1,24 +1,24 @@
 module Batsh.Ast.Poly where
 
-data Literal a
+data PLiteral a
   = Bool Bool a
   | Int Int a
   | Float Float a
   | String String a
-  | List [Expression a] a
+  | List [PExpression a] a
   deriving (Eq, Read, Show)
 
-data LeftValue a
+data PLeftValue a
   = Identifier Identifier a
-  | ListAccess (LeftValue a, Expression a) a
+  | ListAccess (PLeftValue a, PExpression a) a
   deriving (Eq, Read, Show)
 
-data UnaryOperator a
+data PUnaryOperator a
   = Not a
   | Negate a
   deriving (Eq, Read, Show)
 
-data BinaryOperator a
+data PBinaryOperator a
   = Plus a
   | Minus a
   | Multiply a
@@ -37,32 +37,32 @@ data BinaryOperator a
   | Or a
   deriving (Eq, Read, Show)
 
-data Expression a
-  = LeftValue (LeftValue a) a
-  | Literal (Literal a) a
-  | Unary (UnaryOperator a, Expression a) a
-  | Binary (BinaryOperator a, Expression a, Expression a) a
-  | Assign (LeftValue a, Expression a) a
-  | Call (FunctionName, [Expression a]) a
+data PExpression a
+  = LeftValue (PLeftValue a) a
+  | Literal (PLiteral a) a
+  | Unary (PUnaryOperator a, PExpression a) a
+  | Binary (PBinaryOperator a, PExpression a, PExpression a) a
+  | Assign (PLeftValue a, PExpression a) a
+  | Call (FunctionName, [PExpression a]) a
   deriving (Eq, Read, Show)
 
-data Statement a
+data PStatement a
   = Comment String a
-  | Block [Statement a] a
-  | Expression (Expression a) a
-  | If (Expression a, Statement a) a
-  | IfElse (Expression a, Statement a, Statement a) a
-  | While (Expression a, Statement a) a
+  | Block [PStatement a] a
+  | Expression (PExpression a) a
+  | If (PExpression a, PStatement a) a
+  | IfElse (PExpression a, PStatement a, PStatement a) a
+  | While (PExpression a, PStatement a) a
   | Global Identifier a
-  | Return (Maybe (Expression a)) a
+  | Return (Maybe (PExpression a)) a
   deriving (Eq, Read, Show)
 
-data TopLevel a
-  = Statement (Statement a) a
-  | Function (FunctionName, [Parameter], [Statement a]) a
+data PTopLevel a
+  = Statement (PStatement a) a
+  | Function (FunctionName, [Parameter], [PStatement a]) a
   deriving (Eq, Read, Show)
 
-data Program a = Program [TopLevel a] a deriving (Eq, Read, Show)
+data PProgram a = Program [PTopLevel a] a deriving (Eq, Read, Show)
 
 type Identifier = String
 
@@ -74,7 +74,7 @@ class Operator a where
   precedence :: a -> Int
   operatorStr :: a -> String
 
-instance Operator (UnaryOperator a) where
+instance Operator (PUnaryOperator a) where
   precedence operator = case operator of
     Negate _ -> 7
     Not _ -> 7
@@ -83,7 +83,7 @@ instance Operator (UnaryOperator a) where
     Not _ -> "!"
     Negate _ -> "-"
 
-instance Operator (BinaryOperator a) where
+instance Operator (PBinaryOperator a) where
   precedence operator = case operator of
     Or _ -> 0
     And _ -> 1

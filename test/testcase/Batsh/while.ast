@@ -1,52 +1,108 @@
 Program
   [ Statement
-      (Expression (Assign ( Identifier "i" , Literal (Int 0) )))
+      (Expression
+         (Assign ( Identifier "i" () , Literal (Int 0 ()) () ) ()) ())
+      ()
   , Statement
       (While
-         ( Binary ( Less , LeftValue (Identifier "i") , Literal (Int 5) )
+         ( Binary
+             ( Less ()
+             , LeftValue (Identifier "i" ()) ()
+             , Literal (Int 5 ()) ()
+             )
+             ()
          , Block
              [ Expression
                  (Call
                     ( "print"
                     , [ Binary
-                          ( Concat , LeftValue (Identifier "i") , Literal (String " ") )
+                          ( Concat ()
+                          , LeftValue (Identifier "i" ()) ()
+                          , Literal (String " " ()) ()
+                          )
+                          ()
                       ]
-                    ))
+                    )
+                    ())
+                 ()
              , Expression
                  (Assign
-                    ( Identifier "i"
-                    , Binary ( Plus , LeftValue (Identifier "i") , Literal (Int 1) )
-                    ))
+                    ( Identifier "i" ()
+                    , Binary
+                        ( Plus ()
+                        , LeftValue (Identifier "i" ()) ()
+                        , Literal (Int 1 ()) ()
+                        )
+                        ()
+                    )
+                    ())
+                 ()
              ]
-         ))
-  , Statement (Expression (Call ( "println" , [] )))
-  , Statement (Comment " Fibonacci")
+             ()
+         )
+         ())
+      ()
+  , Statement (Expression (Call ( "println" , [] ) ()) ()) ()
+  , Statement (Comment " Fibonacci" ()) ()
   , Statement
-      (Expression (Assign ( Identifier "n" , Literal (Int 0) )))
+      (Expression
+         (Assign ( Identifier "n" () , Literal (Int 0 ()) () ) ()) ())
+      ()
   , Statement
-      (Expression (Assign ( Identifier "i" , Literal (Int 0) )))
+      (Expression
+         (Assign ( Identifier "i" () , Literal (Int 0 ()) () ) ()) ())
+      ()
   , Statement
-      (Expression (Assign ( Identifier "j" , Literal (Int 1) )))
+      (Expression
+         (Assign ( Identifier "j" () , Literal (Int 1 ()) () ) ()) ())
+      ()
   , Statement
       (While
-         ( Binary ( Less , LeftValue (Identifier "n") , Literal (Int 40) )
+         ( Binary
+             ( Less ()
+             , LeftValue (Identifier "n" ()) ()
+             , Literal (Int 40 ()) ()
+             )
+             ()
          , Block
              [ Expression
                  (Assign
-                    ( Identifier "k"
+                    ( Identifier "k" ()
                     , Binary
-                        ( Plus , LeftValue (Identifier "i") , LeftValue (Identifier "j") )
-                    ))
-             , Expression
-                 (Assign ( Identifier "i" , LeftValue (Identifier "j") ))
-             , Expression
-                 (Assign ( Identifier "j" , LeftValue (Identifier "k") ))
+                        ( Plus ()
+                        , LeftValue (Identifier "i" ()) ()
+                        , LeftValue (Identifier "j" ()) ()
+                        )
+                        ()
+                    )
+                    ())
+                 ()
              , Expression
                  (Assign
-                    ( Identifier "n"
-                    , Binary ( Plus , LeftValue (Identifier "n") , Literal (Int 1) )
-                    ))
-             , Expression (Call ( "println" , [ LeftValue (Identifier "k") ] ))
+                    ( Identifier "i" () , LeftValue (Identifier "j" ()) () ) ())
+                 ()
+             , Expression
+                 (Assign
+                    ( Identifier "j" () , LeftValue (Identifier "k" ()) () ) ())
+                 ()
+             , Expression
+                 (Assign
+                    ( Identifier "n" ()
+                    , Binary
+                        ( Plus ()
+                        , LeftValue (Identifier "n" ()) ()
+                        , Literal (Int 1 ()) ()
+                        )
+                        ()
+                    )
+                    ())
+                 ()
+             , Expression
+                 (Call ( "println" , [ LeftValue (Identifier "k" ()) () ] ) ()) ()
              ]
-         ))
+             ()
+         )
+         ())
+      ()
   ]
+  ()

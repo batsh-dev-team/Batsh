@@ -2,95 +2,149 @@ Program
   [ Statement
       (Expression
          (Assign
-            ( Identifier "a"
+            ( Identifier "a" ()
             , Literal
                 (List
-                   [ Literal (String "")
-                   , Literal (String "y")
-                   , Unary ( Negate , Literal (Int 1) )
-                   , Literal (Int 1)
-                   ])
-            )))
+                   [ Literal (String "" ()) ()
+                   , Literal (String "y" ()) ()
+                   , Unary ( Negate () , Literal (Int 1 ()) () ) ()
+                   , Literal (Int 1 ()) ()
+                   ]
+                   ())
+                ()
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Assign
-            ( ListAccess ( Identifier "a" , Literal (Int 0) )
-            , Binary ( Multiply , Literal (Int 2) , Literal (Int 9) )
-            )))
-  , Statement
-      (Expression
-         (Assign
-            ( ListAccess ( Identifier "a" , Literal (Int 2) )
-            , Literal (String "abx")
-            )))
-  , Statement
-      (Expression
-         (Assign
-            ( ListAccess ( Identifier "a" , Literal (Int 4) )
+            ( ListAccess ( Identifier "a" () , Literal (Int 0 ()) () ) ()
             , Binary
-                ( Concat
-                , Literal (String "5")
-                , LeftValue (ListAccess ( Identifier "a" , Literal (Int 0) ))
-                )
-            )))
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ LeftValue (ListAccess ( Identifier "a" , Literal (Int 0) ))
-              , LeftValue (ListAccess ( Identifier "a" , Literal (Int 1) ))
-              , LeftValue (ListAccess ( Identifier "a" , Literal (Int 2) ))
-              , LeftValue (ListAccess ( Identifier "a" , Literal (Int 3) ))
-              , LeftValue (ListAccess ( Identifier "a" , Literal (Int 4) ))
-              ]
-            )))
+                ( Multiply () , Literal (Int 2 ()) () , Literal (Int 9 ()) () ) ()
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Assign
-            ( Identifier "a"
+            ( ListAccess ( Identifier "a" () , Literal (Int 2 ()) () ) ()
+            , Literal (String "abx" ()) ()
+            )
+            ())
+         ())
+      ()
+  , Statement
+      (Expression
+         (Assign
+            ( ListAccess ( Identifier "a" () , Literal (Int 4 ()) () ) ()
+            , Binary
+                ( Concat ()
+                , Literal (String "5" ()) ()
+                , LeftValue
+                    (ListAccess ( Identifier "a" () , Literal (Int 0 ()) () ) ()) ()
+                )
+                ()
+            )
+            ())
+         ())
+      ()
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ LeftValue
+                  (ListAccess ( Identifier "a" () , Literal (Int 0 ()) () ) ()) ()
+              , LeftValue
+                  (ListAccess ( Identifier "a" () , Literal (Int 1 ()) () ) ()) ()
+              , LeftValue
+                  (ListAccess ( Identifier "a" () , Literal (Int 2 ()) () ) ()) ()
+              , LeftValue
+                  (ListAccess ( Identifier "a" () , Literal (Int 3 ()) () ) ()) ()
+              , LeftValue
+                  (ListAccess ( Identifier "a" () , Literal (Int 4 ()) () ) ()) ()
+              ]
+            )
+            ())
+         ())
+      ()
+  , Statement
+      (Expression
+         (Assign
+            ( Identifier "a" ()
             , Literal
-                (List [ Literal (Int 1) , Literal (Int 2) , Literal (Int 3) ])
-            )))
+                (List
+                   [ Literal (Int 1 ()) ()
+                   , Literal (Int 2 ()) ()
+                   , Literal (Int 3 ()) ()
+                   ]
+                   ())
+                ()
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ LeftValue (ListAccess ( Identifier "a" , Literal (Int 0) ))
-              , LeftValue (ListAccess ( Identifier "a" , Literal (Int 1) ))
-              , LeftValue (ListAccess ( Identifier "a" , Literal (Int 2) ))
+            , [ LeftValue
+                  (ListAccess ( Identifier "a" () , Literal (Int 0 ()) () ) ()) ()
+              , LeftValue
+                  (ListAccess ( Identifier "a" () , Literal (Int 1 ()) () ) ()) ()
+              , LeftValue
+                  (ListAccess ( Identifier "a" () , Literal (Int 2 ()) () ) ()) ()
               ]
-            )))
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Multiply
+                  ( Multiply ()
                   , Binary
-                      ( Concat
-                      , Literal (String "10")
-                      , LeftValue (ListAccess ( Identifier "a" , Literal (Int 0) ))
+                      ( Concat ()
+                      , Literal (String "10" ()) ()
+                      , LeftValue
+                          (ListAccess ( Identifier "a" () , Literal (Int 0 ()) () ) ()) ()
                       )
-                  , Literal (Int 2)
+                      ()
+                  , Literal (Int 2 ()) ()
                   )
+                  ()
               ]
-            )))
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ Call ( "len" , [ LeftValue (Identifier "a") ] ) ]
-            )))
+            , [ Call ( "len" , [ LeftValue (Identifier "a" ()) () ] ) () ]
+            )
+            ())
+         ())
+      ()
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Multiply
-                  , Call ( "len" , [ LeftValue (Identifier "a") ] )
-                  , Literal (Int 8)
+                  ( Multiply ()
+                  , Call ( "len" , [ LeftValue (Identifier "a" ()) () ] ) ()
+                  , Literal (Int 8 ()) ()
                   )
+                  ()
               ]
-            )))
-  , Statement (Comment "println([1, 2, 3]);")
+            )
+            ())
+         ())
+      ()
+  , Statement (Comment "println([1, 2, 3]);" ()) ()
   ]
+  ()

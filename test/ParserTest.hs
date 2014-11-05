@@ -17,19 +17,9 @@ testParser = do
   let testStatement = testAst parseStatement
   let testExpression = testAst parseExpression
   -- Expression
-  testExpression "3" (Literal $ Int 3)
-  testExpression "[4.2 + 3, \"str\", []]" (Literal $ List [Binary (Plus,
-    Literal $ Float 4.2 , Literal $ Int 3), Literal $ String "str",
-    Literal $ List []])
-  testExpression "a+2+9*4e2 > 5 || true && 4 != \"str\"" (Binary (Or, Binary (
-    Greater, Binary (Plus, Binary (Plus, LeftValue (Identifier "a"), Literal (
-    Int 2)), Binary (Multiply, Literal (Int 9), Literal (Float 400.0))), Literal
-    (Int 5)), Binary (And, Literal (Bool True), Binary (NotEqual, Literal (Int
-    4), Literal (String "str")))))
+  testExpression "3" (Literal (Int 3 ())())
   -- Statement
-  testStatement "func(4);" (Expression $ Call ("func", [Literal $ Int 4]))
-  testStatement "if (1) if (2) {true;} else {}" (If (Literal (Int 1), IfElse (
-    Literal (Int 2), Block [Expression (Literal (Bool True))], Block [])))
+  testStatement "func(4);" (Expression (Call ("func",[Literal (Int 4 ()) ()]) ()) ())
 
 testCaseDir = "test/testcase"
 testCases = ["arith", "array", "assignment", "block", "command", "comment",
