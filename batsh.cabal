@@ -14,6 +14,7 @@ Library
   Build-Depends:        array, base, bytestring == 0.10.4.0, containers >= 0.5
   Exposed-Modules:      Batsh,
                         Batsh.Ast,
+                        Batsh.Ast.Poly,
                         Batsh.Generator,
                         Batsh.Lexer,
                         Batsh.Parser
