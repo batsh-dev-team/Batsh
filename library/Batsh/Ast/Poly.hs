@@ -70,6 +70,75 @@ type FunctionName = Identifier
 
 type Parameter = Identifier
 
+class AstNode a where
+  annot :: a annot -> annot
+
+instance AstNode PLiteral where
+  annot node = case node of
+    Bool _ annot -> annot
+    Int _ annot -> annot
+    Float _ annot -> annot
+    String _ annot -> annot
+    List _ annot -> annot
+
+instance AstNode PLeftValue where
+  annot node = case node of
+    Identifier _ annot -> annot
+    ListAccess _ annot -> annot
+
+instance AstNode PUnaryOperator where
+  annot node = case node of
+    Not annot -> annot
+    Negate annot -> annot
+
+instance AstNode PBinaryOperator where
+  annot node = case node of
+    Plus annot -> annot
+    Minus annot -> annot
+    Multiply annot -> annot
+    Divide annot -> annot
+    Modulo annot -> annot
+    Concat annot -> annot
+    Equal annot -> annot
+    NotEqual annot -> annot
+    ArithEqual annot -> annot
+    ArithNotEqual annot -> annot
+    Greater annot -> annot
+    Less annot -> annot
+    GreaterEqual annot -> annot
+    LessEqual annot -> annot
+    And annot -> annot
+    Or annot -> annot
+
+instance AstNode PExpression where
+  annot node = case node of
+    LeftValue _ annot -> annot
+    Literal _ annot -> annot
+    Unary _ annot -> annot
+    Binary _ annot -> annot
+    Assign _ annot -> annot
+    Call _ annot -> annot
+
+instance AstNode PStatement where
+  annot node = case node of
+    Comment _ annot -> annot
+    Block _ annot -> annot
+    Expression _ annot -> annot
+    If _ annot -> annot
+    IfElse _ annot -> annot
+    While _ annot -> annot
+    Global _ annot -> annot
+    Return _ annot -> annot
+
+instance AstNode PTopLevel where
+  annot node = case node of
+    Statement _ annot -> annot
+    Function _ annot -> annot
+
+instance AstNode PProgram where
+  annot node = case node of
+    Program _ annot -> annot
+
 class Operator a where
   precedence :: a -> Int
   operatorStr :: a -> String

@@ -1,187 +1,505 @@
 Program
   [ Statement
       (Expression
-         (Call ( "println" , [ Literal (Bool False ()) () ] ) ()) ())
-      ()
+         (Call
+            ( "println"
+            , [ Literal
+                  (Bool
+                     False
+                     LP { lpLine = 1 , lpColumn = 9 , lpStartByte = 8 , lpLength = 5 })
+                  LP { lpLine = 1 , lpColumn = 9 , lpStartByte = 8 , lpLength = 5 }
+              ]
+            )
+            LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 14 })
+         LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 15 })
+      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 15 }
   , Statement
       (Expression
-         (Call ( "println" , [ Literal (Bool True ()) () ] ) ()) ())
-      ()
+         (Call
+            ( "println"
+            , [ Literal
+                  (Bool
+                     True
+                     LP { lpLine = 2 , lpColumn = 9 , lpStartByte = 24 , lpLength = 4 })
+                  LP { lpLine = 2 , lpColumn = 9 , lpStartByte = 24 , lpLength = 4 }
+              ]
+            )
+            LP
+              { lpLine = 2 , lpColumn = 1 , lpStartByte = 16 , lpLength = 13 })
+         LP
+           { lpLine = 2 , lpColumn = 1 , lpStartByte = 16 , lpLength = 14 })
+      LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 16 , lpLength = 14 }
   , Statement
       (Expression
-         (Call ( "println" , [ Literal (Int 42 ()) () ] ) ()) ())
-      ()
+         (Call
+            ( "println"
+            , [ Literal
+                  (Int
+                     42
+                     LP { lpLine = 3 , lpColumn = 9 , lpStartByte = 39 , lpLength = 2 })
+                  LP { lpLine = 3 , lpColumn = 9 , lpStartByte = 39 , lpLength = 2 }
+              ]
+            )
+            LP
+              { lpLine = 3 , lpColumn = 1 , lpStartByte = 31 , lpLength = 11 })
+         LP
+           { lpLine = 3 , lpColumn = 1 , lpStartByte = 31 , lpLength = 12 })
+      LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 31 , lpLength = 12 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Plus ()
-                  , Literal (Int 1 ()) ()
+                  ( Plus
+                      LP { lpLine = 4 , lpColumn = 11 , lpStartByte = 54 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         1
+                         LP { lpLine = 4 , lpColumn = 9 , lpStartByte = 52 , lpLength = 1 })
+                      LP { lpLine = 4 , lpColumn = 9 , lpStartByte = 52 , lpLength = 1 }
                   , Binary
-                      ( Multiply ()
+                      ( Multiply
+                          LP { lpLine = 4 , lpColumn = 21 , lpStartByte = 64 , lpLength = 1 }
                       , Binary
-                          ( Plus () , Literal (Int 4 ()) () , Literal (Int 6 ()) () ) ()
-                      , Literal (Int 3 ()) ()
+                          ( Plus
+                              LP { lpLine = 4 , lpColumn = 16 , lpStartByte = 59 , lpLength = 1 }
+                          , Literal
+                              (Int
+                                 4
+                                 LP
+                                   { lpLine = 4 , lpColumn = 14 , lpStartByte = 57 , lpLength = 1 })
+                              LP { lpLine = 4 , lpColumn = 14 , lpStartByte = 57 , lpLength = 1 }
+                          , Literal
+                              (Int
+                                 6
+                                 LP
+                                   { lpLine = 4 , lpColumn = 18 , lpStartByte = 61 , lpLength = 1 })
+                              LP { lpLine = 4 , lpColumn = 18 , lpStartByte = 61 , lpLength = 1 }
+                          )
+                          LP { lpLine = 4 , lpColumn = 14 , lpStartByte = 57 , lpLength = 5 }
+                      , Literal
+                          (Int
+                             3
+                             LP
+                               { lpLine = 4 , lpColumn = 23 , lpStartByte = 66 , lpLength = 1 })
+                          LP { lpLine = 4 , lpColumn = 23 , lpStartByte = 66 , lpLength = 1 }
                       )
-                      ()
+                      LP
+                        { lpLine = 4 , lpColumn = 14 , lpStartByte = 57 , lpLength = 10 }
                   )
-                  ()
+                  LP { lpLine = 4 , lpColumn = 9 , lpStartByte = 52 , lpLength = 15 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 4 , lpColumn = 1 , lpStartByte = 44 , lpLength = 24 })
+         LP
+           { lpLine = 4 , lpColumn = 1 , lpStartByte = 44 , lpLength = 25 })
+      LP { lpLine = 4 , lpColumn = 1 , lpStartByte = 44 , lpLength = 25 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Minus ()
-                  , Literal (Int 8 ()) ()
+                  ( Minus
+                      LP { lpLine = 5 , lpColumn = 11 , lpStartByte = 80 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         8
+                         LP { lpLine = 5 , lpColumn = 9 , lpStartByte = 78 , lpLength = 1 })
+                      LP { lpLine = 5 , lpColumn = 9 , lpStartByte = 78 , lpLength = 1 }
                   , Binary
-                      ( Modulo () , Literal (Int 3 ()) () , Literal (Int 2 ()) () ) ()
+                      ( Modulo
+                          LP { lpLine = 5 , lpColumn = 15 , lpStartByte = 84 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             3
+                             LP
+                               { lpLine = 5 , lpColumn = 13 , lpStartByte = 82 , lpLength = 1 })
+                          LP { lpLine = 5 , lpColumn = 13 , lpStartByte = 82 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             2
+                             LP
+                               { lpLine = 5 , lpColumn = 17 , lpStartByte = 86 , lpLength = 1 })
+                          LP { lpLine = 5 , lpColumn = 17 , lpStartByte = 86 , lpLength = 1 }
+                      )
+                      LP { lpLine = 5 , lpColumn = 13 , lpStartByte = 82 , lpLength = 5 }
                   )
-                  ()
+                  LP { lpLine = 5 , lpColumn = 9 , lpStartByte = 78 , lpLength = 9 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 5 , lpColumn = 1 , lpStartByte = 70 , lpLength = 18 })
+         LP
+           { lpLine = 5 , lpColumn = 1 , lpStartByte = 70 , lpLength = 19 })
+      LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 70 , lpLength = 19 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Minus ()
-                  , Unary ( Negate () , Literal (Int 9 ()) () ) ()
-                  , Literal (Int 9 ()) ()
+                  ( Minus
+                      LP
+                        { lpLine = 6 , lpColumn = 12 , lpStartByte = 101 , lpLength = 1 }
+                  , Unary
+                      ( Negate
+                          LP { lpLine = 6 , lpColumn = 9 , lpStartByte = 98 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             9
+                             LP
+                               { lpLine = 6 , lpColumn = 10 , lpStartByte = 99 , lpLength = 1 })
+                          LP { lpLine = 6 , lpColumn = 10 , lpStartByte = 99 , lpLength = 1 }
+                      )
+                      LP { lpLine = 6 , lpColumn = 9 , lpStartByte = 98 , lpLength = 2 }
+                  , Literal
+                      (Int
+                         9
+                         LP
+                           { lpLine = 6 , lpColumn = 14 , lpStartByte = 103 , lpLength = 1 })
+                      LP
+                        { lpLine = 6 , lpColumn = 14 , lpStartByte = 103 , lpLength = 1 }
                   )
-                  ()
+                  LP { lpLine = 6 , lpColumn = 9 , lpStartByte = 98 , lpLength = 6 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 6 , lpColumn = 1 , lpStartByte = 90 , lpLength = 15 })
+         LP
+           { lpLine = 6 , lpColumn = 1 , lpStartByte = 90 , lpLength = 16 })
+      LP { lpLine = 6 , lpColumn = 1 , lpStartByte = 90 , lpLength = 16 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Divide ()
+                  ( Divide
+                      LP
+                        { lpLine = 7 , lpColumn = 17 , lpStartByte = 123 , lpLength = 1 }
                   , Binary
-                      ( Plus () , Literal (Int 2 ()) () , Literal (Int 8 ()) () ) ()
-                  , Literal (Int 3 ()) ()
+                      ( Plus
+                          LP
+                            { lpLine = 7 , lpColumn = 12 , lpStartByte = 118 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             2
+                             LP
+                               { lpLine = 7 , lpColumn = 10 , lpStartByte = 116 , lpLength = 1 })
+                          LP
+                            { lpLine = 7 , lpColumn = 10 , lpStartByte = 116 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             8
+                             LP
+                               { lpLine = 7 , lpColumn = 14 , lpStartByte = 120 , lpLength = 1 })
+                          LP
+                            { lpLine = 7 , lpColumn = 14 , lpStartByte = 120 , lpLength = 1 }
+                      )
+                      LP
+                        { lpLine = 7 , lpColumn = 10 , lpStartByte = 116 , lpLength = 5 }
+                  , Literal
+                      (Int
+                         3
+                         LP
+                           { lpLine = 7 , lpColumn = 19 , lpStartByte = 125 , lpLength = 1 })
+                      LP
+                        { lpLine = 7 , lpColumn = 19 , lpStartByte = 125 , lpLength = 1 }
                   )
-                  ()
+                  LP
+                    { lpLine = 7 , lpColumn = 10 , lpStartByte = 116 , lpLength = 10 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 7 , lpColumn = 1 , lpStartByte = 107 , lpLength = 20 })
+         LP
+           { lpLine = 7 , lpColumn = 1 , lpStartByte = 107 , lpLength = 21 })
+      LP
+        { lpLine = 7 , lpColumn = 1 , lpStartByte = 107 , lpLength = 21 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( ArithEqual () , Literal (Int 2 ()) () , Literal (Int 2 ()) () )
-                  ()
-              ]
-            )
-            ())
-         ())
-      ()
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ Binary
-                  ( ArithNotEqual ()
-                  , Literal (Int 6 ()) ()
-                  , Literal (Int 8 ()) ()
+                  ( ArithEqual
+                      LP
+                        { lpLine = 8 , lpColumn = 11 , lpStartByte = 139 , lpLength = 3 }
+                  , Literal
+                      (Int
+                         2
+                         LP
+                           { lpLine = 8 , lpColumn = 9 , lpStartByte = 137 , lpLength = 1 })
+                      LP { lpLine = 8 , lpColumn = 9 , lpStartByte = 137 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         2
+                         LP
+                           { lpLine = 8 , lpColumn = 15 , lpStartByte = 143 , lpLength = 1 })
+                      LP
+                        { lpLine = 8 , lpColumn = 15 , lpStartByte = 143 , lpLength = 1 }
                   )
-                  ()
+                  LP { lpLine = 8 , lpColumn = 9 , lpStartByte = 137 , lpLength = 7 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 8 , lpColumn = 1 , lpStartByte = 129 , lpLength = 16 })
+         LP
+           { lpLine = 8 , lpColumn = 1 , lpStartByte = 129 , lpLength = 17 })
+      LP
+        { lpLine = 8 , lpColumn = 1 , lpStartByte = 129 , lpLength = 17 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Greater () , Literal (Int 3 ()) () , Literal (Int 2 ()) () ) ()
+                  ( ArithNotEqual
+                      LP
+                        { lpLine = 9 , lpColumn = 11 , lpStartByte = 157 , lpLength = 3 }
+                  , Literal
+                      (Int
+                         6
+                         LP
+                           { lpLine = 9 , lpColumn = 9 , lpStartByte = 155 , lpLength = 1 })
+                      LP { lpLine = 9 , lpColumn = 9 , lpStartByte = 155 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         8
+                         LP
+                           { lpLine = 9 , lpColumn = 15 , lpStartByte = 161 , lpLength = 1 })
+                      LP
+                        { lpLine = 9 , lpColumn = 15 , lpStartByte = 161 , lpLength = 1 }
+                  )
+                  LP { lpLine = 9 , lpColumn = 9 , lpStartByte = 155 , lpLength = 7 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 9 , lpColumn = 1 , lpStartByte = 147 , lpLength = 16 })
+         LP
+           { lpLine = 9 , lpColumn = 1 , lpStartByte = 147 , lpLength = 17 })
+      LP
+        { lpLine = 9 , lpColumn = 1 , lpStartByte = 147 , lpLength = 17 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Less () , Literal (Int 4 ()) () , Literal (Int 5 ()) () ) ()
+                  ( Greater
+                      LP
+                        { lpLine = 10 , lpColumn = 11 , lpStartByte = 175 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         3
+                         LP
+                           { lpLine = 10 , lpColumn = 9 , lpStartByte = 173 , lpLength = 1 })
+                      LP
+                        { lpLine = 10 , lpColumn = 9 , lpStartByte = 173 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         2
+                         LP
+                           { lpLine = 10 , lpColumn = 13 , lpStartByte = 177 , lpLength = 1 })
+                      LP
+                        { lpLine = 10 , lpColumn = 13 , lpStartByte = 177 , lpLength = 1 }
+                  )
+                  LP
+                    { lpLine = 10 , lpColumn = 9 , lpStartByte = 173 , lpLength = 5 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 10 , lpColumn = 1 , lpStartByte = 165 , lpLength = 14 })
+         LP
+           { lpLine = 10 , lpColumn = 1 , lpStartByte = 165 , lpLength = 15 })
+      LP
+        { lpLine = 10 , lpColumn = 1 , lpStartByte = 165 , lpLength = 15 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( GreaterEqual () , Literal (Int 6 ()) () , Literal (Int 2 ()) () )
-                  ()
+                  ( Less
+                      LP
+                        { lpLine = 11 , lpColumn = 11 , lpStartByte = 191 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         4
+                         LP
+                           { lpLine = 11 , lpColumn = 9 , lpStartByte = 189 , lpLength = 1 })
+                      LP
+                        { lpLine = 11 , lpColumn = 9 , lpStartByte = 189 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         5
+                         LP
+                           { lpLine = 11 , lpColumn = 13 , lpStartByte = 193 , lpLength = 1 })
+                      LP
+                        { lpLine = 11 , lpColumn = 13 , lpStartByte = 193 , lpLength = 1 }
+                  )
+                  LP
+                    { lpLine = 11 , lpColumn = 9 , lpStartByte = 189 , lpLength = 5 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 11 , lpColumn = 1 , lpStartByte = 181 , lpLength = 14 })
+         LP
+           { lpLine = 11 , lpColumn = 1 , lpStartByte = 181 , lpLength = 15 })
+      LP
+        { lpLine = 11 , lpColumn = 1 , lpStartByte = 181 , lpLength = 15 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( LessEqual () , Literal (Int 19 ()) () , Literal (Int 30 ()) () )
-                  ()
+                  ( GreaterEqual
+                      LP
+                        { lpLine = 12 , lpColumn = 11 , lpStartByte = 207 , lpLength = 2 }
+                  , Literal
+                      (Int
+                         6
+                         LP
+                           { lpLine = 12 , lpColumn = 9 , lpStartByte = 205 , lpLength = 1 })
+                      LP
+                        { lpLine = 12 , lpColumn = 9 , lpStartByte = 205 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         2
+                         LP
+                           { lpLine = 12 , lpColumn = 14 , lpStartByte = 210 , lpLength = 1 })
+                      LP
+                        { lpLine = 12 , lpColumn = 14 , lpStartByte = 210 , lpLength = 1 }
+                  )
+                  LP
+                    { lpLine = 12 , lpColumn = 9 , lpStartByte = 205 , lpLength = 6 }
               ]
             )
-            ())
-         ())
-      ()
-  , Statement
-      (Expression
-         (Call
-            ( "println" , [ Unary ( Not () , Literal (Bool True ()) () ) () ] )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 12 , lpColumn = 1 , lpStartByte = 197 , lpLength = 15 })
+         LP
+           { lpLine = 12 , lpColumn = 1 , lpStartByte = 197 , lpLength = 16 })
+      LP
+        { lpLine = 12 , lpColumn = 1 , lpStartByte = 197 , lpLength = 16 }
   , Statement
       (Expression
          (Call
             ( "println"
-            , [ Unary ( Not () , Literal (Bool False ()) () ) () ]
+            , [ Binary
+                  ( LessEqual
+                      LP
+                        { lpLine = 13 , lpColumn = 12 , lpStartByte = 225 , lpLength = 2 }
+                  , Literal
+                      (Int
+                         19
+                         LP
+                           { lpLine = 13 , lpColumn = 9 , lpStartByte = 222 , lpLength = 2 })
+                      LP
+                        { lpLine = 13 , lpColumn = 9 , lpStartByte = 222 , lpLength = 2 }
+                  , Literal
+                      (Int
+                         30
+                         LP
+                           { lpLine = 13 , lpColumn = 15 , lpStartByte = 228 , lpLength = 2 })
+                      LP
+                        { lpLine = 13 , lpColumn = 15 , lpStartByte = 228 , lpLength = 2 }
+                  )
+                  LP
+                    { lpLine = 13 , lpColumn = 9 , lpStartByte = 222 , lpLength = 8 }
+              ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 13 , lpColumn = 1 , lpStartByte = 214 , lpLength = 17 })
+         LP
+           { lpLine = 13 , lpColumn = 1 , lpStartByte = 214 , lpLength = 18 })
+      LP
+        { lpLine = 13 , lpColumn = 1 , lpStartByte = 214 , lpLength = 18 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Unary
-                  ( Not ()
-                  , Binary
-                      ( Minus () , Literal (Int 2 ()) () , Literal (Int 1 ()) () ) ()
+                  ( Not
+                      LP
+                        { lpLine = 14 , lpColumn = 9 , lpStartByte = 241 , lpLength = 1 }
+                  , Literal
+                      (Bool
+                         True
+                         LP
+                           { lpLine = 14 , lpColumn = 10 , lpStartByte = 242 , lpLength = 4 })
+                      LP
+                        { lpLine = 14 , lpColumn = 10 , lpStartByte = 242 , lpLength = 4 }
                   )
-                  ()
+                  LP
+                    { lpLine = 14 , lpColumn = 9 , lpStartByte = 241 , lpLength = 5 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 14 , lpColumn = 1 , lpStartByte = 233 , lpLength = 14 })
+         LP
+           { lpLine = 14 , lpColumn = 1 , lpStartByte = 233 , lpLength = 15 })
+      LP
+        { lpLine = 14 , lpColumn = 1 , lpStartByte = 233 , lpLength = 15 }
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Unary
+                  ( Not
+                      LP
+                        { lpLine = 15 , lpColumn = 9 , lpStartByte = 257 , lpLength = 1 }
+                  , Literal
+                      (Bool
+                         False
+                         LP
+                           { lpLine = 15 , lpColumn = 10 , lpStartByte = 258 , lpLength = 5 })
+                      LP
+                        { lpLine = 15 , lpColumn = 10 , lpStartByte = 258 , lpLength = 5 }
+                  )
+                  LP
+                    { lpLine = 15 , lpColumn = 9 , lpStartByte = 257 , lpLength = 6 }
+              ]
+            )
+            LP
+              { lpLine = 15 , lpColumn = 1 , lpStartByte = 249 , lpLength = 15 })
+         LP
+           { lpLine = 15 , lpColumn = 1 , lpStartByte = 249 , lpLength = 16 })
+      LP
+        { lpLine = 15 , lpColumn = 1 , lpStartByte = 249 , lpLength = 16 }
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Unary
+                  ( Not
+                      LP
+                        { lpLine = 16 , lpColumn = 9 , lpStartByte = 274 , lpLength = 1 }
+                  , Binary
+                      ( Minus
+                          LP
+                            { lpLine = 16 , lpColumn = 13 , lpStartByte = 278 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             2
+                             LP
+                               { lpLine = 16 , lpColumn = 11 , lpStartByte = 276 , lpLength = 1 })
+                          LP
+                            { lpLine = 16 , lpColumn = 11 , lpStartByte = 276 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             1
+                             LP
+                               { lpLine = 16 , lpColumn = 15 , lpStartByte = 280 , lpLength = 1 })
+                          LP
+                            { lpLine = 16 , lpColumn = 15 , lpStartByte = 280 , lpLength = 1 }
+                      )
+                      LP
+                        { lpLine = 16 , lpColumn = 11 , lpStartByte = 276 , lpLength = 5 }
+                  )
+                  LP
+                    { lpLine = 16 , lpColumn = 9 , lpStartByte = 274 , lpLength = 7 }
+              ]
+            )
+            LP
+              { lpLine = 16 , lpColumn = 1 , lpStartByte = 266 , lpLength = 17 })
+         LP
+           { lpLine = 16 , lpColumn = 1 , lpStartByte = 266 , lpLength = 18 })
+      LP
+        { lpLine = 16 , lpColumn = 1 , lpStartByte = 266 , lpLength = 18 }
   ]
-  ()
+  LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 284 }

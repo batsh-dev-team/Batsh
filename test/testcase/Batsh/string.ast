@@ -1,138 +1,399 @@
 Program
   [ Statement
       (Expression
-         (Call ( "println" , [ Literal (String "BYVoid" ()) () ] ) ()) ())
-      ()
-  , Statement
-      (Expression
-         (Call ( "println" , [ Literal (String "Slash/" ()) () ] ) ()) ())
-      ()
+         (Call
+            ( "println"
+            , [ Literal
+                  (String
+                     "BYVoid"
+                     LP { lpLine = 1 , lpColumn = 9 , lpStartByte = 8 , lpLength = 8 })
+                  LP { lpLine = 1 , lpColumn = 9 , lpStartByte = 8 , lpLength = 8 }
+              ]
+            )
+            LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 17 })
+         LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 18 })
+      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 18 }
   , Statement
       (Expression
          (Call
-            ( "println" , [ Literal (String "Backslash\\\\" ()) () ] ) ())
-         ())
-      ()
+            ( "println"
+            , [ Literal
+                  (String
+                     "Slash/"
+                     LP { lpLine = 2 , lpColumn = 9 , lpStartByte = 27 , lpLength = 8 })
+                  LP { lpLine = 2 , lpColumn = 9 , lpStartByte = 27 , lpLength = 8 }
+              ]
+            )
+            LP
+              { lpLine = 2 , lpColumn = 1 , lpStartByte = 19 , lpLength = 17 })
+         LP
+           { lpLine = 2 , lpColumn = 1 , lpStartByte = 19 , lpLength = 18 })
+      LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 19 , lpLength = 18 }
   , Statement
       (Expression
-         (Call ( "println" , [ Literal (String "Quote\\\"'" ()) () ] ) ())
-         ())
-      ()
+         (Call
+            ( "println"
+            , [ Literal
+                  (String
+                     "Backslash\\\\"
+                     LP
+                       { lpLine = 3 , lpColumn = 9 , lpStartByte = 46 , lpLength = 13 })
+                  LP { lpLine = 3 , lpColumn = 9 , lpStartByte = 46 , lpLength = 13 }
+              ]
+            )
+            LP
+              { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 22 })
+         LP
+           { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 23 })
+      LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 23 }
   , Statement
       (Expression
-         (Call ( "println" , [ Literal (String "Tab\\tTab" ()) () ] ) ())
-         ())
-      ()
-  , Statement (Comment "println(\"Newline\\nLine2\");" ()) ()
-  , Statement (Comment "println(\"!\");" ()) ()
+         (Call
+            ( "println"
+            , [ Literal
+                  (String
+                     "Quote\\\"'"
+                     LP
+                       { lpLine = 4 , lpColumn = 9 , lpStartByte = 70 , lpLength = 10 })
+                  LP { lpLine = 4 , lpColumn = 9 , lpStartByte = 70 , lpLength = 10 }
+              ]
+            )
+            LP
+              { lpLine = 4 , lpColumn = 1 , lpStartByte = 62 , lpLength = 19 })
+         LP
+           { lpLine = 4 , lpColumn = 1 , lpStartByte = 62 , lpLength = 20 })
+      LP { lpLine = 4 , lpColumn = 1 , lpStartByte = 62 , lpLength = 20 }
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Literal
+                  (String
+                     "Tab\\tTab"
+                     LP
+                       { lpLine = 5 , lpColumn = 9 , lpStartByte = 91 , lpLength = 10 })
+                  LP { lpLine = 5 , lpColumn = 9 , lpStartByte = 91 , lpLength = 10 }
+              ]
+            )
+            LP
+              { lpLine = 5 , lpColumn = 1 , lpStartByte = 83 , lpLength = 19 })
+         LP
+           { lpLine = 5 , lpColumn = 1 , lpStartByte = 83 , lpLength = 20 })
+      LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 83 , lpLength = 20 }
+  , Statement
+      (Comment
+         "println(\"Newline\\nLine2\");"
+         LP
+           { lpLine = 6 , lpColumn = 1 , lpStartByte = 104 , lpLength = 28 })
+      LP
+        { lpLine = 6 , lpColumn = 1 , lpStartByte = 104 , lpLength = 28 }
+  , Statement
+      (Comment
+         "println(\"!\");"
+         LP
+           { lpLine = 7 , lpColumn = 1 , lpStartByte = 133 , lpLength = 15 })
+      LP
+        { lpLine = 7 , lpColumn = 1 , lpStartByte = 133 , lpLength = 15 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Concat ()
+                  ( Concat
+                      LP
+                        { lpLine = 8 , lpColumn = 41 , lpStartByte = 189 , lpLength = 2 }
                   , Binary
-                      ( Concat ()
+                      ( Concat
+                          LP
+                            { lpLine = 8 , lpColumn = 29 , lpStartByte = 177 , lpLength = 2 }
                       , Binary
-                          ( Concat ()
-                          , Literal (String "http://" ()) ()
-                          , Literal (String "www." ()) ()
+                          ( Concat
+                              LP
+                                { lpLine = 8 , lpColumn = 19 , lpStartByte = 167 , lpLength = 2 }
+                          , Literal
+                              (String
+                                 "http://"
+                                 LP
+                                   { lpLine = 8 , lpColumn = 9 , lpStartByte = 157 , lpLength = 9 })
+                              LP { lpLine = 8 , lpColumn = 9 , lpStartByte = 157 , lpLength = 9 }
+                          , Literal
+                              (String
+                                 "www."
+                                 LP
+                                   { lpLine = 8
+                                   , lpColumn = 22
+                                   , lpStartByte = 170
+                                   , lpLength = 6
+                                   })
+                              LP
+                                { lpLine = 8 , lpColumn = 22 , lpStartByte = 170 , lpLength = 6 }
                           )
-                          ()
-                      , Literal (String "byvoid" ()) ()
+                          LP
+                            { lpLine = 8 , lpColumn = 9 , lpStartByte = 157 , lpLength = 19 }
+                      , Literal
+                          (String
+                             "byvoid"
+                             LP
+                               { lpLine = 8 , lpColumn = 32 , lpStartByte = 180 , lpLength = 8 })
+                          LP
+                            { lpLine = 8 , lpColumn = 32 , lpStartByte = 180 , lpLength = 8 }
                       )
-                      ()
-                  , Literal (String ".com" ()) ()
+                      LP
+                        { lpLine = 8 , lpColumn = 9 , lpStartByte = 157 , lpLength = 31 }
+                  , Literal
+                      (String
+                         ".com"
+                         LP
+                           { lpLine = 8 , lpColumn = 44 , lpStartByte = 192 , lpLength = 6 })
+                      LP
+                        { lpLine = 8 , lpColumn = 44 , lpStartByte = 192 , lpLength = 6 }
                   )
-                  ()
+                  LP
+                    { lpLine = 8 , lpColumn = 9 , lpStartByte = 157 , lpLength = 41 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 8 , lpColumn = 1 , lpStartByte = 149 , lpLength = 50 })
+         LP
+           { lpLine = 8 , lpColumn = 1 , lpStartByte = 149 , lpLength = 51 })
+      LP
+        { lpLine = 8 , lpColumn = 1 , lpStartByte = 149 , lpLength = 51 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Concat ()
+                  ( Concat
+                      LP
+                        { lpLine = 9 , lpColumn = 27 , lpStartByte = 227 , lpLength = 2 }
                   , Binary
-                      ( Concat ()
+                      ( Concat
+                          LP
+                            { lpLine = 9 , lpColumn = 15 , lpStartByte = 215 , lpLength = 2 }
                       , Binary
-                          ( Divide () , Literal (Int 6 ()) () , Literal (Int 2 ()) () ) ()
-                      , Literal (String "BYVoid" ()) ()
+                          ( Divide
+                              LP
+                                { lpLine = 9 , lpColumn = 11 , lpStartByte = 211 , lpLength = 1 }
+                          , Literal
+                              (Int
+                                 6
+                                 LP
+                                   { lpLine = 9 , lpColumn = 9 , lpStartByte = 209 , lpLength = 1 })
+                              LP { lpLine = 9 , lpColumn = 9 , lpStartByte = 209 , lpLength = 1 }
+                          , Literal
+                              (Int
+                                 2
+                                 LP
+                                   { lpLine = 9
+                                   , lpColumn = 13
+                                   , lpStartByte = 213
+                                   , lpLength = 1
+                                   })
+                              LP
+                                { lpLine = 9 , lpColumn = 13 , lpStartByte = 213 , lpLength = 1 }
+                          )
+                          LP { lpLine = 9 , lpColumn = 9 , lpStartByte = 209 , lpLength = 5 }
+                      , Literal
+                          (String
+                             "BYVoid"
+                             LP
+                               { lpLine = 9 , lpColumn = 18 , lpStartByte = 218 , lpLength = 8 })
+                          LP
+                            { lpLine = 9 , lpColumn = 18 , lpStartByte = 218 , lpLength = 8 }
                       )
-                      ()
+                      LP
+                        { lpLine = 9 , lpColumn = 9 , lpStartByte = 209 , lpLength = 17 }
                   , Binary
-                      ( Plus () , Literal (Int 3 ()) () , Literal (Int 5 ()) () ) ()
-                  )
-                  ()
-              ]
-            )
-            ())
-         ())
-      ()
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ Binary
-                  ( Plus () , Literal (Int 3 ()) () , Literal (String "3" ()) () ) ()
-              ]
-            )
-            ())
-         ())
-      ()
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ Binary
-                  ( Concat ()
-                  , Binary
-                      ( Plus () , Literal (Int 3 ()) () , Literal (String "3" ()) () ) ()
-                  , Literal (String "2" ()) ()
-                  )
-                  ()
-              ]
-            )
-            ())
-         ())
-      ()
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ Binary
-                  ( Plus ()
-                  , Literal (Int 3 ()) ()
-                  , Binary
-                      ( Concat ()
-                      , Literal (String "3" ()) ()
-                      , Literal (String "2" ()) ()
+                      ( Plus
+                          LP
+                            { lpLine = 9 , lpColumn = 32 , lpStartByte = 232 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             3
+                             LP
+                               { lpLine = 9 , lpColumn = 30 , lpStartByte = 230 , lpLength = 1 })
+                          LP
+                            { lpLine = 9 , lpColumn = 30 , lpStartByte = 230 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             5
+                             LP
+                               { lpLine = 9 , lpColumn = 34 , lpStartByte = 234 , lpLength = 1 })
+                          LP
+                            { lpLine = 9 , lpColumn = 34 , lpStartByte = 234 , lpLength = 1 }
                       )
-                      ()
+                      LP
+                        { lpLine = 9 , lpColumn = 30 , lpStartByte = 230 , lpLength = 5 }
                   )
-                  ()
+                  LP
+                    { lpLine = 9 , lpColumn = 9 , lpStartByte = 209 , lpLength = 26 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 9 , lpColumn = 1 , lpStartByte = 201 , lpLength = 35 })
+         LP
+           { lpLine = 9 , lpColumn = 1 , lpStartByte = 201 , lpLength = 36 })
+      LP
+        { lpLine = 9 , lpColumn = 1 , lpStartByte = 201 , lpLength = 36 }
   , Statement
       (Expression
          (Call
             ( "println"
             , [ Binary
-                  ( Equal ()
-                  , Literal (String "BYVoid" ()) ()
-                  , Literal (String "BYVoid" ()) ()
+                  ( Plus
+                      LP
+                        { lpLine = 10 , lpColumn = 11 , lpStartByte = 248 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         3
+                         LP
+                           { lpLine = 10 , lpColumn = 9 , lpStartByte = 246 , lpLength = 1 })
+                      LP
+                        { lpLine = 10 , lpColumn = 9 , lpStartByte = 246 , lpLength = 1 }
+                  , Literal
+                      (String
+                         "3"
+                         LP
+                           { lpLine = 10 , lpColumn = 13 , lpStartByte = 250 , lpLength = 3 })
+                      LP
+                        { lpLine = 10 , lpColumn = 13 , lpStartByte = 250 , lpLength = 3 }
                   )
-                  ()
+                  LP
+                    { lpLine = 10 , lpColumn = 9 , lpStartByte = 246 , lpLength = 7 }
               ]
             )
-            ())
-         ())
-      ()
+            LP
+              { lpLine = 10 , lpColumn = 1 , lpStartByte = 238 , lpLength = 16 })
+         LP
+           { lpLine = 10 , lpColumn = 1 , lpStartByte = 238 , lpLength = 17 })
+      LP
+        { lpLine = 10 , lpColumn = 1 , lpStartByte = 238 , lpLength = 17 }
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary
+                  ( Concat
+                      LP
+                        { lpLine = 11 , lpColumn = 17 , lpStartByte = 272 , lpLength = 2 }
+                  , Binary
+                      ( Plus
+                          LP
+                            { lpLine = 11 , lpColumn = 11 , lpStartByte = 266 , lpLength = 1 }
+                      , Literal
+                          (Int
+                             3
+                             LP
+                               { lpLine = 11 , lpColumn = 9 , lpStartByte = 264 , lpLength = 1 })
+                          LP
+                            { lpLine = 11 , lpColumn = 9 , lpStartByte = 264 , lpLength = 1 }
+                      , Literal
+                          (String
+                             "3"
+                             LP
+                               { lpLine = 11 , lpColumn = 13 , lpStartByte = 268 , lpLength = 3 })
+                          LP
+                            { lpLine = 11 , lpColumn = 13 , lpStartByte = 268 , lpLength = 3 }
+                      )
+                      LP
+                        { lpLine = 11 , lpColumn = 9 , lpStartByte = 264 , lpLength = 7 }
+                  , Literal
+                      (String
+                         "2"
+                         LP
+                           { lpLine = 11 , lpColumn = 20 , lpStartByte = 275 , lpLength = 3 })
+                      LP
+                        { lpLine = 11 , lpColumn = 20 , lpStartByte = 275 , lpLength = 3 }
+                  )
+                  LP
+                    { lpLine = 11 , lpColumn = 9 , lpStartByte = 264 , lpLength = 14 }
+              ]
+            )
+            LP
+              { lpLine = 11 , lpColumn = 1 , lpStartByte = 256 , lpLength = 23 })
+         LP
+           { lpLine = 11 , lpColumn = 1 , lpStartByte = 256 , lpLength = 24 })
+      LP
+        { lpLine = 11 , lpColumn = 1 , lpStartByte = 256 , lpLength = 24 }
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary
+                  ( Plus
+                      LP
+                        { lpLine = 12 , lpColumn = 11 , lpStartByte = 291 , lpLength = 1 }
+                  , Literal
+                      (Int
+                         3
+                         LP
+                           { lpLine = 12 , lpColumn = 9 , lpStartByte = 289 , lpLength = 1 })
+                      LP
+                        { lpLine = 12 , lpColumn = 9 , lpStartByte = 289 , lpLength = 1 }
+                  , Binary
+                      ( Concat
+                          LP
+                            { lpLine = 12 , lpColumn = 18 , lpStartByte = 298 , lpLength = 2 }
+                      , Literal
+                          (String
+                             "3"
+                             LP
+                               { lpLine = 12 , lpColumn = 14 , lpStartByte = 294 , lpLength = 3 })
+                          LP
+                            { lpLine = 12 , lpColumn = 14 , lpStartByte = 294 , lpLength = 3 }
+                      , Literal
+                          (String
+                             "2"
+                             LP
+                               { lpLine = 12 , lpColumn = 21 , lpStartByte = 301 , lpLength = 3 })
+                          LP
+                            { lpLine = 12 , lpColumn = 21 , lpStartByte = 301 , lpLength = 3 }
+                      )
+                      LP
+                        { lpLine = 12 , lpColumn = 14 , lpStartByte = 294 , lpLength = 10 }
+                  )
+                  LP
+                    { lpLine = 12 , lpColumn = 9 , lpStartByte = 289 , lpLength = 15 }
+              ]
+            )
+            LP
+              { lpLine = 12 , lpColumn = 1 , lpStartByte = 281 , lpLength = 25 })
+         LP
+           { lpLine = 12 , lpColumn = 1 , lpStartByte = 281 , lpLength = 26 })
+      LP
+        { lpLine = 12 , lpColumn = 1 , lpStartByte = 281 , lpLength = 26 }
+  , Statement
+      (Expression
+         (Call
+            ( "println"
+            , [ Binary
+                  ( Equal
+                      LP
+                        { lpLine = 13 , lpColumn = 18 , lpStartByte = 325 , lpLength = 2 }
+                  , Literal
+                      (String
+                         "BYVoid"
+                         LP
+                           { lpLine = 13 , lpColumn = 9 , lpStartByte = 316 , lpLength = 8 })
+                      LP
+                        { lpLine = 13 , lpColumn = 9 , lpStartByte = 316 , lpLength = 8 }
+                  , Literal
+                      (String
+                         "BYVoid"
+                         LP
+                           { lpLine = 13 , lpColumn = 21 , lpStartByte = 328 , lpLength = 8 })
+                      LP
+                        { lpLine = 13 , lpColumn = 21 , lpStartByte = 328 , lpLength = 8 }
+                  )
+                  LP
+                    { lpLine = 13 , lpColumn = 9 , lpStartByte = 316 , lpLength = 20 }
+              ]
+            )
+            LP
+              { lpLine = 13 , lpColumn = 1 , lpStartByte = 308 , lpLength = 29 })
+         LP
+           { lpLine = 13 , lpColumn = 1 , lpStartByte = 308 , lpLength = 30 })
+      LP
+        { lpLine = 13 , lpColumn = 1 , lpStartByte = 308 , lpLength = 30 }
   ]
-  ()
+  LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 338 }

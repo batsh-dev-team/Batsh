@@ -3,20 +3,20 @@ module Batsh.Ast(module Poly, module Batsh.Ast) where
 import Batsh.Ast.Poly as Poly
 import Batsh.Lexer(LexPos)
 
-type Annotation = ()
+type AstAnnotation = LexPos
 
-type Literal = PLiteral Annotation
+type Literal = PLiteral AstAnnotation
 
-type LeftValue = PLeftValue Annotation
+type LeftValue = PLeftValue AstAnnotation
 
-type UnaryOperator = PUnaryOperator Annotation
+type UnaryOperator = PUnaryOperator AstAnnotation
 
-type BinaryOperator = PBinaryOperator Annotation
+type BinaryOperator = PBinaryOperator AstAnnotation
 
-type Expression = PExpression Annotation
+type Expression = PExpression AstAnnotation
 
-type Statement = PStatement Annotation
+type Statement = PStatement AstAnnotation
 
-type TopLevel = PTopLevel Annotation
+type TopLevel = PTopLevel AstAnnotation
 
-type Program = PProgram Annotation
+type Program = PProgram AstAnnotation

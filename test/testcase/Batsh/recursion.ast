@@ -1,183 +1,611 @@
 Program
-  [ Statement (Comment " Loop" ()) ()
+  [ Statement
+      (Comment
+         " Loop"
+         LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 7 })
+      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 7 }
   , Function
       ( "loop"
       , [ "num" ]
       , [ Expression
-            (Call ( "println" , [ LeftValue (Identifier "num" ()) () ] ) ()) ()
+            (Call
+               ( "println"
+               , [ LeftValue
+                     (Identifier
+                        "num"
+                        LP
+                          { lpLine = 3 , lpColumn = 11 , lpStartByte = 39 , lpLength = 3 })
+                     LP { lpLine = 3 , lpColumn = 11 , lpStartByte = 39 , lpLength = 3 }
+                 ]
+               )
+               LP
+                 { lpLine = 3 , lpColumn = 3 , lpStartByte = 31 , lpLength = 12 })
+            LP { lpLine = 3 , lpColumn = 3 , lpStartByte = 31 , lpLength = 13 }
         , If
             ( Binary
-                ( Greater ()
-                , LeftValue (Identifier "num" ()) ()
-                , Literal (Int 0 ()) ()
+                ( Greater
+                    LP { lpLine = 4 , lpColumn = 11 , lpStartByte = 55 , lpLength = 1 }
+                , LeftValue
+                    (Identifier
+                       "num"
+                       LP { lpLine = 4 , lpColumn = 7 , lpStartByte = 51 , lpLength = 3 })
+                    LP { lpLine = 4 , lpColumn = 7 , lpStartByte = 51 , lpLength = 3 }
+                , Literal
+                    (Int
+                       0
+                       LP
+                         { lpLine = 4 , lpColumn = 13 , lpStartByte = 57 , lpLength = 1 })
+                    LP { lpLine = 4 , lpColumn = 13 , lpStartByte = 57 , lpLength = 1 }
                 )
-                ()
+                LP { lpLine = 4 , lpColumn = 7 , lpStartByte = 51 , lpLength = 7 }
             , Block
                 [ Expression
                     (Call
                        ( "loop"
                        , [ Binary
-                             ( Minus ()
-                             , LeftValue (Identifier "num" ()) ()
-                             , Literal (Int 1 ()) ()
+                             ( Minus
+                                 LP { lpLine = 5 , lpColumn = 14 , lpStartByte = 75 , lpLength = 1 }
+                             , LeftValue
+                                 (Identifier
+                                    "num"
+                                    LP
+                                      { lpLine = 5
+                                      , lpColumn = 10
+                                      , lpStartByte = 71
+                                      , lpLength = 3
+                                      })
+                                 LP { lpLine = 5 , lpColumn = 10 , lpStartByte = 71 , lpLength = 3 }
+                             , Literal
+                                 (Int
+                                    1
+                                    LP
+                                      { lpLine = 5
+                                      , lpColumn = 16
+                                      , lpStartByte = 77
+                                      , lpLength = 1
+                                      })
+                                 LP { lpLine = 5 , lpColumn = 16 , lpStartByte = 77 , lpLength = 1 }
                              )
-                             ()
+                             LP { lpLine = 5 , lpColumn = 10 , lpStartByte = 71 , lpLength = 7 }
                          ]
                        )
-                       ())
-                    ()
+                       LP
+                         { lpLine = 5 , lpColumn = 5 , lpStartByte = 66 , lpLength = 13 })
+                    LP { lpLine = 5 , lpColumn = 5 , lpStartByte = 66 , lpLength = 14 }
                 ]
-                ()
+                LP
+                  { lpLine = 4 , lpColumn = 16 , lpStartByte = 60 , lpLength = 24 }
             )
-            ()
+            LP { lpLine = 4 , lpColumn = 3 , lpStartByte = 47 , lpLength = 37 }
         ]
       )
-      ()
+      LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 8 , lpLength = 78 }
   , Statement
-      (Expression (Call ( "loop" , [ Literal (Int 10 ()) () ] ) ()) ())
-      ()
-  , Statement (Comment " Factorial" ()) ()
+      (Expression
+         (Call
+            ( "loop"
+            , [ Literal
+                  (Int
+                     10
+                     LP { lpLine = 8 , lpColumn = 6 , lpStartByte = 92 , lpLength = 2 })
+                  LP { lpLine = 8 , lpColumn = 6 , lpStartByte = 92 , lpLength = 2 }
+              ]
+            )
+            LP { lpLine = 8 , lpColumn = 1 , lpStartByte = 87 , lpLength = 8 })
+         LP { lpLine = 8 , lpColumn = 1 , lpStartByte = 87 , lpLength = 9 })
+      LP { lpLine = 8 , lpColumn = 1 , lpStartByte = 87 , lpLength = 9 }
+  , Statement
+      (Comment
+         " Factorial"
+         LP
+           { lpLine = 9 , lpColumn = 1 , lpStartByte = 97 , lpLength = 12 })
+      LP { lpLine = 9 , lpColumn = 1 , lpStartByte = 97 , lpLength = 12 }
   , Function
       ( "fact"
       , [ "num" ]
       , [ IfElse
             ( Binary
-                ( ArithEqual ()
-                , LeftValue (Identifier "num" ()) ()
-                , Literal (Int 0 ()) ()
+                ( ArithEqual
+                    LP
+                      { lpLine = 11 , lpColumn = 11 , lpStartByte = 141 , lpLength = 3 }
+                , LeftValue
+                    (Identifier
+                       "num"
+                       LP
+                         { lpLine = 11 , lpColumn = 7 , lpStartByte = 137 , lpLength = 3 })
+                    LP
+                      { lpLine = 11 , lpColumn = 7 , lpStartByte = 137 , lpLength = 3 }
+                , Literal
+                    (Int
+                       0
+                       LP
+                         { lpLine = 11 , lpColumn = 15 , lpStartByte = 145 , lpLength = 1 })
+                    LP
+                      { lpLine = 11 , lpColumn = 15 , lpStartByte = 145 , lpLength = 1 }
                 )
-                ()
-            , Block [ Return (Just (Literal (Int 1 ()) ())) () ] ()
+                LP
+                  { lpLine = 11 , lpColumn = 7 , lpStartByte = 137 , lpLength = 9 }
+            , Block
+                [ Return
+                    (Just
+                       (Literal
+                          (Int
+                             1
+                             LP
+                               { lpLine = 12 , lpColumn = 12 , lpStartByte = 161 , lpLength = 1 })
+                          LP
+                            { lpLine = 12
+                            , lpColumn = 12
+                            , lpStartByte = 161
+                            , lpLength = 1
+                            }))
+                    LP
+                      { lpLine = 12 , lpColumn = 5 , lpStartByte = 154 , lpLength = 9 }
+                ]
+                LP
+                  { lpLine = 11 , lpColumn = 18 , lpStartByte = 148 , lpLength = 19 }
             , Block
                 [ Return
                     (Just
                        (Binary
-                          ( Multiply ()
+                          ( Multiply
+                              LP
+                                { lpLine = 14 , lpColumn = 26 , lpStartByte = 200 , lpLength = 1 }
                           , Call
                               ( "fact"
                               , [ Binary
-                                    ( Minus ()
-                                    , LeftValue (Identifier "num" ()) ()
-                                    , Literal (Int 1 ()) ()
+                                    ( Minus
+                                        LP
+                                          { lpLine = 14
+                                          , lpColumn = 21
+                                          , lpStartByte = 195
+                                          , lpLength = 1
+                                          }
+                                    , LeftValue
+                                        (Identifier
+                                           "num"
+                                           LP
+                                             { lpLine = 14
+                                             , lpColumn = 17
+                                             , lpStartByte = 191
+                                             , lpLength = 3
+                                             })
+                                        LP
+                                          { lpLine = 14
+                                          , lpColumn = 17
+                                          , lpStartByte = 191
+                                          , lpLength = 3
+                                          }
+                                    , Literal
+                                        (Int
+                                           1
+                                           LP
+                                             { lpLine = 14
+                                             , lpColumn = 23
+                                             , lpStartByte = 197
+                                             , lpLength = 1
+                                             })
+                                        LP
+                                          { lpLine = 14
+                                          , lpColumn = 23
+                                          , lpStartByte = 197
+                                          , lpLength = 1
+                                          }
                                     )
-                                    ()
+                                    LP
+                                      { lpLine = 14
+                                      , lpColumn = 17
+                                      , lpStartByte = 191
+                                      , lpLength = 7
+                                      }
                                 ]
                               )
-                              ()
-                          , LeftValue (Identifier "num" ()) ()
+                              LP
+                                { lpLine = 14 , lpColumn = 12 , lpStartByte = 186 , lpLength = 13 }
+                          , LeftValue
+                              (Identifier
+                                 "num"
+                                 LP
+                                   { lpLine = 14
+                                   , lpColumn = 28
+                                   , lpStartByte = 202
+                                   , lpLength = 3
+                                   })
+                              LP
+                                { lpLine = 14 , lpColumn = 28 , lpStartByte = 202 , lpLength = 3 }
                           )
-                          ()))
-                    ()
+                          LP
+                            { lpLine = 14
+                            , lpColumn = 12
+                            , lpStartByte = 186
+                            , lpLength = 19
+                            }))
+                    LP
+                      { lpLine = 14 , lpColumn = 5 , lpStartByte = 179 , lpLength = 27 }
                 ]
-                ()
+                LP
+                  { lpLine = 13 , lpColumn = 10 , lpStartByte = 173 , lpLength = 37 }
             )
-            ()
+            LP
+              { lpLine = 11 , lpColumn = 3 , lpStartByte = 133 , lpLength = 77 }
         ]
       )
-      ()
+      LP
+        { lpLine = 10 , lpColumn = 1 , lpStartByte = 110 , lpLength = 102 }
   , Statement
       (Expression
          (Call
-            ( "println" , [ Call ( "fact" , [ Literal (Int 5 ()) () ] ) () ] )
-            ())
-         ())
-      ()
-  , Statement (Comment " Fibonacci" ()) ()
+            ( "println"
+            , [ Call
+                  ( "fact"
+                  , [ Literal
+                        (Int
+                           5
+                           LP
+                             { lpLine = 17 , lpColumn = 14 , lpStartByte = 226 , lpLength = 1 })
+                        LP
+                          { lpLine = 17 , lpColumn = 14 , lpStartByte = 226 , lpLength = 1 }
+                    ]
+                  )
+                  LP
+                    { lpLine = 17 , lpColumn = 9 , lpStartByte = 221 , lpLength = 7 }
+              ]
+            )
+            LP
+              { lpLine = 17 , lpColumn = 1 , lpStartByte = 213 , lpLength = 16 })
+         LP
+           { lpLine = 17 , lpColumn = 1 , lpStartByte = 213 , lpLength = 17 })
+      LP
+        { lpLine = 17 , lpColumn = 1 , lpStartByte = 213 , lpLength = 17 }
+  , Statement
+      (Comment
+         " Fibonacci"
+         LP
+           { lpLine = 18 , lpColumn = 1 , lpStartByte = 231 , lpLength = 12 })
+      LP
+        { lpLine = 18 , lpColumn = 1 , lpStartByte = 231 , lpLength = 12 }
   , Function
       ( "fibonacci"
       , [ "num" ]
       , [ IfElse
             ( Binary
-                ( ArithEqual ()
-                , LeftValue (Identifier "num" ()) ()
-                , Literal (Int 0 ()) ()
+                ( ArithEqual
+                    LP
+                      { lpLine = 20 , lpColumn = 11 , lpStartByte = 280 , lpLength = 3 }
+                , LeftValue
+                    (Identifier
+                       "num"
+                       LP
+                         { lpLine = 20 , lpColumn = 7 , lpStartByte = 276 , lpLength = 3 })
+                    LP
+                      { lpLine = 20 , lpColumn = 7 , lpStartByte = 276 , lpLength = 3 }
+                , Literal
+                    (Int
+                       0
+                       LP
+                         { lpLine = 20 , lpColumn = 15 , lpStartByte = 284 , lpLength = 1 })
+                    LP
+                      { lpLine = 20 , lpColumn = 15 , lpStartByte = 284 , lpLength = 1 }
                 )
-                ()
-            , Block [ Return (Just (Literal (Int 0 ()) ())) () ] ()
+                LP
+                  { lpLine = 20 , lpColumn = 7 , lpStartByte = 276 , lpLength = 9 }
+            , Block
+                [ Return
+                    (Just
+                       (Literal
+                          (Int
+                             0
+                             LP
+                               { lpLine = 21 , lpColumn = 12 , lpStartByte = 300 , lpLength = 1 })
+                          LP
+                            { lpLine = 21
+                            , lpColumn = 12
+                            , lpStartByte = 300
+                            , lpLength = 1
+                            }))
+                    LP
+                      { lpLine = 21 , lpColumn = 5 , lpStartByte = 293 , lpLength = 9 }
+                ]
+                LP
+                  { lpLine = 20 , lpColumn = 18 , lpStartByte = 287 , lpLength = 19 }
             , IfElse
                 ( Binary
-                    ( ArithEqual ()
-                    , LeftValue (Identifier "num" ()) ()
-                    , Literal (Int 1 ()) ()
+                    ( ArithEqual
+                        LP
+                          { lpLine = 22 , lpColumn = 18 , lpStartByte = 320 , lpLength = 3 }
+                    , LeftValue
+                        (Identifier
+                           "num"
+                           LP
+                             { lpLine = 22 , lpColumn = 14 , lpStartByte = 316 , lpLength = 3 })
+                        LP
+                          { lpLine = 22 , lpColumn = 14 , lpStartByte = 316 , lpLength = 3 }
+                    , Literal
+                        (Int
+                           1
+                           LP
+                             { lpLine = 22 , lpColumn = 22 , lpStartByte = 324 , lpLength = 1 })
+                        LP
+                          { lpLine = 22 , lpColumn = 22 , lpStartByte = 324 , lpLength = 1 }
                     )
-                    ()
-                , Block [ Return (Just (Literal (Int 1 ()) ())) () ] ()
+                    LP
+                      { lpLine = 22 , lpColumn = 14 , lpStartByte = 316 , lpLength = 9 }
+                , Block
+                    [ Return
+                        (Just
+                           (Literal
+                              (Int
+                                 1
+                                 LP
+                                   { lpLine = 23
+                                   , lpColumn = 12
+                                   , lpStartByte = 340
+                                   , lpLength = 1
+                                   })
+                              LP
+                                { lpLine = 23
+                                , lpColumn = 12
+                                , lpStartByte = 340
+                                , lpLength = 1
+                                }))
+                        LP
+                          { lpLine = 23 , lpColumn = 5 , lpStartByte = 333 , lpLength = 9 }
+                    ]
+                    LP
+                      { lpLine = 22 , lpColumn = 25 , lpStartByte = 327 , lpLength = 19 }
                 , Block
                     [ Return
                         (Just
                            (Binary
-                              ( Plus ()
+                              ( Plus
+                                  LP
+                                    { lpLine = 25
+                                    , lpColumn = 31
+                                    , lpStartByte = 384
+                                    , lpLength = 1
+                                    }
                               , Call
                                   ( "fibonacci"
                                   , [ Binary
-                                        ( Minus ()
-                                        , LeftValue (Identifier "num" ()) ()
-                                        , Literal (Int 2 ()) ()
+                                        ( Minus
+                                            LP
+                                              { lpLine = 25
+                                              , lpColumn = 26
+                                              , lpStartByte = 379
+                                              , lpLength = 1
+                                              }
+                                        , LeftValue
+                                            (Identifier
+                                               "num"
+                                               LP
+                                                 { lpLine = 25
+                                                 , lpColumn = 22
+                                                 , lpStartByte = 375
+                                                 , lpLength = 3
+                                                 })
+                                            LP
+                                              { lpLine = 25
+                                              , lpColumn = 22
+                                              , lpStartByte = 375
+                                              , lpLength = 3
+                                              }
+                                        , Literal
+                                            (Int
+                                               2
+                                               LP
+                                                 { lpLine = 25
+                                                 , lpColumn = 28
+                                                 , lpStartByte = 381
+                                                 , lpLength = 1
+                                                 })
+                                            LP
+                                              { lpLine = 25
+                                              , lpColumn = 28
+                                              , lpStartByte = 381
+                                              , lpLength = 1
+                                              }
                                         )
-                                        ()
+                                        LP
+                                          { lpLine = 25
+                                          , lpColumn = 22
+                                          , lpStartByte = 375
+                                          , lpLength = 7
+                                          }
                                     ]
                                   )
-                                  ()
+                                  LP
+                                    { lpLine = 25
+                                    , lpColumn = 12
+                                    , lpStartByte = 365
+                                    , lpLength = 18
+                                    }
                               , Call
                                   ( "fibonacci"
                                   , [ Binary
-                                        ( Minus ()
-                                        , LeftValue (Identifier "num" ()) ()
-                                        , Literal (Int 1 ()) ()
+                                        ( Minus
+                                            LP
+                                              { lpLine = 25
+                                              , lpColumn = 47
+                                              , lpStartByte = 400
+                                              , lpLength = 1
+                                              }
+                                        , LeftValue
+                                            (Identifier
+                                               "num"
+                                               LP
+                                                 { lpLine = 25
+                                                 , lpColumn = 43
+                                                 , lpStartByte = 396
+                                                 , lpLength = 3
+                                                 })
+                                            LP
+                                              { lpLine = 25
+                                              , lpColumn = 43
+                                              , lpStartByte = 396
+                                              , lpLength = 3
+                                              }
+                                        , Literal
+                                            (Int
+                                               1
+                                               LP
+                                                 { lpLine = 25
+                                                 , lpColumn = 49
+                                                 , lpStartByte = 402
+                                                 , lpLength = 1
+                                                 })
+                                            LP
+                                              { lpLine = 25
+                                              , lpColumn = 49
+                                              , lpStartByte = 402
+                                              , lpLength = 1
+                                              }
                                         )
-                                        ()
+                                        LP
+                                          { lpLine = 25
+                                          , lpColumn = 43
+                                          , lpStartByte = 396
+                                          , lpLength = 7
+                                          }
                                     ]
                                   )
-                                  ()
+                                  LP
+                                    { lpLine = 25
+                                    , lpColumn = 33
+                                    , lpStartByte = 386
+                                    , lpLength = 18
+                                    }
                               )
-                              ()))
-                        ()
+                              LP
+                                { lpLine = 25
+                                , lpColumn = 12
+                                , lpStartByte = 365
+                                , lpLength = 39
+                                }))
+                        LP
+                          { lpLine = 25 , lpColumn = 5 , lpStartByte = 358 , lpLength = 47 }
                     ]
-                    ()
+                    LP
+                      { lpLine = 24 , lpColumn = 10 , lpStartByte = 352 , lpLength = 57 }
                 )
-                ()
+                LP
+                  { lpLine = 22 , lpColumn = 10 , lpStartByte = 312 , lpLength = 97 }
             )
-            ()
+            LP
+              { lpLine = 20 , lpColumn = 3 , lpStartByte = 272 , lpLength = 137 }
         ]
       )
-      ()
+      LP
+        { lpLine = 19 , lpColumn = 1 , lpStartByte = 244 , lpLength = 167 }
   , Statement
       (Expression
-         (Assign ( Identifier "i" () , Literal (Int 0 ()) () ) ()) ())
-      ()
+         (Assign
+            ( Identifier
+                "i"
+                LP
+                  { lpLine = 28 , lpColumn = 1 , lpStartByte = 412 , lpLength = 1 }
+            , Literal
+                (Int
+                   0
+                   LP
+                     { lpLine = 28 , lpColumn = 5 , lpStartByte = 416 , lpLength = 1 })
+                LP
+                  { lpLine = 28 , lpColumn = 5 , lpStartByte = 416 , lpLength = 1 }
+            )
+            LP
+              { lpLine = 28 , lpColumn = 1 , lpStartByte = 412 , lpLength = 5 })
+         LP
+           { lpLine = 28 , lpColumn = 1 , lpStartByte = 412 , lpLength = 6 })
+      LP
+        { lpLine = 28 , lpColumn = 1 , lpStartByte = 412 , lpLength = 6 }
   , Statement
       (While
          ( Binary
-             ( Less ()
-             , LeftValue (Identifier "i" ()) ()
-             , Literal (Int 7 ()) ()
+             ( Less
+                 LP
+                   { lpLine = 29 , lpColumn = 10 , lpStartByte = 428 , lpLength = 1 }
+             , LeftValue
+                 (Identifier
+                    "i"
+                    LP
+                      { lpLine = 29 , lpColumn = 8 , lpStartByte = 426 , lpLength = 1 })
+                 LP
+                   { lpLine = 29 , lpColumn = 8 , lpStartByte = 426 , lpLength = 1 }
+             , Literal
+                 (Int
+                    7
+                    LP
+                      { lpLine = 29 , lpColumn = 12 , lpStartByte = 430 , lpLength = 1 })
+                 LP
+                   { lpLine = 29 , lpColumn = 12 , lpStartByte = 430 , lpLength = 1 }
              )
-             ()
+             LP
+               { lpLine = 29 , lpColumn = 8 , lpStartByte = 426 , lpLength = 5 }
          , Block
              [ Expression
                  (Call
                     ( "println"
-                    , [ Call ( "fibonacci" , [ LeftValue (Identifier "i" ()) () ] ) ()
+                    , [ Call
+                          ( "fibonacci"
+                          , [ LeftValue
+                                (Identifier
+                                   "i"
+                                   LP
+                                     { lpLine = 30
+                                     , lpColumn = 21
+                                     , lpStartByte = 455
+                                     , lpLength = 1
+                                     })
+                                LP
+                                  { lpLine = 30 , lpColumn = 21 , lpStartByte = 455 , lpLength = 1 }
+                            ]
+                          )
+                          LP
+                            { lpLine = 30 , lpColumn = 11 , lpStartByte = 445 , lpLength = 12 }
                       ]
                     )
-                    ())
-                 ()
+                    LP
+                      { lpLine = 30 , lpColumn = 3 , lpStartByte = 437 , lpLength = 21 })
+                 LP
+                   { lpLine = 30 , lpColumn = 3 , lpStartByte = 437 , lpLength = 22 }
              , Expression
                  (Assign
-                    ( Identifier "i" ()
+                    ( Identifier
+                        "i"
+                        LP
+                          { lpLine = 31 , lpColumn = 3 , lpStartByte = 462 , lpLength = 1 }
                     , Binary
-                        ( Plus ()
-                        , LeftValue (Identifier "i" ()) ()
-                        , Literal (Int 1 ()) ()
+                        ( Plus
+                            LP
+                              { lpLine = 31 , lpColumn = 9 , lpStartByte = 468 , lpLength = 1 }
+                        , LeftValue
+                            (Identifier
+                               "i"
+                               LP
+                                 { lpLine = 31 , lpColumn = 7 , lpStartByte = 466 , lpLength = 1 })
+                            LP
+                              { lpLine = 31 , lpColumn = 7 , lpStartByte = 466 , lpLength = 1 }
+                        , Literal
+                            (Int
+                               1
+                               LP
+                                 { lpLine = 31 , lpColumn = 11 , lpStartByte = 470 , lpLength = 1 })
+                            LP
+                              { lpLine = 31 , lpColumn = 11 , lpStartByte = 470 , lpLength = 1 }
                         )
-                        ()
+                        LP
+                          { lpLine = 31 , lpColumn = 7 , lpStartByte = 466 , lpLength = 5 }
                     )
-                    ())
-                 ()
+                    LP
+                      { lpLine = 31 , lpColumn = 3 , lpStartByte = 462 , lpLength = 9 })
+                 LP
+                   { lpLine = 31 , lpColumn = 3 , lpStartByte = 462 , lpLength = 10 }
              ]
-             ()
+             LP
+               { lpLine = 29 , lpColumn = 15 , lpStartByte = 433 , lpLength = 41 }
          )
-         ())
-      ()
+         LP
+           { lpLine = 29 , lpColumn = 1 , lpStartByte = 419 , lpLength = 55 })
+      LP
+        { lpLine = 29 , lpColumn = 1 , lpStartByte = 419 , lpLength = 55 }
   ]
-  ()
+  LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 474 }

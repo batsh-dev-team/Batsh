@@ -41,7 +41,7 @@ $charesc = [abfnrtv\\\"\'\&]
 @string_in  = . # [\"\\] | " " | @escape | @gap
 @string  = \" @string_in* \"
 
-haskell :-
+tokens :-
   $white+     { skip }
   @decimal    { makeReadableLexeme Int }
   @hexadecimal{ makeReadableLexeme Int }
@@ -129,21 +129,21 @@ data Token
   | LEOF
   deriving (Eq, Read, Show)
 
-data LexPos = LexPos
-  { lexPosStartByte :: Int,
-    lexPosLine :: Int,
-    lexPosColumn :: Int,
-    lexLength :: Int }
+data LexPos = LP
+  { lpLine :: Int,
+    lpColumn :: Int,
+    lpStartByte :: Int,
+    lpLength :: Int }
   deriving (Eq, Read, Show)
 
 data Lexeme = Lex LexPos Token deriving (Eq, Read, Show)
 
 makeLexPos :: AlexPosn -> Int -> LexPos
 makeLexPos (AlexPn startByte line column) length =
-  LexPos {lexPosStartByte = startByte,
-          lexPosLine = line,
-          lexPosColumn = column,
-          lexLength = length}
+  LP {lpStartByte = startByte,
+      lpLength = length,
+      lpLine = line,
+      lpColumn = column}
 
 getMatchedString :: AlexInput -> Int -> String
 getMatchedString (_, _, _, str) len = take len str

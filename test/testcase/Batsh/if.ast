@@ -2,135 +2,489 @@ Program
   [ Statement
       (If
          ( Binary
-             ( Less () , Literal (Int 2 ()) () , Literal (Int 10 ()) () ) ()
+             ( Less
+                 LP { lpLine = 1 , lpColumn = 7 , lpStartByte = 6 , lpLength = 1 }
+             , Literal
+                 (Int
+                    2
+                    LP { lpLine = 1 , lpColumn = 5 , lpStartByte = 4 , lpLength = 1 })
+                 LP { lpLine = 1 , lpColumn = 5 , lpStartByte = 4 , lpLength = 1 }
+             , Literal
+                 (Int
+                    10
+                    LP { lpLine = 1 , lpColumn = 9 , lpStartByte = 8 , lpLength = 2 })
+                 LP { lpLine = 1 , lpColumn = 9 , lpStartByte = 8 , lpLength = 2 }
+             )
+             LP { lpLine = 1 , lpColumn = 5 , lpStartByte = 4 , lpLength = 6 }
          , Block
              [ Expression
-                 (Call ( "println" , [ Literal (String "Yes" ()) () ] ) ()) ()
+                 (Call
+                    ( "println"
+                    , [ Literal
+                          (String
+                             "Yes"
+                             LP
+                               { lpLine = 2 , lpColumn = 11 , lpStartByte = 24 , lpLength = 5 })
+                          LP { lpLine = 2 , lpColumn = 11 , lpStartByte = 24 , lpLength = 5 }
+                      ]
+                    )
+                    LP
+                      { lpLine = 2 , lpColumn = 3 , lpStartByte = 16 , lpLength = 14 })
+                 LP { lpLine = 2 , lpColumn = 3 , lpStartByte = 16 , lpLength = 15 }
              ]
-             ()
+             LP
+               { lpLine = 1 , lpColumn = 13 , lpStartByte = 12 , lpLength = 21 }
          )
-         ())
-      ()
+         LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 33 })
+      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 33 }
   , Statement
       (IfElse
-         ( Literal (Bool True ()) ()
+         ( Literal
+             (Bool
+                True
+                LP { lpLine = 4 , lpColumn = 5 , lpStartByte = 38 , lpLength = 4 })
+             LP { lpLine = 4 , lpColumn = 5 , lpStartByte = 38 , lpLength = 4 }
          , Block
              [ IfElse
-                 ( Literal (Bool False ()) ()
+                 ( Literal
+                     (Bool
+                        False
+                        LP { lpLine = 5 , lpColumn = 7 , lpStartByte = 52 , lpLength = 5 })
+                     LP { lpLine = 5 , lpColumn = 7 , lpStartByte = 52 , lpLength = 5 }
                  , Block
                      [ Expression
                          (Assign
-                            ( Identifier "v" ()
+                            ( Identifier
+                                "v"
+                                LP { lpLine = 6 , lpColumn = 5 , lpStartByte = 65 , lpLength = 1 }
                             , Binary
-                                ( Plus () , Literal (Int 4 ()) () , Literal (Int 1 ()) () ) ()
+                                ( Plus
+                                    LP
+                                      { lpLine = 6
+                                      , lpColumn = 11
+                                      , lpStartByte = 71
+                                      , lpLength = 1
+                                      }
+                                , Literal
+                                    (Int
+                                       4
+                                       LP
+                                         { lpLine = 6
+                                         , lpColumn = 9
+                                         , lpStartByte = 69
+                                         , lpLength = 1
+                                         })
+                                    LP
+                                      { lpLine = 6
+                                      , lpColumn = 9
+                                      , lpStartByte = 69
+                                      , lpLength = 1
+                                      }
+                                , Literal
+                                    (Int
+                                       1
+                                       LP
+                                         { lpLine = 6
+                                         , lpColumn = 13
+                                         , lpStartByte = 73
+                                         , lpLength = 1
+                                         })
+                                    LP
+                                      { lpLine = 6
+                                      , lpColumn = 13
+                                      , lpStartByte = 73
+                                      , lpLength = 1
+                                      }
+                                )
+                                LP { lpLine = 6 , lpColumn = 9 , lpStartByte = 69 , lpLength = 5 }
                             )
-                            ())
-                         ()
+                            LP { lpLine = 6 , lpColumn = 5 , lpStartByte = 65 , lpLength = 9 })
+                         LP { lpLine = 6 , lpColumn = 5 , lpStartByte = 65 , lpLength = 10 }
                      ]
-                     ()
+                     LP
+                       { lpLine = 5 , lpColumn = 14 , lpStartByte = 59 , lpLength = 20 }
                  , Block
                      [ Expression
-                         (Assign ( Identifier "v" () , Literal (Int 2 ()) () ) ()) ()
+                         (Assign
+                            ( Identifier
+                                "v"
+                                LP { lpLine = 8 , lpColumn = 5 , lpStartByte = 91 , lpLength = 1 }
+                            , Literal
+                                (Int
+                                   2
+                                   LP
+                                     { lpLine = 8
+                                     , lpColumn = 9
+                                     , lpStartByte = 95
+                                     , lpLength = 1
+                                     })
+                                LP { lpLine = 8 , lpColumn = 9 , lpStartByte = 95 , lpLength = 1 }
+                            )
+                            LP { lpLine = 8 , lpColumn = 5 , lpStartByte = 91 , lpLength = 5 })
+                         LP { lpLine = 8 , lpColumn = 5 , lpStartByte = 91 , lpLength = 6 }
                      ]
-                     ()
+                     LP
+                       { lpLine = 7 , lpColumn = 10 , lpStartByte = 85 , lpLength = 16 }
                  )
-                 ()
+                 LP { lpLine = 5 , lpColumn = 3 , lpStartByte = 48 , lpLength = 53 }
              , If
-                 ( Literal (Bool False ()) ()
+                 ( Literal
+                     (Bool
+                        False
+                        LP
+                          { lpLine = 10 , lpColumn = 7 , lpStartByte = 108 , lpLength = 5 })
+                     LP
+                       { lpLine = 10 , lpColumn = 7 , lpStartByte = 108 , lpLength = 5 }
                  , Expression
-                     (Call ( "println" , [ Literal (String "no" ()) () ] ) ()) ()
+                     (Call
+                        ( "println"
+                        , [ Literal
+                              (String
+                                 "no"
+                                 LP
+                                   { lpLine = 10
+                                   , lpColumn = 22
+                                   , lpStartByte = 123
+                                   , lpLength = 4
+                                   })
+                              LP
+                                { lpLine = 10 , lpColumn = 22 , lpStartByte = 123 , lpLength = 4 }
+                          ]
+                        )
+                        LP
+                          { lpLine = 10
+                          , lpColumn = 14
+                          , lpStartByte = 115
+                          , lpLength = 13
+                          })
+                     LP
+                       { lpLine = 10 , lpColumn = 14 , lpStartByte = 115 , lpLength = 14 }
                  )
-                 ()
+                 LP
+                   { lpLine = 10 , lpColumn = 3 , lpStartByte = 104 , lpLength = 25 }
              ]
-             ()
-         , Block [] ()
+             LP
+               { lpLine = 4 , lpColumn = 11 , lpStartByte = 44 , lpLength = 87 }
+         , Block
+             []
+             LP
+               { lpLine = 11 , lpColumn = 8 , lpStartByte = 137 , lpLength = 4 }
          )
-         ())
-      ()
+         LP
+           { lpLine = 4 , lpColumn = 1 , lpStartByte = 34 , lpLength = 107 })
+      LP
+        { lpLine = 4 , lpColumn = 1 , lpStartByte = 34 , lpLength = 107 }
   , Statement
       (Expression
-         (Call ( "println" , [ LeftValue (Identifier "v" ()) () ] ) ()) ())
-      ()
+         (Call
+            ( "println"
+            , [ LeftValue
+                  (Identifier
+                     "v"
+                     LP
+                       { lpLine = 14 , lpColumn = 9 , lpStartByte = 150 , lpLength = 1 })
+                  LP
+                    { lpLine = 14 , lpColumn = 9 , lpStartByte = 150 , lpLength = 1 }
+              ]
+            )
+            LP
+              { lpLine = 14 , lpColumn = 1 , lpStartByte = 142 , lpLength = 10 })
+         LP
+           { lpLine = 14 , lpColumn = 1 , lpStartByte = 142 , lpLength = 11 })
+      LP
+        { lpLine = 14 , lpColumn = 1 , lpStartByte = 142 , lpLength = 11 }
   , Statement
       (If
          ( Binary
-             ( Greater () , Literal (Int 2 ()) () , Literal (Int 1 ()) () ) ()
+             ( Greater
+                 LP
+                   { lpLine = 15 , lpColumn = 7 , lpStartByte = 160 , lpLength = 1 }
+             , Literal
+                 (Int
+                    2
+                    LP
+                      { lpLine = 15 , lpColumn = 5 , lpStartByte = 158 , lpLength = 1 })
+                 LP
+                   { lpLine = 15 , lpColumn = 5 , lpStartByte = 158 , lpLength = 1 }
+             , Literal
+                 (Int
+                    1
+                    LP
+                      { lpLine = 15 , lpColumn = 9 , lpStartByte = 162 , lpLength = 1 })
+                 LP
+                   { lpLine = 15 , lpColumn = 9 , lpStartByte = 162 , lpLength = 1 }
+             )
+             LP
+               { lpLine = 15 , lpColumn = 5 , lpStartByte = 158 , lpLength = 5 }
          , Expression
-             (Call ( "println" , [ Literal (String "True" ()) () ] ) ()) ()
+             (Call
+                ( "println"
+                , [ Literal
+                      (String
+                         "True"
+                         LP
+                           { lpLine = 15 , lpColumn = 20 , lpStartByte = 173 , lpLength = 6 })
+                      LP
+                        { lpLine = 15 , lpColumn = 20 , lpStartByte = 173 , lpLength = 6 }
+                  ]
+                )
+                LP
+                  { lpLine = 15
+                  , lpColumn = 12
+                  , lpStartByte = 165
+                  , lpLength = 15
+                  })
+             LP
+               { lpLine = 15 , lpColumn = 12 , lpStartByte = 165 , lpLength = 16 }
          )
-         ())
-      ()
+         LP
+           { lpLine = 15 , lpColumn = 1 , lpStartByte = 154 , lpLength = 27 })
+      LP
+        { lpLine = 15 , lpColumn = 1 , lpStartByte = 154 , lpLength = 27 }
   , Statement
       (If
          ( Binary
-             ( ArithEqual () , Literal (Int 1 ()) () , Literal (Int 12 ()) () )
-             ()
+             ( ArithEqual
+                 LP
+                   { lpLine = 16 , lpColumn = 7 , lpStartByte = 188 , lpLength = 3 }
+             , Literal
+                 (Int
+                    1
+                    LP
+                      { lpLine = 16 , lpColumn = 5 , lpStartByte = 186 , lpLength = 1 })
+                 LP
+                   { lpLine = 16 , lpColumn = 5 , lpStartByte = 186 , lpLength = 1 }
+             , Literal
+                 (Int
+                    12
+                    LP
+                      { lpLine = 16 , lpColumn = 11 , lpStartByte = 192 , lpLength = 2 })
+                 LP
+                   { lpLine = 16 , lpColumn = 11 , lpStartByte = 192 , lpLength = 2 }
+             )
+             LP
+               { lpLine = 16 , lpColumn = 5 , lpStartByte = 186 , lpLength = 8 }
          , Block
              [ Expression
-                 (Call ( "println" , [ Literal (String "No" ()) () ] ) ()) ()
+                 (Call
+                    ( "println"
+                    , [ Literal
+                          (String
+                             "No"
+                             LP
+                               { lpLine = 17 , lpColumn = 11 , lpStartByte = 208 , lpLength = 4 })
+                          LP
+                            { lpLine = 17 , lpColumn = 11 , lpStartByte = 208 , lpLength = 4 }
+                      ]
+                    )
+                    LP
+                      { lpLine = 17 , lpColumn = 3 , lpStartByte = 200 , lpLength = 13 })
+                 LP
+                   { lpLine = 17 , lpColumn = 3 , lpStartByte = 200 , lpLength = 14 }
              ]
-             ()
+             LP
+               { lpLine = 16 , lpColumn = 15 , lpStartByte = 196 , lpLength = 20 }
          )
-         ())
-      ()
+         LP
+           { lpLine = 16 , lpColumn = 1 , lpStartByte = 182 , lpLength = 34 })
+      LP
+        { lpLine = 16 , lpColumn = 1 , lpStartByte = 182 , lpLength = 34 }
   , Statement
       (IfElse
          ( Binary
-             ( Equal ()
-             , Literal (String "a" ()) ()
-             , Literal (String "b" ()) ()
+             ( Equal
+                 LP
+                   { lpLine = 19 , lpColumn = 9 , lpStartByte = 225 , lpLength = 2 }
+             , Literal
+                 (String
+                    "a"
+                    LP
+                      { lpLine = 19 , lpColumn = 5 , lpStartByte = 221 , lpLength = 3 })
+                 LP
+                   { lpLine = 19 , lpColumn = 5 , lpStartByte = 221 , lpLength = 3 }
+             , Literal
+                 (String
+                    "b"
+                    LP
+                      { lpLine = 19 , lpColumn = 12 , lpStartByte = 228 , lpLength = 3 })
+                 LP
+                   { lpLine = 19 , lpColumn = 12 , lpStartByte = 228 , lpLength = 3 }
              )
-             ()
+             LP
+               { lpLine = 19 , lpColumn = 5 , lpStartByte = 221 , lpLength = 10 }
          , Block
              [ Expression
-                 (Call ( "println" , [ Literal (String "No" ()) () ] ) ()) ()
+                 (Call
+                    ( "println"
+                    , [ Literal
+                          (String
+                             "No"
+                             LP
+                               { lpLine = 20 , lpColumn = 11 , lpStartByte = 245 , lpLength = 4 })
+                          LP
+                            { lpLine = 20 , lpColumn = 11 , lpStartByte = 245 , lpLength = 4 }
+                      ]
+                    )
+                    LP
+                      { lpLine = 20 , lpColumn = 3 , lpStartByte = 237 , lpLength = 13 })
+                 LP
+                   { lpLine = 20 , lpColumn = 3 , lpStartByte = 237 , lpLength = 14 }
              ]
-             ()
+             LP
+               { lpLine = 19 , lpColumn = 17 , lpStartByte = 233 , lpLength = 20 }
          , Block
              [ Expression
-                 (Call ( "println" , [ Literal (String "a is not b" ()) () ] ) ())
-                 ()
+                 (Call
+                    ( "println"
+                    , [ Literal
+                          (String
+                             "a is not b"
+                             LP
+                               { lpLine = 22
+                               , lpColumn = 11
+                               , lpStartByte = 271
+                               , lpLength = 12
+                               })
+                          LP
+                            { lpLine = 22 , lpColumn = 11 , lpStartByte = 271 , lpLength = 12 }
+                      ]
+                    )
+                    LP
+                      { lpLine = 22 , lpColumn = 3 , lpStartByte = 263 , lpLength = 21 })
+                 LP
+                   { lpLine = 22 , lpColumn = 3 , lpStartByte = 263 , lpLength = 22 }
              ]
-             ()
+             LP
+               { lpLine = 21 , lpColumn = 8 , lpStartByte = 259 , lpLength = 28 }
          )
-         ())
-      ()
+         LP
+           { lpLine = 19 , lpColumn = 1 , lpStartByte = 217 , lpLength = 70 })
+      LP
+        { lpLine = 19 , lpColumn = 1 , lpStartByte = 217 , lpLength = 70 }
   , Statement
       (Expression
-         (Assign ( Identifier "num" () , Literal (Int 43 ()) () ) ()) ())
-      ()
+         (Assign
+            ( Identifier
+                "num"
+                LP
+                  { lpLine = 24 , lpColumn = 1 , lpStartByte = 288 , lpLength = 3 }
+            , Literal
+                (Int
+                   43
+                   LP
+                     { lpLine = 24 , lpColumn = 7 , lpStartByte = 294 , lpLength = 2 })
+                LP
+                  { lpLine = 24 , lpColumn = 7 , lpStartByte = 294 , lpLength = 2 }
+            )
+            LP
+              { lpLine = 24 , lpColumn = 1 , lpStartByte = 288 , lpLength = 8 })
+         LP
+           { lpLine = 24 , lpColumn = 1 , lpStartByte = 288 , lpLength = 9 })
+      LP
+        { lpLine = 24 , lpColumn = 1 , lpStartByte = 288 , lpLength = 9 }
   , Statement
       (If
          ( Binary
-             ( Equal ()
-             , Literal (String "43" ()) ()
-             , LeftValue (Identifier "num" ()) ()
+             ( Equal
+                 LP
+                   { lpLine = 25 , lpColumn = 10 , lpStartByte = 307 , lpLength = 2 }
+             , Literal
+                 (String
+                    "43"
+                    LP
+                      { lpLine = 25 , lpColumn = 5 , lpStartByte = 302 , lpLength = 4 })
+                 LP
+                   { lpLine = 25 , lpColumn = 5 , lpStartByte = 302 , lpLength = 4 }
+             , LeftValue
+                 (Identifier
+                    "num"
+                    LP
+                      { lpLine = 25 , lpColumn = 13 , lpStartByte = 310 , lpLength = 3 })
+                 LP
+                   { lpLine = 25 , lpColumn = 13 , lpStartByte = 310 , lpLength = 3 }
              )
-             ()
+             LP
+               { lpLine = 25 , lpColumn = 5 , lpStartByte = 302 , lpLength = 11 }
          , Block
              [ Expression
-                 (Call ( "println" , [ Literal (String "43 == num" ()) () ] ) ()) ()
+                 (Call
+                    ( "println"
+                    , [ Literal
+                          (String
+                             "43 == num"
+                             LP
+                               { lpLine = 26
+                               , lpColumn = 11
+                               , lpStartByte = 327
+                               , lpLength = 11
+                               })
+                          LP
+                            { lpLine = 26 , lpColumn = 11 , lpStartByte = 327 , lpLength = 11 }
+                      ]
+                    )
+                    LP
+                      { lpLine = 26 , lpColumn = 3 , lpStartByte = 319 , lpLength = 20 })
+                 LP
+                   { lpLine = 26 , lpColumn = 3 , lpStartByte = 319 , lpLength = 21 }
              ]
-             ()
+             LP
+               { lpLine = 25 , lpColumn = 18 , lpStartByte = 315 , lpLength = 27 }
          )
-         ())
-      ()
+         LP
+           { lpLine = 25 , lpColumn = 1 , lpStartByte = 298 , lpLength = 44 })
+      LP
+        { lpLine = 25 , lpColumn = 1 , lpStartByte = 298 , lpLength = 44 }
   , Statement
       (If
          ( Binary
-             ( ArithEqual ()
-             , Literal (String "43" ()) ()
-             , LeftValue (Identifier "num" ()) ()
+             ( ArithEqual
+                 LP
+                   { lpLine = 28 , lpColumn = 10 , lpStartByte = 352 , lpLength = 3 }
+             , Literal
+                 (String
+                    "43"
+                    LP
+                      { lpLine = 28 , lpColumn = 5 , lpStartByte = 347 , lpLength = 4 })
+                 LP
+                   { lpLine = 28 , lpColumn = 5 , lpStartByte = 347 , lpLength = 4 }
+             , LeftValue
+                 (Identifier
+                    "num"
+                    LP
+                      { lpLine = 28 , lpColumn = 14 , lpStartByte = 356 , lpLength = 3 })
+                 LP
+                   { lpLine = 28 , lpColumn = 14 , lpStartByte = 356 , lpLength = 3 }
              )
-             ()
+             LP
+               { lpLine = 28 , lpColumn = 5 , lpStartByte = 347 , lpLength = 12 }
          , Block
              [ Expression
-                 (Call ( "println" , [ Literal (String "43 === num" ()) () ] ) ())
-                 ()
+                 (Call
+                    ( "println"
+                    , [ Literal
+                          (String
+                             "43 === num"
+                             LP
+                               { lpLine = 29
+                               , lpColumn = 11
+                               , lpStartByte = 373
+                               , lpLength = 12
+                               })
+                          LP
+                            { lpLine = 29 , lpColumn = 11 , lpStartByte = 373 , lpLength = 12 }
+                      ]
+                    )
+                    LP
+                      { lpLine = 29 , lpColumn = 3 , lpStartByte = 365 , lpLength = 21 })
+                 LP
+                   { lpLine = 29 , lpColumn = 3 , lpStartByte = 365 , lpLength = 22 }
              ]
-             ()
+             LP
+               { lpLine = 28 , lpColumn = 19 , lpStartByte = 361 , lpLength = 28 }
          )
-         ())
-      ()
+         LP
+           { lpLine = 28 , lpColumn = 1 , lpStartByte = 343 , lpLength = 46 })
+      LP
+        { lpLine = 28 , lpColumn = 1 , lpStartByte = 343 , lpLength = 46 }
   ]
-  ()
+  LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 389 }
