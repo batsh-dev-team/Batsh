@@ -5,11 +5,12 @@ import Test.HUnit
 
 testLexer :: Assertion
 testLexer = do
-  let testSingle str expected = do
-      let tokens = scanTokens str
+  let testSingle code expected = do
+      let tokens = map stripPos (scanLexemes code)
       let token = head tokens
       assertEqual "Number of tokens" 1 (length tokens)
       assertEqual (show token) expected token
+      where stripPos (Lex _ token) = token
   testSingle "variable" $ Identifier "variable"
   testSingle "//a line comment" $ Comment "a line comment"
   testSingle "42" $ Int 42

@@ -153,14 +153,18 @@ parseError :: [Lexer.Token] -> a
 parseError _ = error "Parse error"
 
 parse :: String -> Ast.Program
-parse code = Ast.Program $ program $ Lexer.scanTokens code
+parse code = Ast.Program $ program $ scanTokens code
 
 parseTopLevel :: String -> Ast.TopLevel
-parseTopLevel = toplevel . Lexer.scanTokens
+parseTopLevel = toplevel . scanTokens
 
 parseStatement :: String -> Ast.Statement
-parseStatement = statement . Lexer.scanTokens
+parseStatement = statement . scanTokens
 
 parseExpression :: String -> Ast.Expression
-parseExpression = expression . Lexer.scanTokens
+parseExpression = expression . scanTokens
+
+-- TODO add pos information to AST
+scanTokens code = map stripPos (Lexer.scanLexemes code)
+  where stripPos (Lexer.Lex _ token) = token
 }

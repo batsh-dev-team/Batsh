@@ -5,7 +5,7 @@
 module Batsh.Lexer where
 }
 
-%wrapper "basic"
+%wrapper "monad"
 
 $underscore = \_
 $whitechar =  [ \t\n\r\f\v]
@@ -41,51 +41,53 @@ $charesc = [abfnrtv\\\"\'\&]
 @string_in  = . # [\"\\] | " " | @escape | @gap
 @string  = \" @string_in* \"
 
-tokens :-
-  $white+     ;
-  @decimal    { \s -> Int (read s) }
-  @hexadecimal{ \s -> Int (read s) }
-  @float      { \s -> Float (read s) }
-  @string     { \s -> String (tail $ init s) }
-  "true"      { \s -> TTrue }
-  "false"     { \s -> TFalse }
-  "if"        { \s -> If }
-  "else"      { \s -> Else }
-  "while"     { \s -> While }
-  "function"  { \s -> Function }
-  "global"    { \s -> Global }
-  "return"    { \s -> Return }
-  "!"         { \s -> Not }
-  ";"         { \s -> Semicolon }
-  ","         { \s -> Comma }
-  "+"         { \s -> Plus }
-  "-"         { \s -> Minus }
-  "*"         { \s -> Multiply }
-  "/"         { \s -> Divide }
-  "%"         { \s -> Modulo }
-  "++"        { \s -> Concat }
-  "="         { \s -> Assign }
-  "=="        { \s -> Equal }
-  "!="        { \s -> NotEqual }
-  "==="       { \s -> ArithEqual }
-  "!=="       { \s -> ArithNotEqual }
-  ">"         { \s -> Greater }
-  "<"         { \s -> Less }
-  ">="        { \s -> GreaterEqual }
-  "<="        { \s -> LessEqual }
-  "&&"        { \s -> And }
-  "||"        { \s -> Or }
-  "("         { \s -> LParen }
-  ")"         { \s -> RParen }
-  "["         { \s -> LBrack }
-  "]"         { \s -> RBrack }
-  "{"         { \s -> LBrace }
-  "}"         { \s -> RBrace }
-  "//".*      { \s -> Comment $ drop 2 s }
-  @identifier { \s -> Identifier s }
+haskell :-
+  $white+     { skip }
+  @decimal    { makeReadableLexeme Int }
+  @hexadecimal{ makeReadableLexeme Int }
+  @float      { makeReadableLexeme Float }
+  @string     { makeStringLexeme $ \s -> String (tail $ init s) }
+  "true"      { makeLexeme TTrue }
+  "false"     { makeLexeme TFalse }
+  "if"        { makeLexeme If }
+  "else"      { makeLexeme Else }
+  "while"     { makeLexeme While }
+  "function"  { makeLexeme Function }
+  "global"    { makeLexeme Global }
+  "return"    { makeLexeme Return }
+  "!"         { makeLexeme Not }
+  ";"         { makeLexeme Semicolon }
+  ","         { makeLexeme Comma }
+  "+"         { makeLexeme Plus }
+  "-"         { makeLexeme Minus }
+  "*"         { makeLexeme Multiply }
+  "/"         { makeLexeme Divide }
+  "%"         { makeLexeme Modulo }
+  "++"        { makeLexeme Concat }
+  "="         { makeLexeme Assign }
+  "=="        { makeLexeme Equal }
+  "!="        { makeLexeme NotEqual }
+  "==="       { makeLexeme ArithEqual }
+  "!=="       { makeLexeme ArithNotEqual }
+  ">"         { makeLexeme Greater }
+  "<"         { makeLexeme Less }
+  ">="        { makeLexeme GreaterEqual }
+  "<="        { makeLexeme LessEqual }
+  "&&"        { makeLexeme And }
+  "||"        { makeLexeme Or }
+  "("         { makeLexeme LParen }
+  ")"         { makeLexeme RParen }
+  "["         { makeLexeme LBrack }
+  "]"         { makeLexeme RBrack }
+  "{"         { makeLexeme LBrace }
+  "}"         { makeLexeme RBrace }
+  "//".*      { makeStringLexeme $ \s -> Comment $ drop 2 s }
+  @identifier { makeStringLexeme Identifier }
 
 {
-data Token = Identifier String
+
+data Token
+  = Identifier String
   | Comment String
   | Int Int
   | Float Float
@@ -124,8 +126,64 @@ data Token = Identifier String
   | RBrack
   | LBrace
   | RBrace
-  deriving (Eq,Show)
+  | LEOF
+  deriving (Eq, Read, Show)
 
-scanTokens = alexScanTokens
+data LexPos = LexPos
+  { lexPosStartByte :: Int,
+    lexPosLine :: Int,
+    lexPosColumn :: Int,
+    lexLength :: Int }
+  deriving (Eq, Read, Show)
+
+data Lexeme = Lex LexPos Token deriving (Eq, Read, Show)
+
+makeLexPos :: AlexPosn -> Int -> LexPos
+makeLexPos (AlexPn startByte line column) length =
+  LexPos {lexPosStartByte = startByte,
+          lexPosLine = line,
+          lexPosColumn = column,
+          lexLength = length}
+
+getMatchedString :: AlexInput -> Int -> String
+getMatchedString (_, _, _, str) len = take len str
+
+makeStringLexeme :: (String -> Token) -> AlexInput -> Int -> Alex Lexeme
+makeStringLexeme cons input len =
+  return $ Lex (makeLexPos pos len) token
+  where
+    (pos, _, _, _) = input
+    token = cons $ getMatchedString input len
+
+makeReadableLexeme :: (Read a) =>
+                      (a -> Token) -> AlexInput -> Int -> Alex Lexeme
+makeReadableLexeme cons input len =
+  return $ Lex (makeLexPos pos len) token
+  where
+    (pos, _, _, _) = input
+    token = cons $ read (getMatchedString input len)
+
+makeLexeme :: Token -> AlexInput -> Int -> Alex Lexeme
+makeLexeme token (pos, _, _, _) len = return $ Lex (makeLexPos pos len) token
+
+alexEOF :: Alex Lexeme
+alexEOF = return (Lex undefined LEOF)
+
+-- Returns scanned lexemes with Right [Token] or Left String on error
+scanLexemesSafe :: String -> Either String [Lexeme]
+scanLexemesSafe code = runAlex code $ do
+  let loop i lexemes = do
+      lexeme@(Lex _ token) <- alexMonadScan;
+        if token == LEOF then
+          return $ reverse lexemes
+        else do
+          loop (i + 1) (lexeme : lexemes)
+  loop 0 []
+
+-- Returns scanned lexemes
+scanLexemes :: String -> [Lexeme]
+scanLexemes code = case scanLexemesSafe code of
+  Left message -> error message
+  Right lexemes -> lexemes
 
 }

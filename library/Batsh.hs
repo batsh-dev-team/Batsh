@@ -6,8 +6,8 @@ import qualified Batsh.Lexer
 import qualified Batsh.Parser
 import qualified Batsh.SymbolTable as SymbolTable
 
-lex :: String -> [Batsh.Lexer.Token]
-lex code = Batsh.Lexer.scanTokens code
+lex :: String -> [Batsh.Lexer.Lexeme]
+lex code = Batsh.Lexer.scanLexemes code
 
 parse :: String -> Batsh.Ast.Program
 parse code = Batsh.Parser.parse code
