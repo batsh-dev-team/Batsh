@@ -6,6 +6,7 @@ import Batsh.SymbolTable
 import Control.Exception
 import Control.Monad
 import qualified Data.Map.Strict as SMap
+import Prelude hiding(catch)
 import Test.HUnit
 
 testSymbolTable :: Assertion
