@@ -12,6 +12,7 @@ Build-Type:             Simple
 Library
   Hs-Source-Dirs:       library
   Build-Depends:        array, base, bytestring == 0.10.4.0, containers >= 0.5
+  Build-Tools:          alex >= 3.1.3, happy >= 1.19.4
   Exposed-Modules:      Batsh,
                         Batsh.Ast,
                         Batsh.Ast.Poly,
