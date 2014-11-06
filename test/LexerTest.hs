@@ -1,6 +1,7 @@
 module LexerTest where
 
 import Batsh.Lexer
+import Batsh.Token
 import Test.HUnit
 
 testLexer :: Assertion

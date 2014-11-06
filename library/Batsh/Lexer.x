@@ -3,6 +3,7 @@
 
 {
 module Batsh.Lexer where
+import Batsh.Token
 }
 
 %wrapper "monad"
@@ -85,59 +86,6 @@ tokens :-
   @identifier { makeStringLexeme Identifier }
 
 {
-
-data Token
-  = Identifier String
-  | Comment String
-  | Int Int
-  | Float Float
-  | String String
-  | TTrue
-  | TFalse
-  | If
-  | Else
-  | While
-  | Function
-  | Global
-  | Return
-  | Not
-  | Semicolon
-  | Comma
-  | Plus
-  | Minus
-  | Multiply
-  | Divide
-  | Modulo
-  | Concat
-  | Assign
-  | Equal
-  | NotEqual
-  | ArithEqual
-  | ArithNotEqual
-  | Greater
-  | Less
-  | GreaterEqual
-  | LessEqual
-  | And
-  | Or
-  | LParen
-  | RParen
-  | LBrack
-  | RBrack
-  | LBrace
-  | RBrace
-  | LEOF
-  deriving (Eq, Read, Show)
-
-data LexPos = LP
-  { lpLine :: Int,
-    lpColumn :: Int,
-    lpStartByte :: Int,
-    lpLength :: Int }
-  deriving (Eq, Read, Show)
-
-data Lexeme = Lex LexPos Token deriving (Eq, Read, Show)
-
 makeLexPos :: AlexPosn -> Int -> LexPos
 makeLexPos (AlexPn startByte line column) length =
   LP {lpStartByte = startByte,

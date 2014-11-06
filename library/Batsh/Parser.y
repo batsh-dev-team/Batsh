@@ -8,6 +8,7 @@ module Batsh.Parser(parse,
 
 import qualified Batsh.Ast as Ast
 import qualified Batsh.Lexer as Lexer
+import qualified Batsh.Token as Token
 import Prelude hiding(span)
 }
 
@@ -17,49 +18,49 @@ import Prelude hiding(span)
 %name       statement         statement
 %name       expression        expression
 
-%tokentype  { Lexer.Lexeme }
+%tokentype  { Token.Lexeme }
 %error      { parseError }
 
 %token
-   int      { Lexer.Lex _ (Lexer.Int _) }
-   float    { Lexer.Lex _ (Lexer.Float _) }
-   string   { Lexer.Lex _ (Lexer.String _) }
-   true     { Lexer.Lex _ Lexer.TTrue }
-   false    { Lexer.Lex _ Lexer.TFalse }
-   if       { Lexer.Lex _ Lexer.If }
-   else     { Lexer.Lex _ Lexer.Else }
-   while    { Lexer.Lex _ Lexer.While }
-   function { Lexer.Lex _ Lexer.Function }
-   global   { Lexer.Lex _ Lexer.Global }
-   return   { Lexer.Lex _ Lexer.Return }
-   '!'      { Lexer.Lex _ Lexer.Not }
-   ';'      { Lexer.Lex _ Lexer.Semicolon }
-   ','      { Lexer.Lex _ Lexer.Comma }
-   '+'      { Lexer.Lex _ Lexer.Plus }
-   '-'      { Lexer.Lex _ Lexer.Minus }
-   '*'      { Lexer.Lex _ Lexer.Multiply }
-   '/'      { Lexer.Lex _ Lexer.Divide }
-   '%'      { Lexer.Lex _ Lexer.Modulo }
-   '++'     { Lexer.Lex _ Lexer.Concat }
-   '='      { Lexer.Lex _ Lexer.Assign }
-   '=='     { Lexer.Lex _ Lexer.Equal }
-   '!='     { Lexer.Lex _ Lexer.NotEqual }
-   '==='    { Lexer.Lex _ Lexer.ArithEqual }
-   '!=='    { Lexer.Lex _ Lexer.ArithNotEqual }
-   '>'      { Lexer.Lex _ Lexer.Greater }
-   '<'      { Lexer.Lex _ Lexer.Less }
-   '>='     { Lexer.Lex _ Lexer.GreaterEqual }
-   '<='     { Lexer.Lex _ Lexer.LessEqual }
-   '&&'     { Lexer.Lex _ Lexer.And }
-   '||'     { Lexer.Lex _ Lexer.Or }
-   '('      { Lexer.Lex _ Lexer.LParen }
-   ')'      { Lexer.Lex _ Lexer.RParen }
-   '['      { Lexer.Lex _ Lexer.LBrack }
-   ']'      { Lexer.Lex _ Lexer.RBrack }
-   '{'      { Lexer.Lex _ Lexer.LBrace }
-   '}'      { Lexer.Lex _ Lexer.RBrace }
-   comment  { Lexer.Lex _ (Lexer.Comment _) }
-   ident    { Lexer.Lex _ (Lexer.Identifier _) }
+   int      { Token.Lex _ (Token.Int _) }
+   float    { Token.Lex _ (Token.Float _) }
+   string   { Token.Lex _ (Token.String _) }
+   true     { Token.Lex _ Token.TTrue }
+   false    { Token.Lex _ Token.TFalse }
+   if       { Token.Lex _ Token.If }
+   else     { Token.Lex _ Token.Else }
+   while    { Token.Lex _ Token.While }
+   function { Token.Lex _ Token.Function }
+   global   { Token.Lex _ Token.Global }
+   return   { Token.Lex _ Token.Return }
+   '!'      { Token.Lex _ Token.Not }
+   ';'      { Token.Lex _ Token.Semicolon }
+   ','      { Token.Lex _ Token.Comma }
+   '+'      { Token.Lex _ Token.Plus }
+   '-'      { Token.Lex _ Token.Minus }
+   '*'      { Token.Lex _ Token.Multiply }
+   '/'      { Token.Lex _ Token.Divide }
+   '%'      { Token.Lex _ Token.Modulo }
+   '++'     { Token.Lex _ Token.Concat }
+   '='      { Token.Lex _ Token.Assign }
+   '=='     { Token.Lex _ Token.Equal }
+   '!='     { Token.Lex _ Token.NotEqual }
+   '==='    { Token.Lex _ Token.ArithEqual }
+   '!=='    { Token.Lex _ Token.ArithNotEqual }
+   '>'      { Token.Lex _ Token.Greater }
+   '<'      { Token.Lex _ Token.Less }
+   '>='     { Token.Lex _ Token.GreaterEqual }
+   '<='     { Token.Lex _ Token.LessEqual }
+   '&&'     { Token.Lex _ Token.And }
+   '||'     { Token.Lex _ Token.Or }
+   '('      { Token.Lex _ Token.LParen }
+   ')'      { Token.Lex _ Token.RParen }
+   '['      { Token.Lex _ Token.LBrack }
+   ']'      { Token.Lex _ Token.RBrack }
+   '{'      { Token.Lex _ Token.LBrace }
+   '}'      { Token.Lex _ Token.RBrace }
+   comment  { Token.Lex _ (Token.Comment _) }
+   ident    { Token.Lex _ (Token.Identifier _) }
 
 %right if else
 %right '='
@@ -185,39 +186,39 @@ idents        :                               { [] }
 
 {
 -- Get the position information of a Lexeme
-pos :: Lexer.Lexeme -> Lexer.LexPos
-pos (Lexer.Lex pos _) = pos
+pos :: Token.Lexeme -> Token.LexPos
+pos (Token.Lex pos _) = pos
 
 -- Get the position information of a AstNode
-apos :: Ast.AstNode a => a Lexer.LexPos -> Lexer.LexPos
+apos :: Ast.AstNode a => a Token.LexPos -> Token.LexPos
 apos node = Ast.annot node
 
 -- Merge two positions from leftmost to rightmost
-span :: Lexer.LexPos -> Lexer.LexPos -> Lexer.LexPos
+span :: Token.LexPos -> Token.LexPos -> Token.LexPos
 span left right =
-  Lexer.LP
-    { Lexer.lpStartByte = start,
-      Lexer.lpLength = length,
-      Lexer.lpLine = Lexer.lpLine left,
-      Lexer.lpColumn = Lexer.lpColumn left}
+  Token.LP
+    { Token.lpStartByte = start,
+      Token.lpLength = length,
+      Token.lpLine = Token.lpLine left,
+      Token.lpColumn = Token.lpColumn left}
   where
     length = end - start
-    start = Lexer.lpStartByte left
-    end = Lexer.lpStartByte right + Lexer.lpLength right
+    start = Token.lpStartByte left
+    end = Token.lpStartByte right + Token.lpLength right
 
 -- Extract internal data of the Lexeme
-exInt :: Lexer.Lexeme -> Int
-exInt (Lexer.Lex _ (Lexer.Int num)) = num
+exInt :: Token.Lexeme -> Int
+exInt (Token.Lex _ (Token.Int num)) = num
 
-exFlt :: Lexer.Lexeme -> Float
-exFlt (Lexer.Lex _ (Lexer.Float num)) = num
+exFlt :: Token.Lexeme -> Float
+exFlt (Token.Lex _ (Token.Float num)) = num
 
-exStr :: Lexer.Lexeme -> String
-exStr (Lexer.Lex _ (Lexer.Identifier str)) = str
-exStr (Lexer.Lex _ (Lexer.Comment str)) = str
-exStr (Lexer.Lex _ (Lexer.String str)) = str
+exStr :: Token.Lexeme -> String
+exStr (Token.Lex _ (Token.Identifier str)) = str
+exStr (Token.Lex _ (Token.Comment str)) = str
+exStr (Token.Lex _ (Token.String str)) = str
 
-parseError :: [Lexer.Lexeme] -> a
+parseError :: [Token.Lexeme] -> a
 parseError _ = error "Parse error"
 
 parse :: String -> Ast.Program
@@ -234,5 +235,5 @@ parseExpression = expression . Lexer.scanLexemes
 
 -- TODO add pos information to AST
 scanTokens code = map stripPos (Lexer.scanLexemes code)
-  where stripPos (Lexer.Lex _ token) = token
+  where stripPos (Token.Lex _ token) = token
 }

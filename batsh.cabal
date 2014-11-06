@@ -17,8 +17,9 @@ Library
                         Batsh.Ast.Poly,
                         Batsh.Generator,
                         Batsh.Lexer,
-                        Batsh.Parser
-                        Batsh.SymbolTable
+                        Batsh.Parser,
+                        Batsh.SymbolTable,
+                        Batsh.Token
 
 Executable batsh
   Main-Is:              Main.hs

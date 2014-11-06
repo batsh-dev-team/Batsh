@@ -1,7 +1,7 @@
 module Batsh.Ast(module Poly, module Batsh.Ast) where
 
 import Batsh.Ast.Poly as Poly
-import Batsh.Lexer(LexPos)
+import Batsh.Token(LexPos)
 
 type AstAnnotation = LexPos
 

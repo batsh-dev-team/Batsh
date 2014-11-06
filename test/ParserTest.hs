@@ -2,7 +2,7 @@ module ParserTest where
 
 import qualified Batsh
 import Batsh.Ast
-import Batsh.Lexer(lpLine, lpColumn, lpStartByte, lpLength, LexPos(LP))
+import Batsh.Token(lpLine, lpColumn, lpStartByte, lpLength, LexPos(LP))
 import Batsh.Parser
 import Control.Monad
 import Test.HUnit
