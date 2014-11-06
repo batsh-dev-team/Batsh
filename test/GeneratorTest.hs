@@ -11,6 +11,7 @@ testCases = ["arith", "array", "assignment", "block", "command", "comment",
 
 testGenerator :: Assertion
 testGenerator = do
+  --assertEqual (testpr) 1 2
   forM_ testCases $ \testcase -> do
     let fileName = testCaseDir ++ "/Batsh/" ++ testcase ++ ".batsh"
     code <- readFile fileName
