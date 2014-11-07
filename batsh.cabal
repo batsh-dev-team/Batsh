@@ -16,11 +16,13 @@ Library
   Exposed-Modules:      Batsh,
                         Batsh.Ast,
                         Batsh.Ast.Poly,
+                        Batsh.Ast.Typed,
                         Batsh.Generator,
                         Batsh.Lexer,
                         Batsh.Parser,
                         Batsh.SymbolTable,
-                        Batsh.Token
+                        Batsh.Token,
+                        Batsh.TypeCheck
 
 Executable batsh
   Main-Is:              Main.hs
