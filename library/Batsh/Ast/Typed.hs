@@ -3,7 +3,7 @@ module Batsh.Ast.Typed(module Poly, module Batsh.Ast.Typed) where
 import Batsh.Ast.Poly as Poly
 import Batsh.Token(LexPos)
 
-data Type = TInt | TFloat | TString | TList
+data Type = TBool | TInt | TFloat | TString | TList | TNoType
 
 data TypeAnno = TypeAnno Type LexPos
 

@@ -1,154 +1,342 @@
 Program
-  [ Statement
-      (Expression
-         (Assign
-            ( Identifier
-                "ex"
-                LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 2 }
-            , Call
-                ( "exists"
-                , [ Literal
-                      (String
-                         "Makefile"
-                         LP
-                           { lpLine = 1 , lpColumn = 13 , lpStartByte = 12 , lpLength = 10 })
-                      LP
-                        { lpLine = 1 , lpColumn = 13 , lpStartByte = 12 , lpLength = 10 }
-                  ]
-                )
-                LP { lpLine = 1 , lpColumn = 6 , lpStartByte = 5 , lpLength = 18 }
-            )
-            LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 23 })
-         LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 24 })
-      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 24 }
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ LeftValue
-                  (Identifier
-                     "ex"
-                     LP { lpLine = 2 , lpColumn = 9 , lpStartByte = 33 , lpLength = 2 })
-                  LP { lpLine = 2 , lpColumn = 9 , lpStartByte = 33 , lpLength = 2 }
-              ]
-            )
-            LP
-              { lpLine = 2 , lpColumn = 1 , lpStartByte = 25 , lpLength = 11 })
-         LP
-           { lpLine = 2 , lpColumn = 1 , lpStartByte = 25 , lpLength = 12 })
-      LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 25 , lpLength = 12 }
-  , Statement
-      (Expression
-         (Call
-            ( "exists"
-            , [ Literal
-                  (String
-                     "Makefile"
-                     LP
-                       { lpLine = 3 , lpColumn = 8 , lpStartByte = 45 , lpLength = 10 })
-                  LP { lpLine = 3 , lpColumn = 8 , lpStartByte = 45 , lpLength = 10 }
-              ]
-            )
-            LP
-              { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 18 })
-         LP
-           { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 19 })
-      LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 19 }
-  , Statement
-      (If
-         ( Call
-             ( "exists"
-             , [ Literal
-                   (String
-                      "Makefile"
-                      LP
-                        { lpLine = 4 , lpColumn = 12 , lpStartByte = 69 , lpLength = 10 })
-                   LP
-                     { lpLine = 4 , lpColumn = 12 , lpStartByte = 69 , lpLength = 10 }
-               ]
-             )
-             LP { lpLine = 4 , lpColumn = 5 , lpStartByte = 62 , lpLength = 18 }
-         , Block
-             [ Expression
-                 (Call
-                    ( "println"
-                    , [ Literal
-                          (String
-                             "Yes"
-                             LP
-                               { lpLine = 5 , lpColumn = 11 , lpStartByte = 94 , lpLength = 5 })
-                          LP { lpLine = 5 , lpColumn = 11 , lpStartByte = 94 , lpLength = 5 }
-                      ]
-                    )
-                    LP
-                      { lpLine = 5 , lpColumn = 3 , lpStartByte = 86 , lpLength = 14 })
-                 LP { lpLine = 5 , lpColumn = 3 , lpStartByte = 86 , lpLength = 15 }
-             ]
-             LP
-               { lpLine = 4 , lpColumn = 25 , lpStartByte = 82 , lpLength = 21 }
-         )
-         LP
-           { lpLine = 4 , lpColumn = 1 , lpStartByte = 58 , lpLength = 45 })
-      LP { lpLine = 4 , lpColumn = 1 , lpStartByte = 58 , lpLength = 45 }
-  , Statement
-      (IfElse
-         ( Call
-             ( "exists"
-             , [ Literal
-                   (String
-                      "none"
-                      LP
-                        { lpLine = 7 , lpColumn = 12 , lpStartByte = 115 , lpLength = 6 })
-                   LP
-                     { lpLine = 7 , lpColumn = 12 , lpStartByte = 115 , lpLength = 6 }
-               ]
-             )
-             LP
-               { lpLine = 7 , lpColumn = 5 , lpStartByte = 108 , lpLength = 14 }
-         , Block
-             [ Expression
-                 (Call
-                    ( "println"
-                    , [ Literal
-                          (String
-                             "Impossible"
-                             LP
-                               { lpLine = 8 , lpColumn = 11 , lpStartByte = 136 , lpLength = 12 })
+  { program_topls =
+      [ Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Assign
+                      { expr_lvalue =
+                          Identifier
+                            { lvalue_ident = "ex"
+                            , lvalue_annot =
+                                LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 2 }
+                            }
+                      , expr_subExpr =
+                          Call
+                            { expr_func = "exists"
+                            , expr_params =
+                                [ Literal
+                                    { expr_literal =
+                                        String
+                                          { literal_str = "Makefile"
+                                          , literal_annot =
+                                              LP
+                                                { lpLine = 1
+                                                , lpColumn = 13
+                                                , lpStartByte = 12
+                                                , lpLength = 10
+                                                }
+                                          }
+                                    , expr_annot =
+                                        LP
+                                          { lpLine = 1
+                                          , lpColumn = 13
+                                          , lpStartByte = 12
+                                          , lpLength = 10
+                                          }
+                                    }
+                                ]
+                            , expr_annot =
+                                LP { lpLine = 1 , lpColumn = 6 , lpStartByte = 5 , lpLength = 18 }
+                            }
+                      , expr_annot =
+                          LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 23 }
+                      }
+                , stmt_annot =
+                    LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 24 }
+                }
+          , toplevel_annot =
+              LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 24 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "println"
+                      , expr_params =
+                          [ LeftValue
+                              { expr_lvalue =
+                                  Identifier
+                                    { lvalue_ident = "ex"
+                                    , lvalue_annot =
+                                        LP
+                                          { lpLine = 2
+                                          , lpColumn = 9
+                                          , lpStartByte = 33
+                                          , lpLength = 2
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP { lpLine = 2 , lpColumn = 9 , lpStartByte = 33 , lpLength = 2 }
+                              }
+                          ]
+                      , expr_annot =
+                          LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 25 , lpLength = 11 }
+                      }
+                , stmt_annot =
+                    LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 25 , lpLength = 12 }
+                }
+          , toplevel_annot =
+              LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 25 , lpLength = 12 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "exists"
+                      , expr_params =
+                          [ Literal
+                              { expr_literal =
+                                  String
+                                    { literal_str = "Makefile"
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 3
+                                          , lpColumn = 8
+                                          , lpStartByte = 45
+                                          , lpLength = 10
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 3 , lpColumn = 8 , lpStartByte = 45 , lpLength = 10 }
+                              }
+                          ]
+                      , expr_annot =
+                          LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 18 }
+                      }
+                , stmt_annot =
+                    LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 19 }
+                }
+          , toplevel_annot =
+              LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 38 , lpLength = 19 }
+          }
+      , Statement
+          { toplevel_stmt =
+              If
+                { stmt_expr =
+                    Call
+                      { expr_func = "exists"
+                      , expr_params =
+                          [ Literal
+                              { expr_literal =
+                                  String
+                                    { literal_str = "Makefile"
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 4
+                                          , lpColumn = 12
+                                          , lpStartByte = 69
+                                          , lpLength = 10
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 4
+                                    , lpColumn = 12
+                                    , lpStartByte = 69
+                                    , lpLength = 10
+                                    }
+                              }
+                          ]
+                      , expr_annot =
+                          LP { lpLine = 4 , lpColumn = 5 , lpStartByte = 62 , lpLength = 18 }
+                      }
+                , stmt_then =
+                    Block
+                      { stmt_stmts =
+                          [ Expression
+                              { stmt_expr =
+                                  Call
+                                    { expr_func = "println"
+                                    , expr_params =
+                                        [ Literal
+                                            { expr_literal =
+                                                String
+                                                  { literal_str = "Yes"
+                                                  , literal_annot =
+                                                      LP
+                                                        { lpLine = 5
+                                                        , lpColumn = 11
+                                                        , lpStartByte = 94
+                                                        , lpLength = 5
+                                                        }
+                                                  }
+                                            , expr_annot =
+                                                LP
+                                                  { lpLine = 5
+                                                  , lpColumn = 11
+                                                  , lpStartByte = 94
+                                                  , lpLength = 5
+                                                  }
+                                            }
+                                        ]
+                                    , expr_annot =
+                                        LP
+                                          { lpLine = 5
+                                          , lpColumn = 3
+                                          , lpStartByte = 86
+                                          , lpLength = 14
+                                          }
+                                    }
+                              , stmt_annot =
+                                  LP
+                                    { lpLine = 5 , lpColumn = 3 , lpStartByte = 86 , lpLength = 15 }
+                              }
+                          ]
+                      , stmt_annot =
                           LP
-                            { lpLine = 8 , lpColumn = 11 , lpStartByte = 136 , lpLength = 12 }
-                      ]
-                    )
-                    LP
-                      { lpLine = 8 , lpColumn = 3 , lpStartByte = 128 , lpLength = 21 })
-                 LP
-                   { lpLine = 8 , lpColumn = 3 , lpStartByte = 128 , lpLength = 22 }
-             ]
-             LP
-               { lpLine = 7 , lpColumn = 21 , lpStartByte = 124 , lpLength = 28 }
-         , Block
-             [ Expression
-                 (Call
-                    ( "println"
-                    , [ Literal
-                          (String
-                             "No"
-                             LP
-                               { lpLine = 10 , lpColumn = 11 , lpStartByte = 170 , lpLength = 4 })
+                            { lpLine = 4 , lpColumn = 25 , lpStartByte = 82 , lpLength = 21 }
+                      }
+                , stmt_annot =
+                    LP { lpLine = 4 , lpColumn = 1 , lpStartByte = 58 , lpLength = 45 }
+                }
+          , toplevel_annot =
+              LP { lpLine = 4 , lpColumn = 1 , lpStartByte = 58 , lpLength = 45 }
+          }
+      , Statement
+          { toplevel_stmt =
+              IfElse
+                { stmt_expr =
+                    Call
+                      { expr_func = "exists"
+                      , expr_params =
+                          [ Literal
+                              { expr_literal =
+                                  String
+                                    { literal_str = "none"
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 7
+                                          , lpColumn = 12
+                                          , lpStartByte = 115
+                                          , lpLength = 6
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 7
+                                    , lpColumn = 12
+                                    , lpStartByte = 115
+                                    , lpLength = 6
+                                    }
+                              }
+                          ]
+                      , expr_annot =
                           LP
-                            { lpLine = 10 , lpColumn = 11 , lpStartByte = 170 , lpLength = 4 }
-                      ]
-                    )
+                            { lpLine = 7 , lpColumn = 5 , lpStartByte = 108 , lpLength = 14 }
+                      }
+                , stmt_then =
+                    Block
+                      { stmt_stmts =
+                          [ Expression
+                              { stmt_expr =
+                                  Call
+                                    { expr_func = "println"
+                                    , expr_params =
+                                        [ Literal
+                                            { expr_literal =
+                                                String
+                                                  { literal_str = "Impossible"
+                                                  , literal_annot =
+                                                      LP
+                                                        { lpLine = 8
+                                                        , lpColumn = 11
+                                                        , lpStartByte = 136
+                                                        , lpLength = 12
+                                                        }
+                                                  }
+                                            , expr_annot =
+                                                LP
+                                                  { lpLine = 8
+                                                  , lpColumn = 11
+                                                  , lpStartByte = 136
+                                                  , lpLength = 12
+                                                  }
+                                            }
+                                        ]
+                                    , expr_annot =
+                                        LP
+                                          { lpLine = 8
+                                          , lpColumn = 3
+                                          , lpStartByte = 128
+                                          , lpLength = 21
+                                          }
+                                    }
+                              , stmt_annot =
+                                  LP
+                                    { lpLine = 8
+                                    , lpColumn = 3
+                                    , lpStartByte = 128
+                                    , lpLength = 22
+                                    }
+                              }
+                          ]
+                      , stmt_annot =
+                          LP
+                            { lpLine = 7 , lpColumn = 21 , lpStartByte = 124 , lpLength = 28 }
+                      }
+                , stmt_else =
+                    Block
+                      { stmt_stmts =
+                          [ Expression
+                              { stmt_expr =
+                                  Call
+                                    { expr_func = "println"
+                                    , expr_params =
+                                        [ Literal
+                                            { expr_literal =
+                                                String
+                                                  { literal_str = "No"
+                                                  , literal_annot =
+                                                      LP
+                                                        { lpLine = 10
+                                                        , lpColumn = 11
+                                                        , lpStartByte = 170
+                                                        , lpLength = 4
+                                                        }
+                                                  }
+                                            , expr_annot =
+                                                LP
+                                                  { lpLine = 10
+                                                  , lpColumn = 11
+                                                  , lpStartByte = 170
+                                                  , lpLength = 4
+                                                  }
+                                            }
+                                        ]
+                                    , expr_annot =
+                                        LP
+                                          { lpLine = 10
+                                          , lpColumn = 3
+                                          , lpStartByte = 162
+                                          , lpLength = 13
+                                          }
+                                    }
+                              , stmt_annot =
+                                  LP
+                                    { lpLine = 10
+                                    , lpColumn = 3
+                                    , lpStartByte = 162
+                                    , lpLength = 14
+                                    }
+                              }
+                          ]
+                      , stmt_annot =
+                          LP
+                            { lpLine = 9 , lpColumn = 8 , lpStartByte = 158 , lpLength = 20 }
+                      }
+                , stmt_annot =
                     LP
-                      { lpLine = 10 , lpColumn = 3 , lpStartByte = 162 , lpLength = 13 })
-                 LP
-                   { lpLine = 10 , lpColumn = 3 , lpStartByte = 162 , lpLength = 14 }
-             ]
-             LP
-               { lpLine = 9 , lpColumn = 8 , lpStartByte = 158 , lpLength = 20 }
-         )
-         LP
-           { lpLine = 7 , lpColumn = 1 , lpStartByte = 104 , lpLength = 74 })
-      LP
-        { lpLine = 7 , lpColumn = 1 , lpStartByte = 104 , lpLength = 74 }
-  ]
-  LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 178 }
+                      { lpLine = 7 , lpColumn = 1 , lpStartByte = 104 , lpLength = 74 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 7 , lpColumn = 1 , lpStartByte = 104 , lpLength = 74 }
+          }
+      ]
+  , program_annot =
+      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 178 }
+  }

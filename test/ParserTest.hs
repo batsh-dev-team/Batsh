@@ -18,15 +18,17 @@ testParser = do
   let testStatement = testAst parseStatement
   let testExpression = testAst parseExpression
   -- Expression
-  testExpression "3" $ Literal (Int 3 (LP {lpLine = 1, lpColumn = 1,
-    lpStartByte = 0, lpLength = 1})) (LP {lpLine = 1, lpColumn = 1,
-    lpStartByte = 0, lpLength = 1})
+  testExpression "3" Literal {expr_literal = Int {literal_int = 3,
+    literal_annot = LP {lpLine = 1, lpColumn = 1, lpStartByte = 0,
+    lpLength = 1}}, expr_annot = LP {lpLine = 1, lpColumn = 1, lpStartByte = 0,
+    lpLength = 1}}
   -- Statement
-  testStatement "func(4);" $ Expression (Call ("func",[Literal (Int 4 (
-    LP {lpLine = 1, lpColumn = 6, lpStartByte = 5, lpLength = 1})) (LP {
-    lpLine = 1, lpColumn = 6, lpStartByte = 5, lpLength = 1})]) (LP {
-    lpLine = 1, lpColumn = 1, lpStartByte = 0, lpLength = 7})) (LP {
-    lpLine = 1, lpColumn = 1, lpStartByte = 0, lpLength = 8})
+  testStatement "func(4);" Expression {stmt_expr = Call {expr_func = "func",
+    expr_params = [Literal {expr_literal = Int {literal_int = 4, literal_annot =
+    LP {lpLine = 1, lpColumn = 6, lpStartByte = 5, lpLength = 1}}, expr_annot =
+    LP {lpLine = 1, lpColumn = 6, lpStartByte = 5, lpLength = 1}}], expr_annot =
+    LP {lpLine = 1, lpColumn = 1, lpStartByte = 0, lpLength = 7}}, stmt_annot =
+    LP {lpLine = 1, lpColumn = 1, lpStartByte = 0, lpLength = 8}}
 
 testCaseDir = "test/testcase"
 testCases = ["arith", "array", "assignment", "block", "command", "comment",

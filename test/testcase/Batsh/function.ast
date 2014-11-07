@@ -1,508 +1,1028 @@
 Program
-  [ Statement
-      (Comment
-         " Function call"
-         LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 16 })
-      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 16 }
-  , Function
-      ( "func1"
-      , [ "p1" , "p2" ]
-      , [ Expression
-            (Call
-               ( "println"
-               , [ LeftValue
-                     (Identifier
-                        "p1"
-                        LP
-                          { lpLine = 3 , lpColumn = 11 , lpStartByte = 52 , lpLength = 2 })
-                     LP { lpLine = 3 , lpColumn = 11 , lpStartByte = 52 , lpLength = 2 }
-                 , LeftValue
-                     (Identifier
-                        "p2"
-                        LP
-                          { lpLine = 3 , lpColumn = 15 , lpStartByte = 56 , lpLength = 2 })
-                     LP { lpLine = 3 , lpColumn = 15 , lpStartByte = 56 , lpLength = 2 }
-                 ]
-               )
-               LP
-                 { lpLine = 3 , lpColumn = 3 , lpStartByte = 44 , lpLength = 15 })
-            LP { lpLine = 3 , lpColumn = 3 , lpStartByte = 44 , lpLength = 16 }
-        ]
-      )
-      LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 17 , lpLength = 45 }
-  , Statement
-      (Expression
-         (Call
-            ( "func1"
-            , [ Literal
-                  (String
-                     "Hello"
-                     LP { lpLine = 5 , lpColumn = 7 , lpStartByte = 69 , lpLength = 7 })
-                  LP { lpLine = 5 , lpColumn = 7 , lpStartByte = 69 , lpLength = 7 }
-              , Literal
-                  (String
-                     "World"
-                     LP
-                       { lpLine = 5 , lpColumn = 16 , lpStartByte = 78 , lpLength = 7 })
-                  LP { lpLine = 5 , lpColumn = 16 , lpStartByte = 78 , lpLength = 7 }
+  { program_topls =
+      [ Statement
+          { toplevel_stmt =
+              Comment
+                { stmt_comment = " Function call"
+                , stmt_annot =
+                    LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 16 }
+                }
+          , toplevel_annot =
+              LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 16 }
+          }
+      , Function
+          { toplevel_func = "func1"
+          , toplevel_params = [ "p1" , "p2" ]
+          , toplevel_stmts =
+              [ Expression
+                  { stmt_expr =
+                      Call
+                        { expr_func = "println"
+                        , expr_params =
+                            [ LeftValue
+                                { expr_lvalue =
+                                    Identifier
+                                      { lvalue_ident = "p1"
+                                      , lvalue_annot =
+                                          LP
+                                            { lpLine = 3
+                                            , lpColumn = 11
+                                            , lpStartByte = 52
+                                            , lpLength = 2
+                                            }
+                                      }
+                                , expr_annot =
+                                    LP
+                                      { lpLine = 3
+                                      , lpColumn = 11
+                                      , lpStartByte = 52
+                                      , lpLength = 2
+                                      }
+                                }
+                            , LeftValue
+                                { expr_lvalue =
+                                    Identifier
+                                      { lvalue_ident = "p2"
+                                      , lvalue_annot =
+                                          LP
+                                            { lpLine = 3
+                                            , lpColumn = 15
+                                            , lpStartByte = 56
+                                            , lpLength = 2
+                                            }
+                                      }
+                                , expr_annot =
+                                    LP
+                                      { lpLine = 3
+                                      , lpColumn = 15
+                                      , lpStartByte = 56
+                                      , lpLength = 2
+                                      }
+                                }
+                            ]
+                        , expr_annot =
+                            LP { lpLine = 3 , lpColumn = 3 , lpStartByte = 44 , lpLength = 15 }
+                        }
+                  , stmt_annot =
+                      LP { lpLine = 3 , lpColumn = 3 , lpStartByte = 44 , lpLength = 16 }
+                  }
               ]
-            )
-            LP
-              { lpLine = 5 , lpColumn = 1 , lpStartByte = 63 , lpLength = 23 })
-         LP
-           { lpLine = 5 , lpColumn = 1 , lpStartByte = 63 , lpLength = 24 })
-      LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 63 , lpLength = 24 }
-  , Statement
-      (Comment
-         " Global and local variables"
-         LP
-           { lpLine = 6 , lpColumn = 1 , lpStartByte = 88 , lpLength = 29 })
-      LP { lpLine = 6 , lpColumn = 1 , lpStartByte = 88 , lpLength = 29 }
-  , Statement
-      (Expression
-         (Assign
-            ( Identifier
-                "v1"
-                LP { lpLine = 7 , lpColumn = 1 , lpStartByte = 118 , lpLength = 2 }
-            , Literal
-                (String
-                   "Global V1"
-                   LP
-                     { lpLine = 7 , lpColumn = 6 , lpStartByte = 123 , lpLength = 11 })
-                LP
-                  { lpLine = 7 , lpColumn = 6 , lpStartByte = 123 , lpLength = 11 }
-            )
-            LP
-              { lpLine = 7 , lpColumn = 1 , lpStartByte = 118 , lpLength = 16 })
-         LP
-           { lpLine = 7 , lpColumn = 1 , lpStartByte = 118 , lpLength = 17 })
-      LP
-        { lpLine = 7 , lpColumn = 1 , lpStartByte = 118 , lpLength = 17 }
-  , Statement
-      (Expression
-         (Assign
-            ( Identifier
-                "v2"
-                LP { lpLine = 8 , lpColumn = 1 , lpStartByte = 136 , lpLength = 2 }
-            , Literal
-                (String
-                   "Global V2"
-                   LP
-                     { lpLine = 8 , lpColumn = 6 , lpStartByte = 141 , lpLength = 11 })
-                LP
-                  { lpLine = 8 , lpColumn = 6 , lpStartByte = 141 , lpLength = 11 }
-            )
-            LP
-              { lpLine = 8 , lpColumn = 1 , lpStartByte = 136 , lpLength = 16 })
-         LP
-           { lpLine = 8 , lpColumn = 1 , lpStartByte = 136 , lpLength = 17 })
-      LP
-        { lpLine = 8 , lpColumn = 1 , lpStartByte = 136 , lpLength = 17 }
-  , Statement
-      (Expression
-         (Assign
-            ( Identifier
-                "v3"
-                LP { lpLine = 9 , lpColumn = 1 , lpStartByte = 154 , lpLength = 2 }
-            , Literal
-                (String
-                   "Global V3"
-                   LP
-                     { lpLine = 9 , lpColumn = 6 , lpStartByte = 159 , lpLength = 11 })
-                LP
-                  { lpLine = 9 , lpColumn = 6 , lpStartByte = 159 , lpLength = 11 }
-            )
-            LP
-              { lpLine = 9 , lpColumn = 1 , lpStartByte = 154 , lpLength = 16 })
-         LP
-           { lpLine = 9 , lpColumn = 1 , lpStartByte = 154 , lpLength = 17 })
-      LP
-        { lpLine = 9 , lpColumn = 1 , lpStartByte = 154 , lpLength = 17 }
-  , Function
-      ( "func2"
-      , [ "p" ]
-      , [ Expression
-            (Assign
-               ( Identifier
-                   "v1"
-                   LP
-                     { lpLine = 11 , lpColumn = 3 , lpStartByte = 194 , lpLength = 2 }
-               , Binary
-                   ( Concat
-                       LP
-                         { lpLine = 11 , lpColumn = 17 , lpStartByte = 208 , lpLength = 2 }
-                   , Literal
-                       (String
-                          "Local "
+          , toplevel_annot =
+              LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 17 , lpLength = 45 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "func1"
+                      , expr_params =
+                          [ Literal
+                              { expr_literal =
+                                  String
+                                    { literal_str = "Hello"
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 5
+                                          , lpColumn = 7
+                                          , lpStartByte = 69
+                                          , lpLength = 7
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP { lpLine = 5 , lpColumn = 7 , lpStartByte = 69 , lpLength = 7 }
+                              }
+                          , Literal
+                              { expr_literal =
+                                  String
+                                    { literal_str = "World"
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 5
+                                          , lpColumn = 16
+                                          , lpStartByte = 78
+                                          , lpLength = 7
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 5 , lpColumn = 16 , lpStartByte = 78 , lpLength = 7 }
+                              }
+                          ]
+                      , expr_annot =
+                          LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 63 , lpLength = 23 }
+                      }
+                , stmt_annot =
+                    LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 63 , lpLength = 24 }
+                }
+          , toplevel_annot =
+              LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 63 , lpLength = 24 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Comment
+                { stmt_comment = " Global and local variables"
+                , stmt_annot =
+                    LP { lpLine = 6 , lpColumn = 1 , lpStartByte = 88 , lpLength = 29 }
+                }
+          , toplevel_annot =
+              LP { lpLine = 6 , lpColumn = 1 , lpStartByte = 88 , lpLength = 29 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Assign
+                      { expr_lvalue =
+                          Identifier
+                            { lvalue_ident = "v1"
+                            , lvalue_annot =
+                                LP { lpLine = 7 , lpColumn = 1 , lpStartByte = 118 , lpLength = 2 }
+                            }
+                      , expr_subExpr =
+                          Literal
+                            { expr_literal =
+                                String
+                                  { literal_str = "Global V1"
+                                  , literal_annot =
+                                      LP
+                                        { lpLine = 7
+                                        , lpColumn = 6
+                                        , lpStartByte = 123
+                                        , lpLength = 11
+                                        }
+                                  }
+                            , expr_annot =
+                                LP
+                                  { lpLine = 7 , lpColumn = 6 , lpStartByte = 123 , lpLength = 11 }
+                            }
+                      , expr_annot =
                           LP
-                            { lpLine = 11 , lpColumn = 8 , lpStartByte = 199 , lpLength = 8 })
-                       LP
-                         { lpLine = 11 , lpColumn = 8 , lpStartByte = 199 , lpLength = 8 }
-                   , LeftValue
-                       (Identifier
-                          "p"
+                            { lpLine = 7 , lpColumn = 1 , lpStartByte = 118 , lpLength = 16 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 7 , lpColumn = 1 , lpStartByte = 118 , lpLength = 17 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 7 , lpColumn = 1 , lpStartByte = 118 , lpLength = 17 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Assign
+                      { expr_lvalue =
+                          Identifier
+                            { lvalue_ident = "v2"
+                            , lvalue_annot =
+                                LP { lpLine = 8 , lpColumn = 1 , lpStartByte = 136 , lpLength = 2 }
+                            }
+                      , expr_subExpr =
+                          Literal
+                            { expr_literal =
+                                String
+                                  { literal_str = "Global V2"
+                                  , literal_annot =
+                                      LP
+                                        { lpLine = 8
+                                        , lpColumn = 6
+                                        , lpStartByte = 141
+                                        , lpLength = 11
+                                        }
+                                  }
+                            , expr_annot =
+                                LP
+                                  { lpLine = 8 , lpColumn = 6 , lpStartByte = 141 , lpLength = 11 }
+                            }
+                      , expr_annot =
                           LP
-                            { lpLine = 11 , lpColumn = 20 , lpStartByte = 211 , lpLength = 1 })
-                       LP
-                         { lpLine = 11 , lpColumn = 20 , lpStartByte = 211 , lpLength = 1 }
-                   )
-                   LP
-                     { lpLine = 11 , lpColumn = 8 , lpStartByte = 199 , lpLength = 13 }
-               )
-               LP
-                 { lpLine = 11 , lpColumn = 3 , lpStartByte = 194 , lpLength = 18 })
-            LP
-              { lpLine = 11 , lpColumn = 3 , lpStartByte = 194 , lpLength = 19 }
-        , Expression
-            (Call
-               ( "println"
-               , [ LeftValue
-                     (Identifier
-                        "v1"
-                        LP
-                          { lpLine = 12 , lpColumn = 11 , lpStartByte = 224 , lpLength = 2 })
-                     LP
-                       { lpLine = 12 , lpColumn = 11 , lpStartByte = 224 , lpLength = 2 }
-                 ]
-               )
-               LP
-                 { lpLine = 12 , lpColumn = 3 , lpStartByte = 216 , lpLength = 11 })
-            LP
-              { lpLine = 12 , lpColumn = 3 , lpStartByte = 216 , lpLength = 12 }
-        , Expression
-            (Call
-               ( "println"
-               , [ LeftValue
-                     (Identifier
-                        "v2"
-                        LP
-                          { lpLine = 13 , lpColumn = 11 , lpStartByte = 239 , lpLength = 2 })
-                     LP
-                       { lpLine = 13 , lpColumn = 11 , lpStartByte = 239 , lpLength = 2 }
-                 ]
-               )
-               LP
-                 { lpLine = 13 , lpColumn = 3 , lpStartByte = 231 , lpLength = 11 })
-            LP
-              { lpLine = 13 , lpColumn = 3 , lpStartByte = 231 , lpLength = 12 }
-        , Global
-            "v3"
-            LP
-              { lpLine = 14 , lpColumn = 3 , lpStartByte = 246 , lpLength = 10 }
-        , Global
-            "v4"
-            LP
-              { lpLine = 15 , lpColumn = 3 , lpStartByte = 259 , lpLength = 10 }
-        , Expression
-            (Assign
-               ( Identifier
-                   "v3"
-                   LP
-                     { lpLine = 16 , lpColumn = 3 , lpStartByte = 272 , lpLength = 2 }
-               , Literal
-                   (String
-                      "V3 Modified."
+                            { lpLine = 8 , lpColumn = 1 , lpStartByte = 136 , lpLength = 16 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 8 , lpColumn = 1 , lpStartByte = 136 , lpLength = 17 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 8 , lpColumn = 1 , lpStartByte = 136 , lpLength = 17 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Assign
+                      { expr_lvalue =
+                          Identifier
+                            { lvalue_ident = "v3"
+                            , lvalue_annot =
+                                LP { lpLine = 9 , lpColumn = 1 , lpStartByte = 154 , lpLength = 2 }
+                            }
+                      , expr_subExpr =
+                          Literal
+                            { expr_literal =
+                                String
+                                  { literal_str = "Global V3"
+                                  , literal_annot =
+                                      LP
+                                        { lpLine = 9
+                                        , lpColumn = 6
+                                        , lpStartByte = 159
+                                        , lpLength = 11
+                                        }
+                                  }
+                            , expr_annot =
+                                LP
+                                  { lpLine = 9 , lpColumn = 6 , lpStartByte = 159 , lpLength = 11 }
+                            }
+                      , expr_annot =
+                          LP
+                            { lpLine = 9 , lpColumn = 1 , lpStartByte = 154 , lpLength = 16 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 9 , lpColumn = 1 , lpStartByte = 154 , lpLength = 17 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 9 , lpColumn = 1 , lpStartByte = 154 , lpLength = 17 }
+          }
+      , Function
+          { toplevel_func = "func2"
+          , toplevel_params = [ "p" ]
+          , toplevel_stmts =
+              [ Expression
+                  { stmt_expr =
+                      Assign
+                        { expr_lvalue =
+                            Identifier
+                              { lvalue_ident = "v1"
+                              , lvalue_annot =
+                                  LP
+                                    { lpLine = 11
+                                    , lpColumn = 3
+                                    , lpStartByte = 194
+                                    , lpLength = 2
+                                    }
+                              }
+                        , expr_subExpr =
+                            Binary
+                              { expr_binOp =
+                                  Concat
+                                    { binOp_annot =
+                                        LP
+                                          { lpLine = 11
+                                          , lpColumn = 17
+                                          , lpStartByte = 208
+                                          , lpLength = 2
+                                          }
+                                    }
+                              , expr_left =
+                                  Literal
+                                    { expr_literal =
+                                        String
+                                          { literal_str = "Local "
+                                          , literal_annot =
+                                              LP
+                                                { lpLine = 11
+                                                , lpColumn = 8
+                                                , lpStartByte = 199
+                                                , lpLength = 8
+                                                }
+                                          }
+                                    , expr_annot =
+                                        LP
+                                          { lpLine = 11
+                                          , lpColumn = 8
+                                          , lpStartByte = 199
+                                          , lpLength = 8
+                                          }
+                                    }
+                              , expr_right =
+                                  LeftValue
+                                    { expr_lvalue =
+                                        Identifier
+                                          { lvalue_ident = "p"
+                                          , lvalue_annot =
+                                              LP
+                                                { lpLine = 11
+                                                , lpColumn = 20
+                                                , lpStartByte = 211
+                                                , lpLength = 1
+                                                }
+                                          }
+                                    , expr_annot =
+                                        LP
+                                          { lpLine = 11
+                                          , lpColumn = 20
+                                          , lpStartByte = 211
+                                          , lpLength = 1
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 11
+                                    , lpColumn = 8
+                                    , lpStartByte = 199
+                                    , lpLength = 13
+                                    }
+                              }
+                        , expr_annot =
+                            LP
+                              { lpLine = 11 , lpColumn = 3 , lpStartByte = 194 , lpLength = 18 }
+                        }
+                  , stmt_annot =
                       LP
-                        { lpLine = 16 , lpColumn = 8 , lpStartByte = 277 , lpLength = 14 })
-                   LP
-                     { lpLine = 16 , lpColumn = 8 , lpStartByte = 277 , lpLength = 14 }
-               )
-               LP
-                 { lpLine = 16 , lpColumn = 3 , lpStartByte = 272 , lpLength = 19 })
-            LP
-              { lpLine = 16 , lpColumn = 3 , lpStartByte = 272 , lpLength = 20 }
-        ]
-      )
-      LP
-        { lpLine = 10 , lpColumn = 1 , lpStartByte = 172 , lpLength = 122 }
-  , Statement
-      (Expression
-         (Call
-            ( "func2"
-            , [ Literal
-                  (String
-                     "Var"
-                     LP
-                       { lpLine = 18 , lpColumn = 7 , lpStartByte = 301 , lpLength = 5 })
-                  LP
-                    { lpLine = 18 , lpColumn = 7 , lpStartByte = 301 , lpLength = 5 }
-              ]
-            )
-            LP
-              { lpLine = 18 , lpColumn = 1 , lpStartByte = 295 , lpLength = 12 })
-         LP
-           { lpLine = 18 , lpColumn = 1 , lpStartByte = 295 , lpLength = 13 })
-      LP
-        { lpLine = 18 , lpColumn = 1 , lpStartByte = 295 , lpLength = 13 }
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ LeftValue
-                  (Identifier
-                     "v1"
-                     LP
-                       { lpLine = 19 , lpColumn = 9 , lpStartByte = 317 , lpLength = 2 })
-                  LP
-                    { lpLine = 19 , lpColumn = 9 , lpStartByte = 317 , lpLength = 2 }
-              ]
-            )
-            LP
-              { lpLine = 19 , lpColumn = 1 , lpStartByte = 309 , lpLength = 11 })
-         LP
-           { lpLine = 19 , lpColumn = 1 , lpStartByte = 309 , lpLength = 12 })
-      LP
-        { lpLine = 19 , lpColumn = 1 , lpStartByte = 309 , lpLength = 12 }
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ LeftValue
-                  (Identifier
-                     "v3"
-                     LP
-                       { lpLine = 20 , lpColumn = 9 , lpStartByte = 330 , lpLength = 2 })
-                  LP
-                    { lpLine = 20 , lpColumn = 9 , lpStartByte = 330 , lpLength = 2 }
-              ]
-            )
-            LP
-              { lpLine = 20 , lpColumn = 1 , lpStartByte = 322 , lpLength = 11 })
-         LP
-           { lpLine = 20 , lpColumn = 1 , lpStartByte = 322 , lpLength = 12 })
-      LP
-        { lpLine = 20 , lpColumn = 1 , lpStartByte = 322 , lpLength = 12 }
-  , Statement
-      (Comment
-         " Return value"
-         LP
-           { lpLine = 21 , lpColumn = 1 , lpStartByte = 335 , lpLength = 15 })
-      LP
-        { lpLine = 21 , lpColumn = 1 , lpStartByte = 335 , lpLength = 15 }
-  , Function
-      ( "func3"
-      , [ "num" ]
-      , [ Return
-            (Just
-               (Binary
-                  ( Plus
+                        { lpLine = 11 , lpColumn = 3 , lpStartByte = 194 , lpLength = 19 }
+                  }
+              , Expression
+                  { stmt_expr =
+                      Call
+                        { expr_func = "println"
+                        , expr_params =
+                            [ LeftValue
+                                { expr_lvalue =
+                                    Identifier
+                                      { lvalue_ident = "v1"
+                                      , lvalue_annot =
+                                          LP
+                                            { lpLine = 12
+                                            , lpColumn = 11
+                                            , lpStartByte = 224
+                                            , lpLength = 2
+                                            }
+                                      }
+                                , expr_annot =
+                                    LP
+                                      { lpLine = 12
+                                      , lpColumn = 11
+                                      , lpStartByte = 224
+                                      , lpLength = 2
+                                      }
+                                }
+                            ]
+                        , expr_annot =
+                            LP
+                              { lpLine = 12 , lpColumn = 3 , lpStartByte = 216 , lpLength = 11 }
+                        }
+                  , stmt_annot =
                       LP
-                        { lpLine = 23 , lpColumn = 14 , lpStartByte = 386 , lpLength = 1 }
-                  , LeftValue
-                      (Identifier
-                         "num"
-                         LP
-                           { lpLine = 23 , lpColumn = 10 , lpStartByte = 382 , lpLength = 3 })
+                        { lpLine = 12 , lpColumn = 3 , lpStartByte = 216 , lpLength = 12 }
+                  }
+              , Expression
+                  { stmt_expr =
+                      Call
+                        { expr_func = "println"
+                        , expr_params =
+                            [ LeftValue
+                                { expr_lvalue =
+                                    Identifier
+                                      { lvalue_ident = "v2"
+                                      , lvalue_annot =
+                                          LP
+                                            { lpLine = 13
+                                            , lpColumn = 11
+                                            , lpStartByte = 239
+                                            , lpLength = 2
+                                            }
+                                      }
+                                , expr_annot =
+                                    LP
+                                      { lpLine = 13
+                                      , lpColumn = 11
+                                      , lpStartByte = 239
+                                      , lpLength = 2
+                                      }
+                                }
+                            ]
+                        , expr_annot =
+                            LP
+                              { lpLine = 13 , lpColumn = 3 , lpStartByte = 231 , lpLength = 11 }
+                        }
+                  , stmt_annot =
                       LP
-                        { lpLine = 23 , lpColumn = 10 , lpStartByte = 382 , lpLength = 3 }
-                  , Literal
-                      (Int
-                         41
-                         LP
-                           { lpLine = 23 , lpColumn = 16 , lpStartByte = 388 , lpLength = 2 })
+                        { lpLine = 13 , lpColumn = 3 , lpStartByte = 231 , lpLength = 12 }
+                  }
+              , Global
+                  { stmt_ident = "v3"
+                  , stmt_annot =
                       LP
-                        { lpLine = 23 , lpColumn = 16 , lpStartByte = 388 , lpLength = 2 }
-                  )
-                  LP
-                    { lpLine = 23
-                    , lpColumn = 10
-                    , lpStartByte = 382
-                    , lpLength = 8
-                    }))
-            LP
-              { lpLine = 23 , lpColumn = 3 , lpStartByte = 375 , lpLength = 16 }
-        ]
-      )
-      LP
-        { lpLine = 22 , lpColumn = 1 , lpStartByte = 351 , lpLength = 42 }
-  , Statement
-      (Expression
-         (Call
-            ( "func3"
-            , [ Literal
-                  (Int
-                     4
-                     LP
-                       { lpLine = 25 , lpColumn = 7 , lpStartByte = 400 , lpLength = 1 })
-                  LP
-                    { lpLine = 25 , lpColumn = 7 , lpStartByte = 400 , lpLength = 1 }
+                        { lpLine = 14 , lpColumn = 3 , lpStartByte = 246 , lpLength = 10 }
+                  }
+              , Global
+                  { stmt_ident = "v4"
+                  , stmt_annot =
+                      LP
+                        { lpLine = 15 , lpColumn = 3 , lpStartByte = 259 , lpLength = 10 }
+                  }
+              , Expression
+                  { stmt_expr =
+                      Assign
+                        { expr_lvalue =
+                            Identifier
+                              { lvalue_ident = "v3"
+                              , lvalue_annot =
+                                  LP
+                                    { lpLine = 16
+                                    , lpColumn = 3
+                                    , lpStartByte = 272
+                                    , lpLength = 2
+                                    }
+                              }
+                        , expr_subExpr =
+                            Literal
+                              { expr_literal =
+                                  String
+                                    { literal_str = "V3 Modified."
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 16
+                                          , lpColumn = 8
+                                          , lpStartByte = 277
+                                          , lpLength = 14
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 16
+                                    , lpColumn = 8
+                                    , lpStartByte = 277
+                                    , lpLength = 14
+                                    }
+                              }
+                        , expr_annot =
+                            LP
+                              { lpLine = 16 , lpColumn = 3 , lpStartByte = 272 , lpLength = 19 }
+                        }
+                  , stmt_annot =
+                      LP
+                        { lpLine = 16 , lpColumn = 3 , lpStartByte = 272 , lpLength = 20 }
+                  }
               ]
-            )
-            LP
-              { lpLine = 25 , lpColumn = 1 , lpStartByte = 394 , lpLength = 8 })
-         LP
-           { lpLine = 25 , lpColumn = 1 , lpStartByte = 394 , lpLength = 9 })
-      LP
-        { lpLine = 25 , lpColumn = 1 , lpStartByte = 394 , lpLength = 9 }
-  , Statement
-      (Expression
-         (Call
-            ( "println" , [] )
-            LP
-              { lpLine = 26 , lpColumn = 1 , lpStartByte = 404 , lpLength = 9 })
-         LP
-           { lpLine = 26 , lpColumn = 1 , lpStartByte = 404 , lpLength = 10 })
-      LP
-        { lpLine = 26 , lpColumn = 1 , lpStartByte = 404 , lpLength = 10 }
-  , Statement
-      (Expression
-         (Assign
-            ( Identifier
-                "ret"
-                LP
-                  { lpLine = 27 , lpColumn = 1 , lpStartByte = 415 , lpLength = 3 }
-            , Call
-                ( "func3"
-                , [ Literal
-                      (Int
-                         1
-                         LP
-                           { lpLine = 27 , lpColumn = 13 , lpStartByte = 427 , lpLength = 1 })
+          , toplevel_annot =
+              LP
+                { lpLine = 10 , lpColumn = 1 , lpStartByte = 172 , lpLength = 122 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "func2"
+                      , expr_params =
+                          [ Literal
+                              { expr_literal =
+                                  String
+                                    { literal_str = "Var"
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 18
+                                          , lpColumn = 7
+                                          , lpStartByte = 301
+                                          , lpLength = 5
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 18
+                                    , lpColumn = 7
+                                    , lpStartByte = 301
+                                    , lpLength = 5
+                                    }
+                              }
+                          ]
+                      , expr_annot =
+                          LP
+                            { lpLine = 18 , lpColumn = 1 , lpStartByte = 295 , lpLength = 12 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 18 , lpColumn = 1 , lpStartByte = 295 , lpLength = 13 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 18 , lpColumn = 1 , lpStartByte = 295 , lpLength = 13 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "println"
+                      , expr_params =
+                          [ LeftValue
+                              { expr_lvalue =
+                                  Identifier
+                                    { lvalue_ident = "v1"
+                                    , lvalue_annot =
+                                        LP
+                                          { lpLine = 19
+                                          , lpColumn = 9
+                                          , lpStartByte = 317
+                                          , lpLength = 2
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 19
+                                    , lpColumn = 9
+                                    , lpStartByte = 317
+                                    , lpLength = 2
+                                    }
+                              }
+                          ]
+                      , expr_annot =
+                          LP
+                            { lpLine = 19 , lpColumn = 1 , lpStartByte = 309 , lpLength = 11 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 19 , lpColumn = 1 , lpStartByte = 309 , lpLength = 12 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 19 , lpColumn = 1 , lpStartByte = 309 , lpLength = 12 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "println"
+                      , expr_params =
+                          [ LeftValue
+                              { expr_lvalue =
+                                  Identifier
+                                    { lvalue_ident = "v3"
+                                    , lvalue_annot =
+                                        LP
+                                          { lpLine = 20
+                                          , lpColumn = 9
+                                          , lpStartByte = 330
+                                          , lpLength = 2
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 20
+                                    , lpColumn = 9
+                                    , lpStartByte = 330
+                                    , lpLength = 2
+                                    }
+                              }
+                          ]
+                      , expr_annot =
+                          LP
+                            { lpLine = 20 , lpColumn = 1 , lpStartByte = 322 , lpLength = 11 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 20 , lpColumn = 1 , lpStartByte = 322 , lpLength = 12 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 20 , lpColumn = 1 , lpStartByte = 322 , lpLength = 12 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Comment
+                { stmt_comment = " Return value"
+                , stmt_annot =
+                    LP
+                      { lpLine = 21 , lpColumn = 1 , lpStartByte = 335 , lpLength = 15 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 21 , lpColumn = 1 , lpStartByte = 335 , lpLength = 15 }
+          }
+      , Function
+          { toplevel_func = "func3"
+          , toplevel_params = [ "num" ]
+          , toplevel_stmts =
+              [ Return
+                  { stmt_retval =
+                      Just
+                        Binary
+                          { expr_binOp =
+                              Plus
+                                { binOp_annot =
+                                    LP
+                                      { lpLine = 23
+                                      , lpColumn = 14
+                                      , lpStartByte = 386
+                                      , lpLength = 1
+                                      }
+                                }
+                          , expr_left =
+                              LeftValue
+                                { expr_lvalue =
+                                    Identifier
+                                      { lvalue_ident = "num"
+                                      , lvalue_annot =
+                                          LP
+                                            { lpLine = 23
+                                            , lpColumn = 10
+                                            , lpStartByte = 382
+                                            , lpLength = 3
+                                            }
+                                      }
+                                , expr_annot =
+                                    LP
+                                      { lpLine = 23
+                                      , lpColumn = 10
+                                      , lpStartByte = 382
+                                      , lpLength = 3
+                                      }
+                                }
+                          , expr_right =
+                              Literal
+                                { expr_literal =
+                                    Int
+                                      { literal_int = 41
+                                      , literal_annot =
+                                          LP
+                                            { lpLine = 23
+                                            , lpColumn = 16
+                                            , lpStartByte = 388
+                                            , lpLength = 2
+                                            }
+                                      }
+                                , expr_annot =
+                                    LP
+                                      { lpLine = 23
+                                      , lpColumn = 16
+                                      , lpStartByte = 388
+                                      , lpLength = 2
+                                      }
+                                }
+                          , expr_annot =
+                              LP
+                                { lpLine = 23 , lpColumn = 10 , lpStartByte = 382 , lpLength = 8 }
+                          }
+                  , stmt_annot =
                       LP
-                        { lpLine = 27 , lpColumn = 13 , lpStartByte = 427 , lpLength = 1 }
-                  ]
-                )
-                LP
-                  { lpLine = 27 , lpColumn = 7 , lpStartByte = 421 , lpLength = 8 }
-            )
-            LP
-              { lpLine = 27 , lpColumn = 1 , lpStartByte = 415 , lpLength = 14 })
-         LP
-           { lpLine = 27 , lpColumn = 1 , lpStartByte = 415 , lpLength = 15 })
-      LP
-        { lpLine = 27 , lpColumn = 1 , lpStartByte = 415 , lpLength = 15 }
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ Literal
-                  (String
-                     "Returned:"
-                     LP
-                       { lpLine = 28 , lpColumn = 9 , lpStartByte = 439 , lpLength = 11 })
-                  LP
-                    { lpLine = 28 , lpColumn = 9 , lpStartByte = 439 , lpLength = 11 }
-              , LeftValue
-                  (Identifier
-                     "ret"
-                     LP
-                       { lpLine = 28 , lpColumn = 22 , lpStartByte = 452 , lpLength = 3 })
-                  LP
-                    { lpLine = 28 , lpColumn = 22 , lpStartByte = 452 , lpLength = 3 }
+                        { lpLine = 23 , lpColumn = 3 , lpStartByte = 375 , lpLength = 16 }
+                  }
               ]
-            )
-            LP
-              { lpLine = 28 , lpColumn = 1 , lpStartByte = 431 , lpLength = 25 })
-         LP
-           { lpLine = 28 , lpColumn = 1 , lpStartByte = 431 , lpLength = 26 })
-      LP
-        { lpLine = 28 , lpColumn = 1 , lpStartByte = 431 , lpLength = 26 }
-  , Statement
-      (Comment
-         " Argument containing space"
-         LP
-           { lpLine = 29 , lpColumn = 1 , lpStartByte = 458 , lpLength = 28 })
-      LP
-        { lpLine = 29 , lpColumn = 1 , lpStartByte = 458 , lpLength = 28 }
-  , Function
-      ( "g"
-      , [ "text" ]
-      , [ Return
-            (Just
-               (LeftValue
-                  (Identifier
-                     "text"
-                     LP
-                       { lpLine = 31 , lpColumn = 10 , lpStartByte = 515 , lpLength = 4 })
-                  LP
-                    { lpLine = 31
-                    , lpColumn = 10
-                    , lpStartByte = 515
-                    , lpLength = 4
-                    }))
-            LP
-              { lpLine = 31 , lpColumn = 3 , lpStartByte = 508 , lpLength = 12 }
-        ]
-      )
-      LP
-        { lpLine = 30 , lpColumn = 1 , lpStartByte = 487 , lpLength = 35 }
-  , Function
-      ( "f"
-      , [ "text" ]
-      , [ Return
-            (Just
-               (Call
-                  ( "g"
-                  , [ LeftValue
-                        (Identifier
-                           "text"
-                           LP
-                             { lpLine = 34 , lpColumn = 12 , lpStartByte = 553 , lpLength = 4 })
-                        LP
-                          { lpLine = 34 , lpColumn = 12 , lpStartByte = 553 , lpLength = 4 }
-                    ]
-                  )
-                  LP
-                    { lpLine = 34
-                    , lpColumn = 10
-                    , lpStartByte = 551
-                    , lpLength = 7
-                    }))
-            LP
-              { lpLine = 34 , lpColumn = 3 , lpStartByte = 544 , lpLength = 15 }
-        ]
-      )
-      LP
-        { lpLine = 33 , lpColumn = 1 , lpStartByte = 523 , lpLength = 38 }
-  , Statement
-      (Expression
-         (Assign
-            ( Identifier
-                "test"
-                LP
-                  { lpLine = 36 , lpColumn = 1 , lpStartByte = 562 , lpLength = 4 }
-            , Call
-                ( "f"
-                , [ Literal
-                      (String
-                         "Param with space"
-                         LP
-                           { lpLine = 36
-                           , lpColumn = 10
-                           , lpStartByte = 571
-                           , lpLength = 18
-                           })
+          , toplevel_annot =
+              LP
+                { lpLine = 22 , lpColumn = 1 , lpStartByte = 351 , lpLength = 42 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "func3"
+                      , expr_params =
+                          [ Literal
+                              { expr_literal =
+                                  Int
+                                    { literal_int = 4
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 25
+                                          , lpColumn = 7
+                                          , lpStartByte = 400
+                                          , lpLength = 1
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 25
+                                    , lpColumn = 7
+                                    , lpStartByte = 400
+                                    , lpLength = 1
+                                    }
+                              }
+                          ]
+                      , expr_annot =
+                          LP
+                            { lpLine = 25 , lpColumn = 1 , lpStartByte = 394 , lpLength = 8 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 25 , lpColumn = 1 , lpStartByte = 394 , lpLength = 9 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 25 , lpColumn = 1 , lpStartByte = 394 , lpLength = 9 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "println"
+                      , expr_params = []
+                      , expr_annot =
+                          LP
+                            { lpLine = 26 , lpColumn = 1 , lpStartByte = 404 , lpLength = 9 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 26 , lpColumn = 1 , lpStartByte = 404 , lpLength = 10 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 26 , lpColumn = 1 , lpStartByte = 404 , lpLength = 10 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Assign
+                      { expr_lvalue =
+                          Identifier
+                            { lvalue_ident = "ret"
+                            , lvalue_annot =
+                                LP
+                                  { lpLine = 27 , lpColumn = 1 , lpStartByte = 415 , lpLength = 3 }
+                            }
+                      , expr_subExpr =
+                          Call
+                            { expr_func = "func3"
+                            , expr_params =
+                                [ Literal
+                                    { expr_literal =
+                                        Int
+                                          { literal_int = 1
+                                          , literal_annot =
+                                              LP
+                                                { lpLine = 27
+                                                , lpColumn = 13
+                                                , lpStartByte = 427
+                                                , lpLength = 1
+                                                }
+                                          }
+                                    , expr_annot =
+                                        LP
+                                          { lpLine = 27
+                                          , lpColumn = 13
+                                          , lpStartByte = 427
+                                          , lpLength = 1
+                                          }
+                                    }
+                                ]
+                            , expr_annot =
+                                LP
+                                  { lpLine = 27 , lpColumn = 7 , lpStartByte = 421 , lpLength = 8 }
+                            }
+                      , expr_annot =
+                          LP
+                            { lpLine = 27 , lpColumn = 1 , lpStartByte = 415 , lpLength = 14 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 27 , lpColumn = 1 , lpStartByte = 415 , lpLength = 15 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 27 , lpColumn = 1 , lpStartByte = 415 , lpLength = 15 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "println"
+                      , expr_params =
+                          [ Literal
+                              { expr_literal =
+                                  String
+                                    { literal_str = "Returned:"
+                                    , literal_annot =
+                                        LP
+                                          { lpLine = 28
+                                          , lpColumn = 9
+                                          , lpStartByte = 439
+                                          , lpLength = 11
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 28
+                                    , lpColumn = 9
+                                    , lpStartByte = 439
+                                    , lpLength = 11
+                                    }
+                              }
+                          , LeftValue
+                              { expr_lvalue =
+                                  Identifier
+                                    { lvalue_ident = "ret"
+                                    , lvalue_annot =
+                                        LP
+                                          { lpLine = 28
+                                          , lpColumn = 22
+                                          , lpStartByte = 452
+                                          , lpLength = 3
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 28
+                                    , lpColumn = 22
+                                    , lpStartByte = 452
+                                    , lpLength = 3
+                                    }
+                              }
+                          ]
+                      , expr_annot =
+                          LP
+                            { lpLine = 28 , lpColumn = 1 , lpStartByte = 431 , lpLength = 25 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 28 , lpColumn = 1 , lpStartByte = 431 , lpLength = 26 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 28 , lpColumn = 1 , lpStartByte = 431 , lpLength = 26 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Comment
+                { stmt_comment = " Argument containing space"
+                , stmt_annot =
+                    LP
+                      { lpLine = 29 , lpColumn = 1 , lpStartByte = 458 , lpLength = 28 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 29 , lpColumn = 1 , lpStartByte = 458 , lpLength = 28 }
+          }
+      , Function
+          { toplevel_func = "g"
+          , toplevel_params = [ "text" ]
+          , toplevel_stmts =
+              [ Return
+                  { stmt_retval =
+                      Just
+                        LeftValue
+                          { expr_lvalue =
+                              Identifier
+                                { lvalue_ident = "text"
+                                , lvalue_annot =
+                                    LP
+                                      { lpLine = 31
+                                      , lpColumn = 10
+                                      , lpStartByte = 515
+                                      , lpLength = 4
+                                      }
+                                }
+                          , expr_annot =
+                              LP
+                                { lpLine = 31 , lpColumn = 10 , lpStartByte = 515 , lpLength = 4 }
+                          }
+                  , stmt_annot =
                       LP
-                        { lpLine = 36 , lpColumn = 10 , lpStartByte = 571 , lpLength = 18 }
-                  ]
-                )
-                LP
-                  { lpLine = 36 , lpColumn = 8 , lpStartByte = 569 , lpLength = 21 }
-            )
-            LP
-              { lpLine = 36 , lpColumn = 1 , lpStartByte = 562 , lpLength = 28 })
-         LP
-           { lpLine = 36 , lpColumn = 1 , lpStartByte = 562 , lpLength = 29 })
-      LP
-        { lpLine = 36 , lpColumn = 1 , lpStartByte = 562 , lpLength = 29 }
-  , Statement
-      (Expression
-         (Call
-            ( "println"
-            , [ LeftValue
-                  (Identifier
-                     "test"
-                     LP
-                       { lpLine = 37 , lpColumn = 9 , lpStartByte = 600 , lpLength = 4 })
-                  LP
-                    { lpLine = 37 , lpColumn = 9 , lpStartByte = 600 , lpLength = 4 }
+                        { lpLine = 31 , lpColumn = 3 , lpStartByte = 508 , lpLength = 12 }
+                  }
               ]
-            )
-            LP
-              { lpLine = 37 , lpColumn = 1 , lpStartByte = 592 , lpLength = 13 })
-         LP
-           { lpLine = 37 , lpColumn = 1 , lpStartByte = 592 , lpLength = 14 })
-      LP
-        { lpLine = 37 , lpColumn = 1 , lpStartByte = 592 , lpLength = 14 }
-  ]
-  LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 606 }
+          , toplevel_annot =
+              LP
+                { lpLine = 30 , lpColumn = 1 , lpStartByte = 487 , lpLength = 35 }
+          }
+      , Function
+          { toplevel_func = "f"
+          , toplevel_params = [ "text" ]
+          , toplevel_stmts =
+              [ Return
+                  { stmt_retval =
+                      Just
+                        Call
+                          { expr_func = "g"
+                          , expr_params =
+                              [ LeftValue
+                                  { expr_lvalue =
+                                      Identifier
+                                        { lvalue_ident = "text"
+                                        , lvalue_annot =
+                                            LP
+                                              { lpLine = 34
+                                              , lpColumn = 12
+                                              , lpStartByte = 553
+                                              , lpLength = 4
+                                              }
+                                        }
+                                  , expr_annot =
+                                      LP
+                                        { lpLine = 34
+                                        , lpColumn = 12
+                                        , lpStartByte = 553
+                                        , lpLength = 4
+                                        }
+                                  }
+                              ]
+                          , expr_annot =
+                              LP
+                                { lpLine = 34 , lpColumn = 10 , lpStartByte = 551 , lpLength = 7 }
+                          }
+                  , stmt_annot =
+                      LP
+                        { lpLine = 34 , lpColumn = 3 , lpStartByte = 544 , lpLength = 15 }
+                  }
+              ]
+          , toplevel_annot =
+              LP
+                { lpLine = 33 , lpColumn = 1 , lpStartByte = 523 , lpLength = 38 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Assign
+                      { expr_lvalue =
+                          Identifier
+                            { lvalue_ident = "test"
+                            , lvalue_annot =
+                                LP
+                                  { lpLine = 36 , lpColumn = 1 , lpStartByte = 562 , lpLength = 4 }
+                            }
+                      , expr_subExpr =
+                          Call
+                            { expr_func = "f"
+                            , expr_params =
+                                [ Literal
+                                    { expr_literal =
+                                        String
+                                          { literal_str = "Param with space"
+                                          , literal_annot =
+                                              LP
+                                                { lpLine = 36
+                                                , lpColumn = 10
+                                                , lpStartByte = 571
+                                                , lpLength = 18
+                                                }
+                                          }
+                                    , expr_annot =
+                                        LP
+                                          { lpLine = 36
+                                          , lpColumn = 10
+                                          , lpStartByte = 571
+                                          , lpLength = 18
+                                          }
+                                    }
+                                ]
+                            , expr_annot =
+                                LP
+                                  { lpLine = 36 , lpColumn = 8 , lpStartByte = 569 , lpLength = 21 }
+                            }
+                      , expr_annot =
+                          LP
+                            { lpLine = 36 , lpColumn = 1 , lpStartByte = 562 , lpLength = 28 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 36 , lpColumn = 1 , lpStartByte = 562 , lpLength = 29 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 36 , lpColumn = 1 , lpStartByte = 562 , lpLength = 29 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "println"
+                      , expr_params =
+                          [ LeftValue
+                              { expr_lvalue =
+                                  Identifier
+                                    { lvalue_ident = "test"
+                                    , lvalue_annot =
+                                        LP
+                                          { lpLine = 37
+                                          , lpColumn = 9
+                                          , lpStartByte = 600
+                                          , lpLength = 4
+                                          }
+                                    }
+                              , expr_annot =
+                                  LP
+                                    { lpLine = 37
+                                    , lpColumn = 9
+                                    , lpStartByte = 600
+                                    , lpLength = 4
+                                    }
+                              }
+                          ]
+                      , expr_annot =
+                          LP
+                            { lpLine = 37 , lpColumn = 1 , lpStartByte = 592 , lpLength = 13 }
+                      }
+                , stmt_annot =
+                    LP
+                      { lpLine = 37 , lpColumn = 1 , lpStartByte = 592 , lpLength = 14 }
+                }
+          , toplevel_annot =
+              LP
+                { lpLine = 37 , lpColumn = 1 , lpStartByte = 592 , lpLength = 14 }
+          }
+      ]
+  , program_annot =
+      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 606 }
+  }

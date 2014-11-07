@@ -80,7 +80,7 @@ program       : toplevels                     { Ast.Program $1 $
 
 toplevel      : statement                     { Ast.Statement $1 (apos $1) }
               | function ident '(' idents ')'
-                '{' statements '}'            { Ast.Function (exStr $2, $4, $7)
+                '{' statements '}'            { Ast.Function (exStr $2) $4 $7
                                                 $ span (pos $1) (pos $8)}
 
 statement     : comment                       { Ast.Comment (exStr $1)
@@ -99,26 +99,26 @@ statement     : comment                       { Ast.Comment (exStr $1)
               | loop_statement                { $1 }
 
 if_statement  : if '(' expression ')'
-                statement  %prec if           { Ast.If ($3, $5)
+                statement  %prec if           { Ast.If $3 $5
                                                 $ span (pos $1) (apos $5) }
               | if '(' expression ')'
-                statement else statement      { Ast.IfElse ($3, $5, $7)
+                statement else statement      { Ast.IfElse $3 $5 $7
                                                 $ span (pos $1) (apos $7) }
 
 loop_statement: while '(' expression ')'
-                statement                     { Ast.While ($3, $5)
+                statement                     { Ast.While $3 $5
                                                 $ span (pos $1) (apos $5) }
 
 expression    : leftvalue                     { Ast.LeftValue $1 (apos $1) }
               | literal                       { Ast.Literal $1 (apos $1) }
-              | ident '(' expressions ')'     { Ast.Call (exStr $1, $3)
+              | ident '(' expressions ')'     { Ast.Call (exStr $1) $3
                                                 $ span (pos $1) (pos $4) }
               | '(' expression ')'            { $2 }
-              | unary                         { let (unary, pos) = $1 in
-                                                Ast.Unary unary pos }
-              | binary                        { let (binary, pos) = $1 in
-                                                Ast.Binary binary pos }
-              | leftvalue '=' expression      { Ast.Assign ($1, $3)
+              | unary                         { let ((op, sub), pos) = $1 in
+                                                Ast.Unary op sub pos }
+              | binary                        { let ((op, left, right), pos) = $1 in
+                                                Ast.Binary op left right pos }
+              | leftvalue '=' expression      { Ast.Assign $1 $3
                                                 $ span (apos $1) (apos $3) }
 
 unary         : '!' expression                { (Ast.Not (pos $1), $2),
@@ -167,7 +167,7 @@ literal       : true                          { Ast.Bool True (pos $1) }
               | '[' expressions ']'           { Ast.List $2 (pos $1) }
 
 leftvalue     : ident                         { Ast.Identifier (exStr $1) (pos $1) }
-              | leftvalue '[' expression ']'  { Ast.ListAccess ($1, $3)
+              | leftvalue '[' expression ']'  { Ast.ListAccess $1 $3
                                                 $ span (apos $1) (pos $4) }
 
 toplevels     :                               { [] }

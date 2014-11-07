@@ -54,16 +54,20 @@ instance Renderable (PLiteral a) where
 instance Renderable (PLeftValue a) where
   render lvalue = case lvalue of
     Identifier ident _ -> render ident
-    ListAccess (lvalue, expr) _ -> build lvalue "[" expr "]"
+    ListAccess lvalue expr _ -> build lvalue "[" expr "]"
 
 instance Renderable (PExpression a) where
   render expr = case expr of
     LeftValue lvalue _ -> render lvalue
     Literal literal _ -> render literal
-    Unary unary _ -> renderUnary unary
-    Binary binary _ -> renderBinary binary
-    Assign (lvalue, expr) _ -> build lvalue " = " expr
-    Call (ident, exprs) _ -> build ident '(' exprs ')'
+    Unary operator expr _ ->
+      build (operatorStr operator) (renderSubExpression operator expr)
+    Binary operator left right _ ->
+      build (renderSubExpression operator left) ' '
+        (operatorStr operator) ' '
+        (renderSubExpression operator right)
+    Assign lvalue expr _ -> build lvalue " = " expr
+    Call ident exprs _ -> build ident '(' exprs ')'
     where
     -- Render a subexpression. Add parenthesis if and only if necessary.
     renderSubExpression :: (Operator a) => a -> (PExpression b) -> Builder
@@ -72,23 +76,14 @@ instance Renderable (PExpression a) where
       case subExpr of
         -- if subexpression is a binary expression and the precedence of operator is
         -- lower, then add (). E.g. + is less precedent than *.
-        Binary (subOperator, _, _) _
+        Binary subOperator _ _ _
           | precedence subOperator < precedence operator ->
              renderedWithParen
-        Unary (subOperator, _) _
+        Unary subOperator _ _
           | precedence subOperator < precedence operator ->
              renderedWithParen
         _ -> render subExpr
 
-    renderUnary :: (PUnaryOperator a, PExpression a) -> Builder
-    renderUnary (operator, expr) =
-      build (operatorStr operator) (renderSubExpression operator expr)
-
-    renderBinary :: (PBinaryOperator a, PExpression a, PExpression a) -> Builder
-    renderBinary (operator, left, right) =
-      build (renderSubExpression operator left) ' '
-            (operatorStr operator) ' '
-            (renderSubExpression operator right)
 
 instance Renderable [PExpression a] where
   render exprs = renderSeparateList exprs ", " render
@@ -114,12 +109,12 @@ renderStatementIndent stmt level isClause =
         build "//" comment
       Block stmts _ -> renderBlock stmts level
       Expression expr _ -> withSemicolon $ render expr
-      If (expr, stmt) _ ->
+      If expr stmt _ ->
         build "if (" expr ") " (renderClause stmt)
-      IfElse (expr, thenStmt, elseStmt) _ ->
+      IfElse expr thenStmt elseStmt _ ->
         build "if (" expr ") " (renderClause thenStmt)
               " else " (renderClause elseStmt)
-      While (expr, stmt) _ ->
+      While expr stmt _ ->
         build "while (" expr ") " (renderClause stmt)
       Global ident _ -> withSemicolon $
         build "global " ident
@@ -134,7 +129,7 @@ renderStatementIndent stmt level isClause =
 instance Renderable (PTopLevel a) where
   render toplevel = case toplevel of
     Statement stmt _ -> render stmt
-    Function (name, params, stmts) _ ->
+    Function name params stmts _ ->
       build "function " name '(' (renderSeparateList params ", " render) ") "
             (renderBlock stmts 0)
 

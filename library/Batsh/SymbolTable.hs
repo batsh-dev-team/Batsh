@@ -49,7 +49,7 @@ create (Program program _) =
   SymbolTable $ SMap.fromList $ (SGlobal, globalTable) : functionTables
   where
   (functions, topLevelStmts) = List.partition (\topl -> case topl of
-    Function _ _ -> True
+    Function _ _ _ _ -> True
     Statement _ _ -> False
     ) program;
   stmts = map (\(Statement stmt _) -> stmt) topLevelStmts
@@ -61,7 +61,7 @@ create (Program program _) =
   functionTables :: [(Scope, Table)]
   functionTables = map processFunction functions
   addFuncDef :: MapIdentifierSymbol -> TopLevel -> MapIdentifierSymbol
-  addFuncDef table (Function (func, _, _) _) =
+  addFuncDef table (Function func _ _ _) =
     let scope = SGlobal in -- functions can be defined only in the global scope
     let symbol = (func, STFunction, scope) in
     if not (SMap.member func table) then
@@ -70,7 +70,7 @@ create (Program program _) =
       symbolTableError $ "Redefinition of function '" ++ func ++ "'"
 
 processFunction :: TopLevel -> (Scope, Table)
-processFunction (Function (func, params, stmts) _) =
+processFunction (Function func params stmts _) =
   (scope, table)
   where
   scope = SFunction func;
@@ -92,14 +92,14 @@ processStatement :: Table -> Scope -> Statement -> Table
 processStatement table scope stmt = case stmt of
   Block stmts _ -> processStatements table scope stmts -- TODO block scope
   Expression expr _ -> processExpression table scope expr
-  If (expr, subStmt) _ ->
+  If expr subStmt _ ->
     let exprTable = processExpression table scope expr in
     processStatement exprTable scope subStmt
-  IfElse (expr, thenStmt, elseStmt) _ ->
+  IfElse expr thenStmt elseStmt _ ->
     let exprTable = processExpression table scope expr in
     let thenTable = processStatement exprTable scope thenStmt in
     processStatement thenTable scope elseStmt
-  While (expr, subStmt) _ ->
+  While expr subStmt _ ->
     let exprTable = processExpression table scope expr in
     processStatement exprTable scope subStmt
   Global ident _ -> processIdentifier table SGlobal ident
@@ -112,9 +112,9 @@ processStatements table scope stmts =
 
 processExpression :: Table -> Scope -> Expression -> Table
 processExpression table scope expr = case expr of
-  Assign (lvalue, subExpr) _ -> processLeftValue table scope lvalue
-  Unary (_, subExpr) _ -> processExpression table scope subExpr
-  Binary (_, left, right) _ ->
+  Assign lvalue subExpr _ -> processLeftValue table scope lvalue
+  Unary _ subExpr _ -> processExpression table scope subExpr
+  Binary _ left right _ ->
     let exprTable = processExpression table scope left in
     processExpression exprTable scope right
   _ -> table
@@ -122,7 +122,7 @@ processExpression table scope expr = case expr of
 processLeftValue :: Table -> Scope -> LeftValue -> Table
 processLeftValue table scope lvalue = case lvalue of
   Identifier ident _ -> processIdentifier table scope ident
-  ListAccess (lvalue, subExpr) _ ->
+  ListAccess lvalue subExpr _ ->
     let lvalueTable = processLeftValue table scope lvalue in
     processExpression lvalueTable scope subExpr
 
