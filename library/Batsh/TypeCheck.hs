@@ -1,13 +1,33 @@
-module Batsh.TypeCheck where
+{-#LANGUAGE DeriveDataTypeable#-}
+module Batsh.TypeCheck(typeCheck,
+                       TypeCheckError(..)) where
 
 import qualified Batsh.Ast as Raw
 import Batsh.Ast.Typed
+import Batsh.Token(LexPos)
+import Control.Exception
+import Data.Typeable(Typeable)
 
 class AstNode a => TypeCheckable a where
   typeCheck :: a Raw.AstAnnotation -> a TypeAnno
 
+data TypeCheckError
+  -- expected_type actual_type position
+  = TypeMismatch [Type] Type LexPos
+  deriving (Eq, Read, Show, Typeable)
+
+instance Exception TypeCheckError
+
 typeCheckList :: TypeCheckable a => [a Raw.AstAnnotation] -> [a TypeAnno]
 typeCheckList list = map typeCheck list
+
+convertType :: AstNode a => [Type] -> (Type -> Type) -> a TypeAnno -> Type
+convertType expectedTypes typeConverter node =
+  if typeOfNode `elem` expectedTypes then
+    typeConverter typeOfNode
+  else
+    throw $ TypeMismatch expectedTypes typeOfNode (nodePos node)
+  where typeOfNode = nodeType node
 
 instance TypeCheckable PLiteral where
   typeCheck literal = case literal of
@@ -53,3 +73,41 @@ instance TypeCheckable PExpression where
       where lvalue' = typeCheck lvalue
     Literal literal pos -> Literal literal' (TypeAnno (nodeType literal') pos)
       where literal' = typeCheck literal
+    Unary operator subExpr pos -> checkUnary operator subExpr pos
+    where
+      checkUnary :: Raw.UnaryOperator -> Raw.Expression -> Raw.AstAnnotation
+        -> Expression
+      checkUnary operator subExpr pos =
+        Unary operator' subExpr' $ TypeAnno inferredType pos
+        where
+          operator' = typeCheck operator
+          subExpr' = typeCheck subExpr
+          inferredType = case operator' of
+            Not _ ->
+              convertType [TBool, TVaribale] (\_ -> TBool) subExpr'
+            Negate _ ->
+              convertType [TInt, TFloat, TVaribale] id subExpr'
+      checkBinary :: Raw.BinaryOperator -> Raw.Expression -> Raw.Expression
+        -> Raw.AstAnnotation -> Expression
+      checkBinary operator left right pos =
+        Binary operator' left' right' $ TypeAnno inferredType pos
+        where
+          operator' = typeCheck operator
+          left' = typeCheck left
+          right' = typeCheck right
+          inferredType = case operator' of
+            Plus _ -> TInt
+
+instance TypeCheckable PStatement where
+  typeCheck stmt = case stmt of
+    Expression expr pos -> Expression expr' (TypeAnno TNoType pos)
+      where expr' = typeCheck expr
+
+instance TypeCheckable PTopLevel where
+  typeCheck topl = case topl of
+    Statement stmt pos -> Statement stmt' (TypeAnno TNoType pos)
+      where stmt' = typeCheck stmt
+
+instance TypeCheckable PProgram where
+  typeCheck (Program topls pos) =
+    Program (typeCheckList topls) (TypeAnno TNoType pos)

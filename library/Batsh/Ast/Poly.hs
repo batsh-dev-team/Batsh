@@ -135,6 +135,16 @@ data PProgram annot_type
   }
   deriving (Eq, Read, Show)
 
+data PNode annot_type
+  = NodeLiteral (PLiteral annot_type)
+  | NodeLeftValue (PLeftValue annot_type)
+  | NodeUnaryOperator (PUnaryOperator annot_type)
+  | NodeBinaryOperator (PBinaryOperator annot_type)
+  | NodeExpression (PExpression annot_type)
+  | NodeStatement (PStatement annot_type)
+  | NodeTopLevel (PTopLevel annot_type)
+  | NodeProgram (PProgram annot_type)
+
 type Identifier = String
 
 type FunctionName = Identifier

@@ -6,6 +6,7 @@ import qualified GeneratorTest
 import qualified LexerTest
 import qualified ParserTest
 import qualified SymbolTableTest
+import qualified TypeCheckTest
 
 main :: IO ()
 main = defaultMainWithOpts
@@ -14,5 +15,6 @@ main = defaultMainWithOpts
    testCase "ParseFile"       ParserTest.testParseFile,
    testCase "Generator"       GeneratorTest.testGenerator,
    testCase "SymbolTable"     SymbolTableTest.testSymbolTable,
-   testCase "SymbolTableFile" SymbolTableTest.testSymbolTableFile]
+   testCase "SymbolTableFile" SymbolTableTest.testSymbolTableFile,
+   testCase "TypeCheck"       TypeCheckTest.testTypeCheck]
   mempty

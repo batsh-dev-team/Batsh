@@ -20,3 +20,5 @@ type Statement = PStatement AstAnnotation
 type TopLevel = PTopLevel AstAnnotation
 
 type Program = PProgram AstAnnotation
+
+type Node = PNode AstAnnotation
