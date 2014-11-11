@@ -1,0 +1,242 @@
+Program
+  { program_topls =
+      [ Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Assign
+                      { expr_lvalue =
+                          Identifier
+                            { lvalue_ident = "a"
+                            , lvalue_annot =
+                                TypeAnno
+                                  TVariable
+                                  LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 1 }
+                            }
+                      , expr_subExpr =
+                          Literal
+                            { expr_literal =
+                                Int
+                                  { literal_int = 3
+                                  , literal_annot =
+                                      TypeAnno
+                                        TInt
+                                        LP
+                                          { lpLine = 1
+                                          , lpColumn = 5
+                                          , lpStartByte = 4
+                                          , lpLength = 1
+                                          }
+                                  }
+                            , expr_annot =
+                                TypeAnno
+                                  TInt
+                                  LP { lpLine = 1 , lpColumn = 5 , lpStartByte = 4 , lpLength = 1 }
+                            }
+                      , expr_annot =
+                          TypeAnno
+                            TInt
+                            LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 5 }
+                      }
+                , stmt_annot =
+                    TypeAnno
+                      TNoType
+                      LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 6 }
+                }
+          , toplevel_annot =
+              TypeAnno
+                TNoType
+                LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 6 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Comment
+                { stmt_comment = " This is comment 1"
+                , stmt_annot =
+                    TypeAnno
+                      TNoType
+                      LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 7 , lpLength = 20 }
+                }
+          , toplevel_annot =
+              TypeAnno
+                TNoType
+                LP { lpLine = 2 , lpColumn = 1 , lpStartByte = 7 , lpLength = 20 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Assign
+                      { expr_lvalue =
+                          Identifier
+                            { lvalue_ident = "a"
+                            , lvalue_annot =
+                                TypeAnno
+                                  TVariable
+                                  LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 28 , lpLength = 1 }
+                            }
+                      , expr_subExpr =
+                          Binary
+                            { expr_binOp =
+                                Multiply
+                                  { binOp_annot =
+                                      TypeAnno
+                                        TNoType
+                                        LP
+                                          { lpLine = 3
+                                          , lpColumn = 7
+                                          , lpStartByte = 34
+                                          , lpLength = 1
+                                          }
+                                  }
+                            , expr_left =
+                                LeftValue
+                                  { expr_lvalue =
+                                      Identifier
+                                        { lvalue_ident = "a"
+                                        , lvalue_annot =
+                                            TypeAnno
+                                              TVariable
+                                              LP
+                                                { lpLine = 3
+                                                , lpColumn = 5
+                                                , lpStartByte = 32
+                                                , lpLength = 1
+                                                }
+                                        }
+                                  , expr_annot =
+                                      TypeAnno
+                                        TVariable
+                                        LP
+                                          { lpLine = 3
+                                          , lpColumn = 5
+                                          , lpStartByte = 32
+                                          , lpLength = 1
+                                          }
+                                  }
+                            , expr_right =
+                                Literal
+                                  { expr_literal =
+                                      Int
+                                        { literal_int = 5
+                                        , literal_annot =
+                                            TypeAnno
+                                              TInt
+                                              LP
+                                                { lpLine = 3
+                                                , lpColumn = 9
+                                                , lpStartByte = 36
+                                                , lpLength = 1
+                                                }
+                                        }
+                                  , expr_annot =
+                                      TypeAnno
+                                        TInt
+                                        LP
+                                          { lpLine = 3
+                                          , lpColumn = 9
+                                          , lpStartByte = 36
+                                          , lpLength = 1
+                                          }
+                                  }
+                            , expr_annot =
+                                TypeAnno
+                                  TInt
+                                  LP { lpLine = 3 , lpColumn = 5 , lpStartByte = 32 , lpLength = 5 }
+                            }
+                      , expr_annot =
+                          TypeAnno
+                            TInt
+                            LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 28 , lpLength = 9 }
+                      }
+                , stmt_annot =
+                    TypeAnno
+                      TNoType
+                      LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 28 , lpLength = 10 }
+                }
+          , toplevel_annot =
+              TypeAnno
+                TNoType
+                LP { lpLine = 3 , lpColumn = 1 , lpStartByte = 28 , lpLength = 10 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Comment
+                { stmt_comment = " This is comment 2"
+                , stmt_annot =
+                    TypeAnno
+                      TNoType
+                      LP { lpLine = 4 , lpColumn = 1 , lpStartByte = 39 , lpLength = 20 }
+                }
+          , toplevel_annot =
+              TypeAnno
+                TNoType
+                LP { lpLine = 4 , lpColumn = 1 , lpStartByte = 39 , lpLength = 20 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Expression
+                { stmt_expr =
+                    Call
+                      { expr_func = "println"
+                      , expr_params =
+                          [ LeftValue
+                              { expr_lvalue =
+                                  Identifier
+                                    { lvalue_ident = "a"
+                                    , lvalue_annot =
+                                        TypeAnno
+                                          TVariable
+                                          LP
+                                            { lpLine = 5
+                                            , lpColumn = 9
+                                            , lpStartByte = 68
+                                            , lpLength = 1
+                                            }
+                                    }
+                              , expr_annot =
+                                  TypeAnno
+                                    TVariable
+                                    LP
+                                      { lpLine = 5
+                                      , lpColumn = 9
+                                      , lpStartByte = 68
+                                      , lpLength = 1
+                                      }
+                              }
+                          ]
+                      , expr_annot =
+                          TypeAnno
+                            TString
+                            LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 60 , lpLength = 10 }
+                      }
+                , stmt_annot =
+                    TypeAnno
+                      TNoType
+                      LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 60 , lpLength = 11 }
+                }
+          , toplevel_annot =
+              TypeAnno
+                TNoType
+                LP { lpLine = 5 , lpColumn = 1 , lpStartByte = 60 , lpLength = 11 }
+          }
+      , Statement
+          { toplevel_stmt =
+              Comment
+                { stmt_comment = "This is comment 3"
+                , stmt_annot =
+                    TypeAnno
+                      TNoType
+                      LP { lpLine = 6 , lpColumn = 1 , lpStartByte = 72 , lpLength = 19 }
+                }
+          , toplevel_annot =
+              TypeAnno
+                TNoType
+                LP { lpLine = 6 , lpColumn = 1 , lpStartByte = 72 , lpLength = 19 }
+          }
+      ]
+  , program_annot =
+      TypeAnno
+        TNoType
+        LP { lpLine = 1 , lpColumn = 1 , lpStartByte = 0 , lpLength = 91 }
+  }

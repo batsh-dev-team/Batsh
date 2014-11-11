@@ -23,14 +23,6 @@ instance Exception TypeCheckError
 typeCheckList :: TypeCheckable a => [a Raw.AstAnnotation] -> [a TypeAnno]
 typeCheckList list = map typeCheck list
 
-convertType :: AstNode a => [Type] -> (Type -> Type) -> a TypeAnno -> Type
-convertType expectedTypes typeConverter node =
-  if typeOfNode `elem` expectedTypes then
-    typeConverter typeOfNode
-  else
-    throw $ TypeMismatch expectedTypes typeOfNode (nodePos node)
-  where typeOfNode = nodeType node
-
 instance TypeCheckable PLiteral where
   typeCheck literal = case literal of
     Bool bool pos -> Bool bool (TypeAnno TBool pos)
@@ -90,9 +82,9 @@ instance TypeCheckable PExpression where
           subExpr' = typeCheck subExpr
           inferredType = case operator' of
             Not _ ->
-              convertType [TBool, TVariable] (\_ -> TBool) subExpr'
+              convertType usableTypes (\_ -> TBool) subExpr'
             Negate _ ->
-              convertType [TInt, TFloat, TVariable] id subExpr'
+              convertType usableTypes id subExpr'
       checkBinary :: Raw.BinaryOperator -> Raw.Expression -> Raw.Expression
         -> Raw.AstAnnotation -> Expression
       checkBinary operator left right pos =
@@ -101,7 +93,23 @@ instance TypeCheckable PExpression where
           operator' = typeCheck operator
           left' = typeCheck left
           right' = typeCheck right
-          inferredType = TVariable -- TODO
+          inferredType = case operator' of
+            Plus _ -> convertType2 usableTypes numTypeEscalate left' right'
+            Minus _ -> convertType2 usableTypes numTypeEscalate left' right'
+            Multiply _ -> convertType2 usableTypes numTypeEscalate left' right'
+            Divide _ -> convertType2 usableTypes numTypeEscalate left' right'
+            Modulo _ -> convertType2 usableTypes numTypeEscalate left' right'
+            Concat _ -> convertType2 usableTypes (\_ _ -> TString) left' right'
+            Equal _ -> convertType2 usableTypes toBool left' right'
+            NotEqual _ -> convertType2 usableTypes toBool left' right'
+            ArithEqual _ -> convertType2 usableTypes toBool left' right'
+            ArithNotEqual _ -> convertType2 usableTypes toBool left' right'
+            Greater _ -> convertType2 usableTypes toBool left' right'
+            Less _ -> convertType2 usableTypes toBool left' right'
+            GreaterEqual _ -> convertType2 usableTypes toBool left' right'
+            LessEqual _ -> convertType2 usableTypes toBool left' right'
+            And _ -> convertType2 usableTypes toBool left' right'
+            Or _ -> convertType2 usableTypes toBool left' right'
       checkAssign :: Raw.LeftValue -> Raw.Expression -> Raw.AstAnnotation
         -> Expression
       checkAssign lvalue subExpr pos =
@@ -112,6 +120,37 @@ instance TypeCheckable PExpression where
           inferredType = case nodeType subExpr' of
             TNoType -> throw $ AssignFromNoType (nodePos subExpr')
             _ -> nodeType subExpr'
+      convertType :: AstNode a => [Type] -> (Type -> Type) -> a TypeAnno -> Type
+      convertType expectedTypes typeConverter node =
+        if typeOfNode `elem` expectedTypes then
+          typeConverter typeOfNode
+        else
+          throw $ TypeMismatch expectedTypes typeOfNode (nodePos node)
+        where typeOfNode = nodeType node
+      convertType2 :: AstNode a => [Type] -> (Type -> Type -> Type)
+        -> a TypeAnno -> a TypeAnno -> Type
+      convertType2 expectedTypes typeConverter left right =
+        convertType expectedTypes (\leftType ->
+        convertType expectedTypes (\rightType ->
+          typeConverter leftType rightType
+        ) right
+        ) left
+      numTypeEscalate :: Type -> Type -> Type
+      numTypeEscalate left right = case (left, right) of
+        (TInt, TInt) -> TInt
+        (TInt, TFloat) -> TFloat
+        (TFloat, TInt) -> TFloat
+        (TFloat, TFloat) -> TFloat
+        (TVariable, TInt) -> TInt
+        (TInt, TVariable) -> TInt
+        (TVariable, TFloat) -> TFloat
+        (TFloat, TVariable) -> TFloat
+        (TVariable, TVariable) -> TVariable
+        _ -> TVariable
+      toBool :: Type -> Type -> Type
+      toBool _ _ = TBool
+      stringTypes = [TString, TVariable]
+      usableTypes = [TBool, TInt, TFloat, TString, TVariable]
 
 instance TypeCheckable PStatement where
   typeCheck stmt = case stmt of
