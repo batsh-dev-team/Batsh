@@ -1,10 +1,11 @@
 module TypeCheckTest where
 
-import Batsh(parse)
+import Batsh(parse, parseFromFile)
 import Batsh.Ast.Typed
 import Batsh.Token(LexPos(..))
 import Batsh.TypeCheck
 import Control.Exception
+import Control.Monad
 import Prelude hiding(catch)
 import Test.HUnit
 
@@ -33,3 +34,19 @@ testTypeCheck = do
       assertEqual (show typedAst) expected typedAst
     handler :: (Eq a, Exception a) => a -> a -> IO ()
     handler expected ex = assertEqual (show ex) expected ex
+
+testCaseDir = "test/testcase"
+testCases = ["arith", "array", "assignment", "block", "command", "comment",
+  "exists", "function", "if", "recursion", "string", "while"]
+
+testTypeCheckFile :: Assertion
+testTypeCheckFile = do
+  let testParseFile codeFile typedAstFile = do
+      text <- readFile typedAstFile
+      let expected = read text :: Program
+      ast <- parseFromFile codeFile
+      let typed = typeCheck ast
+      assertEqual (show typedAstFile) expected typed
+  forM_ testCases $ \testcase ->
+    testParseFile (testCaseDir ++ "/Batsh/" ++ testcase ++ ".batsh")
+                  (testCaseDir ++ "/Batsh/" ++ testcase ++ ".typed")

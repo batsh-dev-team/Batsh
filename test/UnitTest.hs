@@ -16,5 +16,6 @@ main = defaultMainWithOpts
    testCase "Generator"       GeneratorTest.testGenerator,
    testCase "SymbolTable"     SymbolTableTest.testSymbolTable,
    testCase "SymbolTableFile" SymbolTableTest.testSymbolTableFile,
-   testCase "TypeCheck"       TypeCheckTest.testTypeCheck]
+   testCase "TypeCheck"       TypeCheckTest.testTypeCheck,
+   testCase "TypeCheckFile"   TypeCheckTest.testTypeCheckFile]
   mempty
