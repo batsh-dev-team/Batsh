@@ -21,7 +21,7 @@ testTypeCheck = do
     program_annot = TypeAnno TNoType (LP {lpLine = 1, lpColumn = 1,
     lpStartByte = 0, lpLength = 2})}
   catch (print $ typed "!3;")
-        (handler $ TypeMismatch [TBool,TVaribale] TInt (LP {lpLine = 1,
+        (handler $ TypeMismatch [TBool,TVariable] TInt (LP {lpLine = 1,
         lpColumn = 2, lpStartByte = 1, lpLength = 1}))
   return ()
   where

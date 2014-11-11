@@ -1,5 +1,6 @@
 {-#LANGUAGE DeriveDataTypeable#-}
 module Batsh.TypeCheck(typeCheck,
+                       TypeCheckable,
                        TypeCheckError(..)) where
 
 import qualified Batsh.Ast as Raw
@@ -14,6 +15,7 @@ class AstNode a => TypeCheckable a where
 data TypeCheckError
   -- expected_type actual_type position
   = TypeMismatch [Type] Type LexPos
+  | AssignFromNoType LexPos
   deriving (Eq, Read, Show, Typeable)
 
 instance Exception TypeCheckError
@@ -39,9 +41,9 @@ instance TypeCheckable PLiteral where
 
 instance TypeCheckable PLeftValue where
   typeCheck literal = case literal of
-    Identifier ident pos -> Identifier ident (TypeAnno TVaribale pos)
+    Identifier ident pos -> Identifier ident (TypeAnno TVariable pos)
     ListAccess lvalue expr pos ->
-      ListAccess (typeCheck lvalue) (typeCheck expr) (TypeAnno TVaribale pos)
+      ListAccess (typeCheck lvalue) (typeCheck expr) (TypeAnno TVariable pos)
 
 instance TypeCheckable PUnaryOperator where
   typeCheck operator = case operator of
@@ -74,6 +76,10 @@ instance TypeCheckable PExpression where
     Literal literal pos -> Literal literal' (TypeAnno (nodeType literal') pos)
       where literal' = typeCheck literal
     Unary operator subExpr pos -> checkUnary operator subExpr pos
+    --Binary
+    Assign lvalue subExpr pos -> checkAssign lvalue subExpr pos
+    Call func exprs pos -> Call func exprs' (TypeAnno TString pos) -- TODO
+      where exprs' = typeCheckList exprs
     where
       checkUnary :: Raw.UnaryOperator -> Raw.Expression -> Raw.AstAnnotation
         -> Expression
@@ -84,9 +90,9 @@ instance TypeCheckable PExpression where
           subExpr' = typeCheck subExpr
           inferredType = case operator' of
             Not _ ->
-              convertType [TBool, TVaribale] (\_ -> TBool) subExpr'
+              convertType [TBool, TVariable] (\_ -> TBool) subExpr'
             Negate _ ->
-              convertType [TInt, TFloat, TVaribale] id subExpr'
+              convertType [TInt, TFloat, TVariable] id subExpr'
       checkBinary :: Raw.BinaryOperator -> Raw.Expression -> Raw.Expression
         -> Raw.AstAnnotation -> Expression
       checkBinary operator left right pos =
@@ -95,18 +101,43 @@ instance TypeCheckable PExpression where
           operator' = typeCheck operator
           left' = typeCheck left
           right' = typeCheck right
-          inferredType = case operator' of
-            Plus _ -> TInt
+          inferredType = TVariable -- TODO
+      checkAssign :: Raw.LeftValue -> Raw.Expression -> Raw.AstAnnotation
+        -> Expression
+      checkAssign lvalue subExpr pos =
+        Assign lvalue' subExpr' $ TypeAnno inferredType pos
+        where
+          lvalue' = typeCheck lvalue
+          subExpr' = typeCheck subExpr
+          inferredType = case nodeType subExpr' of
+            TNoType -> throw $ AssignFromNoType (nodePos subExpr')
+            _ -> nodeType subExpr'
 
 instance TypeCheckable PStatement where
   typeCheck stmt = case stmt of
-    Expression expr pos -> Expression expr' (TypeAnno TNoType pos)
-      where expr' = typeCheck expr
+    Comment comment pos -> Comment comment (TypeAnno TNoType pos)
+    Block stmts pos -> Block (typeCheckList stmts) (TypeAnno TNoType pos)
+    Expression expr pos -> Expression (typeCheck expr) (TypeAnno TNoType pos)
+    If expr thenStmt pos ->
+      If (typeCheck expr) (typeCheck thenStmt) (TypeAnno TNoType pos)
+    IfElse expr thenStmt elseStmt pos ->
+      IfElse (typeCheck expr) (typeCheck thenStmt)
+             (typeCheck elseStmt) (TypeAnno TNoType pos)
+    While expr loopStmt pos ->
+      While (typeCheck expr) (typeCheck loopStmt) (TypeAnno TNoType pos)
+    Global ident pos -> Global ident (TypeAnno TNoType pos)
+    Return (Just expr) pos ->
+      Return (Just $ typeCheck expr) (TypeAnno TNoType pos)
+    Return Nothing pos ->
+      Return Nothing (TypeAnno TNoType pos)
 
 instance TypeCheckable PTopLevel where
   typeCheck topl = case topl of
-    Statement stmt pos -> Statement stmt' (TypeAnno TNoType pos)
-      where stmt' = typeCheck stmt
+    Statement stmt pos -> Statement (typeCheck stmt) (TypeAnno TNoType pos)
+    Function func params stmts pos -> Function func params stmts' annot
+      where
+        stmts' = typeCheckList stmts
+        annot = TypeAnno TNoType pos -- TODO check type of return value
 
 instance TypeCheckable PProgram where
   typeCheck (Program topls pos) =
