@@ -48,7 +48,7 @@ instance TypeCheckable PLeftValue where
 instance TypeCheckable PUnaryOperator where
   typeCheck operator = case operator of
     Not pos -> Not $ TypeAnno TNoType pos
-    Negate pos -> Not $ TypeAnno TNoType pos
+    Negate pos -> Negate $ TypeAnno TNoType pos
 
 instance TypeCheckable PBinaryOperator where
   typeCheck operator = case operator of
@@ -76,7 +76,7 @@ instance TypeCheckable PExpression where
     Literal literal pos -> Literal literal' (TypeAnno (nodeType literal') pos)
       where literal' = typeCheck literal
     Unary operator subExpr pos -> checkUnary operator subExpr pos
-    --Binary
+    Binary operator left right pos -> checkBinary operator left right pos
     Assign lvalue subExpr pos -> checkAssign lvalue subExpr pos
     Call func exprs pos -> Call func exprs' (TypeAnno TString pos) -- TODO
       where exprs' = typeCheckList exprs

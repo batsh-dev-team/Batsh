@@ -1,6 +1,6 @@
 module TypeCheckTest where
 
-import Batsh
+import Batsh(parse)
 import Batsh.Ast.Typed
 import Batsh.Token(LexPos(..))
 import Batsh.TypeCheck

@@ -1,11 +1,13 @@
 module Batsh where
 
 import qualified Batsh.Ast
+import qualified Batsh.Ast.Typed as TypedAst
 import qualified Batsh.Generator
 import qualified Batsh.Lexer
 import qualified Batsh.Parser
 import qualified Batsh.SymbolTable as SymbolTable
 import qualified Batsh.Token as Token
+import qualified Batsh.TypeCheck as TypeCheck
 
 lex :: String -> [Token.Lexeme]
 lex code = Batsh.Lexer.scanLexemes code
@@ -31,3 +33,6 @@ generateCodeToFile = Batsh.Generator.printToFile
 
 createSymbolTable :: Batsh.Ast.Program -> SymbolTable.SymbolTable
 createSymbolTable = SymbolTable.create
+
+typeCheck :: Batsh.Ast.Program -> TypedAst.Program
+typeCheck = TypeCheck.typeCheck

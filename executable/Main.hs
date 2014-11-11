@@ -23,7 +23,8 @@ data Command
 data BatshOpts = BatshOpts
   { batshOptsAst :: Bool,
     batshOptsTokens :: Bool,
-    batshOptsSymbols :: Bool }
+    batshOptsSymbols :: Bool,
+    batshOptsTypeCheck :: Bool }
   deriving Show
 
 version :: Parser (a -> a)
@@ -73,10 +74,13 @@ batshOpts = runA $ proc () -> do
       <> help "Output parsed tokens")) -< ()
   symbols <- asA (switch (long "symbols"
       <> help "Output symbol table")) -< ()
+  typeCheck <- asA (switch (long "type"
+      <> help "Output type checked abstract syntax tree")) -< ()
   returnA -< BatshOpts {
     batshOptsAst = ast,
     batshOptsTokens = tokens,
-    batshOptsSymbols = symbols}
+    batshOptsSymbols = symbols,
+    batshOptsTypeCheck = typeCheck}
 
 bashParser :: Parser Command
 bashParser = pure Bash
@@ -94,6 +98,7 @@ batsh input target opts = do
   let program = Batsh.parse code
   let tokens = Batsh.lex code
   let symbols = Batsh.createSymbolTable program
+  let typed = Batsh.typeCheck program
   let outputWithSuffix :: String -> String -> IO ();
       outputWithSuffix suffix contents = do
         let fileName = target ++ suffix
@@ -101,6 +106,7 @@ batsh input target opts = do
   when (batshOptsTokens opts) (outputWithSuffix ".tokens" (ppShow tokens))
   when (batshOptsAst opts) (outputWithSuffix ".ast" (ppShow program))
   when (batshOptsSymbols opts) (outputWithSuffix ".symbols" (ppShow symbols))
+  when (batshOptsTypeCheck opts) (outputWithSuffix ".typed" (ppShow typed))
   Batsh.generateCodeToFile program target
 
 pinfo :: ParserInfo Args
