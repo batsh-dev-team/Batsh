@@ -19,7 +19,7 @@ If you happen to be a maintainer of a cross-platform tool which relies on Bash o
 
 Batsh is implemented in OCaml and managed by [OPAM](http://opam.ocaml.org/pkg/batsh/0.0.5/).
 
-1. Install OPAM. See [instructions](http://opam.ocaml.org/doc/Quick_Install.html).
+1. Install OPAM. See [instructions](http://opam.ocaml.org/doc/Install.html).
 2. Switch to the latest version (or at least 4.00.1) of OCaml by running `opam switch`.
 3. Install Batsh: `opam install batsh`
 
