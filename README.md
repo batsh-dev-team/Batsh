@@ -5,7 +5,7 @@ It enables you to write your script once runs on all platforms without **any** a
 
 Both Bash and Batch are messy to read and tricky to write due to historical reasons.
 You have to spend a lot of time learning either of them and write platform-dependent code for each operating system.
-I have wasted lots of time in my life struggling with bizare syntaxes and unreasonable behaviors of them, and do not want to waste any more.
+I have wasted lots of time in my life struggling with bizarre syntaxes and unreasonable behaviors of them, and do not want to waste any more.
 
 If you happen to be a maintainer of a cross-platform tool which relies on Bash on Linux/Mac and Batch on Windows as "glue code", and found it painful to "synchronize" between them, you would definitely like to try Batsh.
 
