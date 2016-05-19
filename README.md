@@ -203,7 +203,7 @@ OPTIONS
 
 Yes you can use any of them as platform-independent glue code. But there are several disadvantages:
 
-1. None of them is **preinstalled on all platforms** (including Windows).
+1. None of them are **preinstalled on all platforms** (including Windows).
 2. Functionalities like process piping are not convenient to use.
 3. Hard to integrate with existing code written in Bash or Batch.
 
