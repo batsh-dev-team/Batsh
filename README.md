@@ -114,7 +114,7 @@ v2 = "Global V2";
 function func(p) {
   v1 = "Local " ++ p;
   global v2;
-  v2 = "V3 Modified.";
+  v2 = "V2 Modified.";
 }
 func("Var");
 ```
