@@ -1,33 +1,35 @@
-build: _obuild
-	ocp-build build batsh
-	ln -sf _obuild/batsh/batsh.asm batsh
+SRCFILES = src/*.ml*
 
-LIBDIR=$(CAML_LD_LIBRARY_PATH)/..
-BATSHDIR=$(LIBDIR)/batsh
+OCAMLFORMAT = ocamlformat \
+	--inplace \
+	--field-space loose \
+	--let-and sparse \
+	--let-open auto \
+	--type-decl sparse \
+	--sequence-style terminator \
+	$(SRCFILES)
 
-install: build
-	ocp-build install batsh-lib batsh -install-lib "$(LIBDIR)"
-	# This is an unly wordaround for fixing the generated META file
-	sed -i 's/ camlp4lib//g' "$(LIBDIR)/META.batsh"
-	sed -i 's/ camlp4lib//g' "$(LIBDIR)/META.batsh-lib"
+OCPINDENT = ocp-indent \
+	--inplace \
+	$(SRCFILES)
 
-uninstall:
-	ocp-build uninstall
+.PHONY: all
+all :
+	dune build @all
 
-test: build
-	ocp-build build test
-	@./_obuild/test/test.asm
+# .PHONY: test
+# test :
+# 	dune exec ./tests/main.exe
 
-update: build
-	node scripts/update.js | bash
+.PHONY: run
+run :
+	dune exec ./src/main.exe
 
-_obuild:
-	ocp-build init
+.PHONY: format
+format :
+	$(OCAMLFORMAT)
+	$(OCPINDENT)
 
+.PHONY : clean
 clean:
-	ocp-build clean
-
-distclean:
-	rm -rf _obuild
-
-.PHONY: build
+	dune clean
