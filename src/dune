@@ -6,3 +6,7 @@
             cmdliner)
  (preprocess (pps ppx_sexp_conv))
  )
+
+(ocamllex lexer)
+
+(menhir (modules parser_yacc))
