@@ -7,7 +7,8 @@ type variable_entry = {
 }
 [@@deriving sexp]
 
-type variable_table = (string, variable_entry) Hashtbl.t
+type variable_table = (string, variable_entry) Hashtbl.Poly.t
+[@@deriving sexp]
 
 let sexp_of_variable_table (vtable : variable_table) : Sexp.t =
   Sexp.List (Hashtbl.fold vtable ~init: []
@@ -23,7 +24,7 @@ type function_entry =
 [@@deriving sexp]
 
 type t = {
-  functions : (string, function_entry) Hashtbl.t;
+  functions : (string, function_entry) Hashtbl.Poly.t;
   globals : variable_table;
 }
 [@@deriving sexp]
