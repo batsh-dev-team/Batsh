@@ -18,9 +18,9 @@ depopts: ["ounit"]
 dev-repo: "git://github.com/BYVoid/Batsh"
 install: ["dune" "install"]
 synopsis:
-  "A (C-like syntax) programming language that compiles to Bash and Windows Batch."
+  "A (C-like syntax) programming language that compiles to Bash and Windows Batch"
 description: """
-Batsh enables you to write code once runs on all platforms without any additional dependency.
+Batsh enables you to write code once runs on all platforms without any additional dependency
 
 Documentation: https://github.com/BYVoid/Batsh
 
