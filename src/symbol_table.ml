@@ -5,7 +5,7 @@ type variable_entry = {
   name : string;
   global : bool;
 }
-with sexp_of
+[@@deriving sexp]
 
 type variable_table = (string, variable_entry) Hashtbl.t
 
@@ -20,19 +20,19 @@ let sexp_of_variable_table (vtable : variable_table) : Sexp.t =
 type function_entry =
   | Declaration
   | Defination of variable_table
-with sexp_of
+[@@deriving sexp]
 
 type t = {
   functions : (string, function_entry) Hashtbl.t;
   globals : variable_table;
 }
-with sexp_of
+[@@deriving sexp]
 
 module Scope = struct
   type t =
     | GlobalScope of variable_table
     | FunctionScope of (string * variable_table)
-  with sexp_of
+  [@@deriving sexp]
 
   let is_function (scope : t) : bool =
     match scope with

@@ -1,2 +1,5 @@
 (executable
- (name main))
+ (name main)
+ (libraries core_kernel)
+ (preprocess (pps ppx_sexp_conv))
+ )

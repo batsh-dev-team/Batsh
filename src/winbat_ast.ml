@@ -58,4 +58,4 @@ and statement = [
 and statements = statement list
 
 and t = statements
-with sexp_of
+[@@deriving sexp]

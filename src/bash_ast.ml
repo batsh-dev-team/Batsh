@@ -48,4 +48,4 @@ and toplevel =
   | Function of (identifier * statements)
 
 and t = toplevel list
-with sexp_of
+[@@deriving sexp]
