@@ -2,6 +2,7 @@ opam-version: "2.0"
 maintainer: "byvoid@byvoid.com"
 authors: ["BYVoid <byvoid@byvoid.com>"]
 homepage: "https://github.com/BYVoid/Batsh"
+bug-reports: "https://github.com/BYVoid/Batsh/issues"
 license: "MIT"
 build: [
   ["dune" "build" "-p" name "-j" jobs]
