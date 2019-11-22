@@ -1,5 +1,7 @@
 # Batsh
 
+[![Build Status](https://travis-ci.org/darrenldl/Batsh.svg?branch=master)](https://travis-ci.org/darrenldl/Batsh)
+
 Batsh is a simple programming language that compiles to Bash and Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx).
 It enables you to write your script once runs on all platforms without **any** additional dependency.
 
