@@ -513,7 +513,7 @@ let sort_functions (topls : Batsh_ast.t) : Batsh_ast.t =
     | Function _ -> true
     | Statement _ -> false
   in
-  List.stable_sort topls ~cmp: (fun a b ->
+  List.stable_sort topls ~compare:(fun a b ->
       let func_a = is_function a in
       let func_b = is_function b in
       match (func_a, func_b) with
