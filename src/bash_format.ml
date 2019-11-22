@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 open Bash_ast
 
 let rec print_lvalue_partial (buf : Buffer.t) (lvalue : leftvalue) =

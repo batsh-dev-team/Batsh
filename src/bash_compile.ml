@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 open Bash_ast
 
 module BAST = Batsh_ast
