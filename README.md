@@ -35,10 +35,10 @@ You have to install OCaml (version 4.00.1 or higher) development environment bef
 
 #### Dependencies
 
-If there is any missing dependency, you can install them by running `opam install ocp-build core ounit dlist cmdliner`
+If there is any missing dependency, you can install them by running `opam install dune core ounit dlist cmdliner`
 
-* [ocp-build](http://www.typerex.org/ocp-build.html): Build framework.
-* [core](http://janestreet.github.io/): An industrial strength alternative to OCaml's standard library.
+* [dune](https://dune.build/): Build framework.
+* [core_kernel](https://github.com/janestreet/core_kernel/): An industrial strength alternative to OCaml's standard library.
 * [ounit](http://ounit.forge.ocamlcore.org/): Unit test framework.
 * [dlist](https://github.com/BYVoid/Dlist): A purely functional list-like data structure supporting O(1) concatenation.
 * [cmdliner](http://erratique.ch/software/cmdliner): Command line interfaces parser.
