@@ -7,7 +7,7 @@ services:
 - docker
 before_install:
 - docker pull ocaml/opam2:alpine
-- docker run -td --name builder -v $(pwd):/home/opam/oali-master ocaml/opam2:alpine
+- docker run -td --name builder -v $(pwd):/home/opam/Batsh-master ocaml/opam2:alpine
 - docker exec builder sudo apk add m4
 - docker exec builder opam pin add dlist https://github.com/darrenldl/Dlist.git
 - docker exec builder opam install dune
