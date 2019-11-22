@@ -221,3 +221,5 @@ Those reasons are why I developed Batsh.
 * [jeb-de](https://github.com/jeb-de)
 * [Al Ramirez](https://github.com/mirez)
 * [Nixola](https://github.com/Nixola)
+* [Darren Ldl](https://github.com/darrenldl)
+* [Anton Kochkov](https://github.com/XVilka)
