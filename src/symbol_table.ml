@@ -131,7 +131,7 @@ let process_function
   match Hashtbl.find functions name with
   | Some _ -> () (* TODO duplicate *)
   | None ->
-    let variables = Hashtbl.create ~hashable:String.hashable () in
+    let variables = Hashtbl.create (module String) in
     Hashtbl.change functions name ~f:(fun original ->
         (* TODO declaration *)
         Some (Defination variables)
@@ -146,8 +146,8 @@ let process_toplevel (symtable: t) (topl: toplevel) =
 
 let create (ast: Batsh_ast.t) :t =
   let symtable = {
-    functions = Hashtbl.create ~hashable: String.hashable ();
-    globals = Hashtbl.create ~hashable: String.hashable ()
+    functions = Hashtbl.create (module String);
+    globals = Hashtbl.create (module String)
   } in
   List.iter ast ~f: (process_toplevel symtable);
   symtable
