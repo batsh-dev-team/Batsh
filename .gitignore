@@ -6,3 +6,4 @@ batsh
 oUnit-anon.cache
 _build/
 .merlin
+*.install
