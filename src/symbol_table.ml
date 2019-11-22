@@ -131,8 +131,8 @@ let process_function
   match Hashtbl.find functions name with
   | Some _ -> () (* TODO duplicate *)
   | None ->
-    let variables = Hashtbl.create ~hashable: String.hashable () in
-    Hashtbl.change functions name (fun original ->
+    let variables = Hashtbl.create ~hashable:String.hashable () in
+    Hashtbl.change functions name ~f:(fun original ->
         (* TODO declaration *)
         Some (Defination variables)
       );
