@@ -120,10 +120,10 @@ let batsh =
   Term.info "batsh" ~doc:"Format source file."
 
 let default_cmd =
-  (* let doc = Version.description in *)
-  let doc = "dummy text" in
+  let doc = Version.description in
+  (* let doc = "dummy text" in *)
   Term.(ret (pure (fun _ -> `Help (`Plain, None)) $ (Term.pure ()) )),
-  Term.info "batsh" ~version:"dummy text" ~doc
+  Term.info "batsh" ~version:Version.string ~doc
 
 let () =
   match Term.eval_choice default_cmd [bash; winbat; batsh] with
