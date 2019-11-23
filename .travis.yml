@@ -35,3 +35,4 @@ deploy:
   on:
     tags: true
     repo: darrenldl/Batsh
+  skip_cleanup: true
