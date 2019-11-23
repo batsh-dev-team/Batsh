@@ -13,6 +13,7 @@ before_install:
 - docker exec builder opam install dune
 - docker exec builder opam install core_kernel
 - docker exec builder opam install core
+- docker exec builder opam install ounit2
 - docker exec builder opam pin add dlist https://github.com/darrenldl/Dlist.git
 - docker exec builder opam install ppx_sexp_conv
 - docker exec builder opam install cmdliner
