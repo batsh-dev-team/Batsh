@@ -9,6 +9,7 @@ before_install:
 - docker pull ocaml/opam2:alpine
 - docker run -td --name builder -v $(pwd):/home/opam/Batsh-master ocaml/opam2:alpine
 - docker exec builder sudo apk add m4
+- docker exec builder sudo apk add linux-headers
 - docker exec builder opam install dune
 - docker exec builder opam install core_kernel
 - docker exec builder opam install core
