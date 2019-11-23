@@ -1,5 +1,6 @@
 open Core_kernel
 open Cmdliner
+open Batsh_lib
 
 (* Options common to all commands *)
 
