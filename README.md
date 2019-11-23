@@ -6,7 +6,7 @@
 
 This is a fork of Batsh with upgrades to build on more recent OCaml versions (buildable on OCaml 4.08.1). You can see the discussion thread which spawned this fork effort [here](https://discuss.ocaml.org/t/compiling-batsh/4700/).
 
-Note that I have made no effort in making sure the rest of README is still relevant/correct
+Note that I have made no effort in ensuring the rest of README is still relevant/correct
 
 ## Project description
 
