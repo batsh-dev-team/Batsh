@@ -17,9 +17,9 @@ OCPINDENT = ocp-indent \
 all :
 	dune build @all
 
-# .PHONY: test
-# test :
-# 	dune exec ./tests/main.exe
+.PHONY: test
+test :
+	dune exec ./tests/main.exe
 
 .PHONY: run
 run :

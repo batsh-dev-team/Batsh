@@ -225,7 +225,7 @@ let compile_call
       in
       stmts
 
-let rec compile_expression_statement
+let compile_expression_statement
     (expr : Batsh_ast.expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)

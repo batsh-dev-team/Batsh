@@ -11,7 +11,7 @@ let check_function_statement (stmt : statement) =
     ()
 
 let check_function (func : (identifier * identifiers * statements)) =
-  let name, params, stmts = func in
+  let _name, _params, stmts = func in
   List.iter stmts ~f: check_function_statement
 
 let check_toplevel (topl : toplevel) =

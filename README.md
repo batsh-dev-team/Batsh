@@ -2,6 +2,14 @@
 
 [![Build Status](https://travis-ci.org/darrenldl/Batsh.svg?branch=master)](https://travis-ci.org/darrenldl/Batsh)
 
+## Notes from fork maintainer
+
+This is a fork of Batsh with upgrades to build on more recent OCaml versions (buildable on OCaml 4.08.1). You can see the discussion thread which spawned this fork effort [here](https://discuss.ocaml.org/t/compiling-batsh/4700/).
+
+Note that I have made no effort in ensuring the rest of README is still relevant/correct
+
+## Project description
+
 Batsh is a simple programming language that compiles to Bash and Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx).
 It enables you to write your script once runs on all platforms without **any** additional dependency.
 
@@ -178,7 +186,7 @@ Test existence of given path.
 
 ```
 NAME
-       batsh - A language that compiles to Bash and Windows Batch.
+       batsh - A language that compiles to Bash and Windows Batch
 
 SYNOPSIS
        batsh COMMAND ...
