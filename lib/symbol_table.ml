@@ -12,7 +12,7 @@ type variable_table = (string, variable_entry) Hashtbl.Poly.t
 
 let sexp_of_variable_table (vtable : variable_table) : Sexp.t =
   Sexp.List (Hashtbl.fold vtable ~init: []
-               ~f: (fun ~key ~data acc ->
+               ~f: (fun ~key:_ ~data acc ->
                    let item = (sexp_of_variable_entry data) in
                    item :: acc
                  )
@@ -68,7 +68,7 @@ module Scope = struct
       ~(f: string -> bool -> 'a -> 'a) =
     let vtable = variables scope in
     Hashtbl.fold vtable ~init
-      ~f: (fun ~key ~data acc -> f data.name data.global acc)
+      ~f: (fun ~key:_ ~data acc -> f data.name data.global acc)
 
   let add_temporary_variable
       (scope: t)
@@ -132,7 +132,7 @@ let process_function
   | Some _ -> () (* TODO duplicate *)
   | None ->
     let variables = Hashtbl.create (module String) in
-    Hashtbl.change functions name ~f:(fun original ->
+    Hashtbl.change functions name ~f:(fun _original ->
         (* TODO declaration *)
         Some (Defination variables)
       );
