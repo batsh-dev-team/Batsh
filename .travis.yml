@@ -23,7 +23,6 @@ script:
 - docker exec builder bash -c 'chmod u=rwx ~/Batsh'
 - docker exec builder bash -c 'eval $(opam env); cd ~/Batsh/; make'
 - docker cp builder:/home/opam/Batsh/_build/default/src/main.exe ./batsh
-- strip batsh
 notifications:
   email:
     on_success: never
