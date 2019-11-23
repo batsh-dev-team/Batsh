@@ -121,7 +121,6 @@ let batsh =
 
 let default_cmd =
   let doc = Version.description in
-  (* let doc = "dummy text" in *)
   Term.(ret (pure (fun _ -> `Help (`Plain, None)) $ (Term.pure ()) )),
   Term.info "batsh" ~version:Version.string ~doc
 
