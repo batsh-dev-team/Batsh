@@ -1,6 +1,7 @@
-open Core.Std
+open Core
 open Unix.Process_channels
 open OUnit
+open Batsh_lib
 
 let drop_carrage_return str =
   let buffer = Buffer.create (String.length str) in
