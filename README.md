@@ -2,21 +2,18 @@
 
 [![Build Status](https://travis-ci.org/darrenldl/Batsh.svg?branch=master)](https://travis-ci.org/darrenldl/Batsh)
 
-## Notes from fork maintainer
+## Notes from maintainers
 
-This is a fork of Batsh with upgrades to build on more recent OCaml versions (buildable on OCaml 4.08.1). You can see the discussion thread which spawned this fork effort [here](https://discuss.ocaml.org/t/compiling-batsh/4700/).
+This repo was transferred from the original author @BYVoid,
+and has been upgraded to build on more recent OCaml versions (buildable on at least OCaml 4.08.1).
+You can see the discussion thread which spawned this fork effort
+[here](https://discuss.ocaml.org/t/compiling-batsh/4700/).
 
-Note that this fork is in absolute bare minimum maintenance mode and exists purely in response to the forum thread above, this means
+Note that this project is currently in minimum maintenance mode.
+Issues, PR may not be actively dealt with.
 
-- I have no interest in handling any feature requests
-
-- I have no interest in developing or polishing Batsh any further
-
-- I have no interest in responding to any technical questions
-
-If you are interested in pushing this project forward, feel free to fork this repo
-
-Note that I also have made no effort in ensuring the rest of README is still relevant/correct, though I've updated couple pieces of text
+The following sections may contain out of date info as we are still
+in the process of going through the repo
 
 ## Project description
 
