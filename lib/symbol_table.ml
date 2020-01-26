@@ -1,17 +1,18 @@
-open Core_kernel.Std
+open Core_kernel
 open Batsh_ast
 
 type variable_entry = {
   name : string;
   global : bool;
 }
-with sexp_of
+[@@deriving sexp]
 
-type variable_table = (string, variable_entry) Hashtbl.t
+type variable_table = (string, variable_entry) Hashtbl.Poly.t
+[@@deriving sexp]
 
 let sexp_of_variable_table (vtable : variable_table) : Sexp.t =
   Sexp.List (Hashtbl.fold vtable ~init: []
-               ~f: (fun ~key ~data acc ->
+               ~f: (fun ~key:_ ~data acc ->
                    let item = (sexp_of_variable_entry data) in
                    item :: acc
                  )
@@ -20,19 +21,19 @@ let sexp_of_variable_table (vtable : variable_table) : Sexp.t =
 type function_entry =
   | Declaration
   | Defination of variable_table
-with sexp_of
+[@@deriving sexp]
 
 type t = {
-  functions : (string, function_entry) Hashtbl.t;
+  functions : (string, function_entry) Hashtbl.Poly.t;
   globals : variable_table;
 }
-with sexp_of
+[@@deriving sexp]
 
 module Scope = struct
   type t =
     | GlobalScope of variable_table
     | FunctionScope of (string * variable_table)
-  with sexp_of
+  [@@deriving sexp]
 
   let is_function (scope : t) : bool =
     match scope with
@@ -67,7 +68,7 @@ module Scope = struct
       ~(f: string -> bool -> 'a -> 'a) =
     let vtable = variables scope in
     Hashtbl.fold vtable ~init
-      ~f: (fun ~key ~data acc -> f data.name data.global acc)
+      ~f: (fun ~key:_ ~data acc -> f data.name data.global acc)
 
   let add_temporary_variable
       (scope: t)
@@ -91,7 +92,7 @@ let process_identifier
     (scope: variable_table)
     (ident: identifier)
     ~(global: bool) =
-  Hashtbl.change scope ident (fun original ->
+  Hashtbl.change scope ident ~f:(fun original ->
       let entry = Some {
           name = ident;
           global = global;
@@ -130,8 +131,8 @@ let process_function
   match Hashtbl.find functions name with
   | Some _ -> () (* TODO duplicate *)
   | None ->
-    let variables = Hashtbl.create ~hashable: String.hashable () in
-    Hashtbl.change functions name (fun original ->
+    let variables = Hashtbl.create (module String) in
+    Hashtbl.change functions name ~f:(fun _original ->
         (* TODO declaration *)
         Some (Defination variables)
       );
@@ -145,8 +146,8 @@ let process_toplevel (symtable: t) (topl: toplevel) =
 
 let create (ast: Batsh_ast.t) :t =
   let symtable = {
-    functions = Hashtbl.create ~hashable: String.hashable ();
-    globals = Hashtbl.create ~hashable: String.hashable ()
+    functions = Hashtbl.create (module String);
+    globals = Hashtbl.create (module String)
   } in
   List.iter ast ~f: (process_toplevel symtable);
   symtable

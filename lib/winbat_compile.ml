@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 open Batsh_ast
 open Winbat_ast
 
@@ -225,7 +225,7 @@ let compile_call
       in
       stmts
 
-let rec compile_expression_statement
+let compile_expression_statement
     (expr : Batsh_ast.expression)
     ~(symtable : Symbol_table.t)
     ~(scope : Symbol_table.Scope.t)
@@ -513,7 +513,7 @@ let sort_functions (topls : Batsh_ast.t) : Batsh_ast.t =
     | Function _ -> true
     | Statement _ -> false
   in
-  List.stable_sort topls ~cmp: (fun a b ->
+  List.stable_sort topls ~compare:(fun a b ->
       let func_a = is_function a in
       let func_b = is_function b in
       match (func_a, func_b) with

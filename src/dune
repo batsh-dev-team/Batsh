@@ -1,0 +1,7 @@
+(executable
+ (name main)
+ (public_name batsh)
+ (flags     (-w "+a-4-9-29-37-40-42-44-48-50-32" -ccopt -static))
+ (libraries batsh_lib
+            cmdliner)
+ )

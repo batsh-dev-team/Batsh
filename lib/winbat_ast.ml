@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 
 type identifier = string
 
@@ -58,4 +58,4 @@ and statement = [
 and statements = statement list
 
 and t = statements
-with sexp_of
+[@@deriving sexp]

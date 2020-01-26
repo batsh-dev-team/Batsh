@@ -1,0 +1,41 @@
+language: c
+sudo: required
+branches:
+  except:
+  - dev
+services:
+- docker
+before_install:
+- docker pull ocaml/opam2:alpine
+- docker run -td --name builder -v $(pwd):/home/opam/Batsh-master ocaml/opam2:alpine
+- docker exec builder sudo apk add m4
+- docker exec builder sudo apk add linux-headers
+- docker exec builder opam install dune
+- docker exec builder opam install core_kernel
+- docker exec builder opam install core
+- docker exec builder opam install ounit2
+- docker exec builder opam pin add dlist https://github.com/darrenldl/Dlist.git
+- docker exec builder opam install ppx_sexp_conv
+- docker exec builder opam install cmdliner
+- docker exec builder opam install sexplib
+- docker exec builder opam install menhir
+script:
+- docker exec builder bash -c 'cd ~; echo $(pwd)'
+- docker exec builder bash -c 'cd ~; ls'
+- docker exec builder bash -c 'cp -r ~/Batsh-master ~/Batsh'
+- docker exec builder bash -c 'chmod u=rwx ~/Batsh'
+- docker exec builder bash -c 'eval $(opam env); cd ~/Batsh/; make'
+- docker cp builder:/home/opam/Batsh/_build/default/src/main.exe ./batsh
+- strip batsh
+notifications:
+  email:
+    on_success: never
+deploy:
+  provider: releases
+  api_key:
+    secure: Fd8V/RfIG4DVP355EituB9SBSFKL+R+VI1RzBDsvMclSmd4d42rQrmJ3jl30waY3BwGlzeRLMdZt1Wd7abnUohAQiAdEndrdYfzVes+54N2QK/AMEcUXWqwISQjt2tue73XS72L7IfR2cw5rIAq+SLeeA9FzELjGrDAmzkxSG/is8pa6heVXiD14jYyInRiH0EvAmwPG7dopCCSaOLcv2Fk+LRQ1vJqTA4sQ6Ytz/s8gpDpqUJXkdq6nsDeUr7WrzBhRXgvn6X0u0S1c8hbv79s3F5b6cDKZ/Hr4jJNZGDQfvO9NT4f3BIdo7kpsM9u3LxfxbSCB6AHY3im0tLOtGcmk4kn3qCiNPPp6+4SmYWuS8CRSt9XH95lnmLABb3fFkp1QKrk6vmbKmKoRWB+3edePQvS14GPjNKW7g+EiiVSjYN0OEmL9dxVQfsIF5iZV7mxRkZFdfYKSOUa0uI3SEcLUDpk4SkvQVODcLaL4/XOchvwqevfAI/fKRred5Vbi7grwlPAepowfN+moxBvWXRSbMvsBENhzkwqGFdqiSN7prKZsPbWMWmP71Tn3+Lqwr1QTWY6+b8UpthT7mKRcXrdjYE3WG+YNleOtCsW3nWZPlgR9GWIowiylc/PDBIcokvm1dRb5isj2ETefMhlmfBAdUxlrsf20dFdIvgC3aIE=
+  file: batsh
+  on:
+    tags: true
+    repo: darrenldl/Batsh
+  skip_cleanup: true

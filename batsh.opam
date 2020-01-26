@@ -1,0 +1,28 @@
+opam-version: "2.0"
+maintainer: "byvoid@byvoid.com"
+authors: ["BYVoid <byvoid@byvoid.com>"]
+homepage: "https://github.com/BYVoid/Batsh"
+bug-reports: "https://github.com/BYVoid/Batsh/issues"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "4.04.1"}
+  "core" {>= "0.12"}
+  "core_kernel" {>= "0.12"}
+  "dlist" {>= "0.0.3"}
+  "cmdliner" {>= "0.9.2"}
+]
+depopts: ["ounit"]
+dev-repo: "git://github.com/BYVoid/Batsh"
+install: ["dune" "install"]
+synopsis:
+  "A (C-like syntax) programming language that compiles to Bash and Windows Batch"
+description: """
+Batsh enables you to write code once runs on all platforms without any additional dependency
+
+Documentation: https://github.com/BYVoid/Batsh
+
+Online demo: http://batsh.org/
+"""

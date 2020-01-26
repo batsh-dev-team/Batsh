@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 
 type identifier = string
 
@@ -48,4 +48,4 @@ and toplevel =
   | Function of (identifier * statements)
 
 and t = toplevel list
-with sexp_of
+[@@deriving sexp]

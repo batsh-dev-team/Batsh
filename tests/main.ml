@@ -1,6 +1,9 @@
-open Core.Std
+open Core
 open Unix.Process_channels
 open OUnit
+open Batsh_lib
+
+let script_dir = "test_scripts"
 
 let drop_carrage_return str =
   let buffer = Buffer.create (String.length str) in
@@ -19,7 +22,7 @@ let test_bash name batsh expected =
   let bash = Bash.compile batsh in
   let code = (Bash.print bash) ^ "\n" in
   (* Code *)
-  let inx = In_channel.create ("tests/bash/" ^ name ^ ".sh") in
+  let inx = In_channel.create (script_dir ^ "/bash/" ^ name ^ ".sh") in
   let code_expected = In_channel.input_all inx in
   In_channel.close inx;
   assert_equal code_expected code ~printer: Fn.id;
@@ -35,7 +38,7 @@ let test_winbat name batsh expected =
   let winbat = Winbat.compile batsh in
   let code = (Winbat.print winbat) ^ "\n" in
   (* Code *)
-  let inx = In_channel.create ("tests/batch/" ^ name ^ ".bat") in
+  let inx = In_channel.create (script_dir ^ "/batch/" ^ name ^ ".bat") in
   let code_expected = In_channel.input_all inx in
   In_channel.close inx;
   assert_equal code_expected code ~printer: Fn.id;
@@ -53,7 +56,7 @@ let test_winbat name batsh expected =
   test_result expected output exit_status
 
 let get_expected name =
-  let answer_filename = "tests/output/" ^ name ^ ".txt" in
+  let answer_filename = script_dir ^ "/output/" ^ name ^ ".txt" in
   let inx = In_channel.create answer_filename in
   let expected = In_channel.input_all inx in
   In_channel.close inx;
@@ -61,7 +64,7 @@ let get_expected name =
 
 let test name func _ =
   let expected = get_expected name in
-  let filename = "tests/" ^ name ^ ".batsh" in
+  let filename = script_dir ^ "/" ^ name ^ ".batsh" in
   let batsh = Parser.create_from_file filename in
   func name batsh expected
 

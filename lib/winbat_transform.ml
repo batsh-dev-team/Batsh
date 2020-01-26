@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 open Batsh_ast
 
 let rec split_expression
@@ -43,7 +43,7 @@ let rec split_expression
   match expr with
   | Bool _ | Int _ | Float _ | Leftvalue _ ->
     split_when ~cond:split_primitive (Dlist.empty ()) expr
-  | String str ->
+  | String _str ->
     split_when ~cond:split_string (Dlist.empty ()) expr
   | ArithUnary (operator, expr) ->
     let split = match operator with

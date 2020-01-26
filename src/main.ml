@@ -1,5 +1,6 @@
-open Core_kernel.Std
+open Core_kernel
 open Cmdliner
+open Batsh_lib
 
 (* Options common to all commands *)
 
@@ -122,7 +123,7 @@ let batsh =
 let default_cmd =
   let doc = Version.description in
   Term.(ret (pure (fun _ -> `Help (`Plain, None)) $ (Term.pure ()) )),
-  Term.info "batsh" ~version:Version.version ~doc
+  Term.info "batsh" ~version:Version.string ~doc
 
 let () =
   match Term.eval_choice default_cmd [bash; winbat; batsh] with

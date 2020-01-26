@@ -1,5 +1,22 @@
 # Batsh
 
+[![Build Status](https://travis-ci.org/darrenldl/Batsh.svg?branch=master)](https://travis-ci.org/darrenldl/Batsh)
+
+## Notes from maintainers
+
+This repo was transferred from the original author @BYVoid,
+and has been upgraded to build on more recent OCaml versions (buildable on at least OCaml 4.08.1).
+You can see the discussion thread which spawned this fork effort
+[here](https://discuss.ocaml.org/t/compiling-batsh/4700/).
+
+Note that this project is currently in minimum maintenance mode.
+Issues, PR may not be actively dealt with.
+
+The following sections may contain out of date info as we are still
+in the process of going through the repo
+
+## Project description
+
 Batsh is a simple programming language that compiles to Bash and Windows [Batch](http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/batch.mspx).
 It enables you to write your script once runs on all platforms without **any** additional dependency.
 
@@ -35,10 +52,10 @@ You have to install OCaml (version 4.00.1 or higher) development environment bef
 
 #### Dependencies
 
-If there is any missing dependency, you can install them by running `opam install ocp-build core ounit dlist cmdliner`
+If there is any missing dependency, you can install them by running `opam install dune core_kernel ounit dlist cmdliner`
 
-* [ocp-build](http://www.typerex.org/ocp-build.html): Build framework.
-* [core](http://janestreet.github.io/): An industrial strength alternative to OCaml's standard library.
+* [dune](https://dune.build/): Build framework.
+* [core_kernel](https://github.com/janestreet/core_kernel/): Core_kernel is the system-independent part of Core, Jane Street's industrial-strength alternative to the OCaml standard library.
 * [ounit](http://ounit.forge.ocamlcore.org/): Unit test framework.
 * [dlist](https://github.com/BYVoid/Dlist): A purely functional list-like data structure supporting O(1) concatenation.
 * [cmdliner](http://erratique.ch/software/cmdliner): Command line interfaces parser.
@@ -176,7 +193,7 @@ Test existence of given path.
 
 ```
 NAME
-       batsh - A language that compiles to Bash and Windows Batch.
+       batsh - A language that compiles to Bash and Windows Batch
 
 SYNOPSIS
        batsh COMMAND ...
@@ -221,3 +238,5 @@ Those reasons are why I developed Batsh.
 * [jeb-de](https://github.com/jeb-de)
 * [Al Ramirez](https://github.com/mirez)
 * [Nixola](https://github.com/Nixola)
+* [Darren Ldl](https://github.com/darrenldl)
+* [Anton Kochkov](https://github.com/XVilka)

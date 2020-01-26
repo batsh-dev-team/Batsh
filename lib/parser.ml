@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 
 type t = {
   lex: Lexing.lexbuf;
@@ -42,7 +42,7 @@ let create_from_lexbuf (lexbuf : Lexing.lexbuf) (filename: string) : t =
   let symtable = Symbol_table.create ast in
   { lex = lexbuf; ast; symtable; }
 
-let create_from_channel (inx: in_channel) (filename: string) : t =
+let create_from_channel (inx: In_channel.t) (filename: string) : t =
   let lexbuf = Lexing.from_channel inx in
   create_from_lexbuf lexbuf filename
 

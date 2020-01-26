@@ -1,4 +1,4 @@
-open Core_kernel.Std
+open Core_kernel
 open Bash_ast
 
 let rec print_lvalue_partial (buf : Buffer.t) (lvalue : leftvalue) =
@@ -17,7 +17,7 @@ let rec print_lvalue_partial (buf : Buffer.t) (lvalue : leftvalue) =
 and print_lvalue (buf : Buffer.t) (lvalue : leftvalue) ~(quote : bool) =
   let quote = if quote then "\"" else "" in
   match lvalue with
-  | Identifier ident ->
+  | Identifier _ident ->
     bprintf buf "%s$%a%s" quote print_lvalue_partial lvalue quote
   | ListAccess _
   | EntireList _
