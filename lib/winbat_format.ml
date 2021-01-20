@@ -41,7 +41,7 @@ let rec print_leftvalue
   =
   match lvalue with
   | `Identifier ident ->
-    if bare || ((String.get ident 0) = '%') then
+    if bare || (Char.equal (String.get ident 0) '%') then
       bprintf buf "%s" ident
     else
       bprintf buf "!%s!" ident
@@ -75,7 +75,7 @@ let rec print_arith buf (arith : arithmetic) =
   | `ArithUnary (operator, arith) ->
     bprintf buf "%s^(%a^)" operator print_arith arith
   | `ArithBinary (operator, left, right) -> (
-      let operator = if operator = "%" then "%%" else operator in
+      let operator = if String.equal operator "%" then "%%" else operator in
       bprintf buf "^(%a %s %a^)"
         print_arith left
         operator
@@ -145,7 +145,7 @@ let rec print_statement buf (stmt: statement) ~(indent: int) =
   | `Comment comment ->
     let len = String.length comment in
     bprintf buf "rem%s%s" (
-      if len = 0 || (len > 0 && (String.get comment 0) = ' ') then
+      if len = 0 || (len > 0 && Char.equal (String.get comment 0) ' ') then
         ""
       else
         " "
