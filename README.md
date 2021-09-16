@@ -151,7 +151,7 @@ function fibonacci(num) {
 println(fibonacci(8));
 ```
 
-### [More examples](https://github.com/BYVoid/Batsh/tree/master/tests)
+### [More examples](https://github.com/BYVoid/Batsh/tree/master/test_scripts)
 
 ### Syntax Highlighting
 
