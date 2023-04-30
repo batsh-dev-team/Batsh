@@ -1,7 +1,5 @@
 # Batsh
 
-[![Build Status](https://travis-ci.org/darrenldl/Batsh.svg?branch=master)](https://travis-ci.org/darrenldl/Batsh)
-
 ## Notes from maintainers
 
 This repo was transferred from the original author @BYVoid,
@@ -155,8 +153,13 @@ println(fibonacci(8));
 
 ### Syntax Highlighting
 
+#### Vim
+
 * [vim-Batsh](https://github.com/vuryleo/vim-Batsh)
-* [batsh-mode](https://github.com/thechampagne/batsh-mode) (emacs)
+
+#### Emacs
+
+* [batsh-mode](https://github.com/thechampagne/batsh-mode)
 
 ## Built-in functions
 
