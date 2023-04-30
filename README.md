@@ -156,6 +156,7 @@ println(fibonacci(8));
 ### Syntax Highlighting
 
 * [vim-Batsh](https://github.com/vuryleo/vim-Batsh)
+* [batsh-mode](https://github.com/thechampagne/batsh-mode) (emacs)
 
 ## Built-in functions
 
